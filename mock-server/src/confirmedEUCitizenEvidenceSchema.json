@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "required": ["photo"],
+  "description": "A Base64 encoded selfie with the ID card that contains the subject's address and photo.",
+  "properties": {
+    "photo": {
+      "type": "string",
+      "maskable": true
+    }
+  }
+}

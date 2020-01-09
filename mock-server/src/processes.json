@@ -4,7 +4,7 @@
     "version": 1,
     "description": "By providing the data defined in the claim schema we can prove your EU citizenship",
     "claimSchema": "aHR0cDovLzEyNy4wLjAuMTo4MDgwL21vcnBoZXVzL3dpdG5lc3Mtc2VydmljZS9jbGFpbS1zY2hlbWFzL2NvbmZpcm1lZEVVQ2l0aXplbg==",
-    "evidenceSchema": null,
+    "evidenceSchema": "aHR0cDovLzEyNy4wLjAuMTo4MDgwL21vcnBoZXVzL3dpdG5lc3Mtc2VydmljZS9ldmlkZW5jZS1zY2hlbWFzL2NvbmZpcm1lZEVVQ2l0aXplbg==",
     "constraintsSchema": null
   }
 ]
