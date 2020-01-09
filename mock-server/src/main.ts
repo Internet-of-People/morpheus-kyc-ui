@@ -15,10 +15,12 @@ class Server {
 
   public start(): void {
     this.app.get(`${Server.ROOT_PATH}/processes/list`, async (_, res): Promise<void> => {
+      console.log('Serving processes/list...');
       await this.sleep();
       // claimSchema: http://127.0.0.1:8080/morpheus/witness-service/claim-schemas/confirmedEUCitizen
       // evidenceSchema: http://127.0.0.1:8080/morpheus/witness-service/evidence-schemas/confirmedEUCitizen
-      res.status(200).json(processes);
+      console.log('Served');
+      res.status(200).json({processes});
     });
 
     this.app.get(`${Server.ROOT_PATH}/claim-schemas/confirmedEUCitizen`, async (_, res): Promise<void> => {
@@ -38,8 +40,8 @@ class Server {
       res.status(200).json({"soon":"it will be here"});
     });
 
-    this.app.listen(8080, (): void => {
-      console.log('Listening on 8080');
+    this.app.listen(8080, '0.0.0.0', (): void => {
+      console.log('Listening on 0.0.0.0:8080');
     });
   }
 

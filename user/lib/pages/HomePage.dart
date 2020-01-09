@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/morpheus-color.dart';
+import 'package:morpheus_kyc_user/utils/MorpheusColor.dart';
 
-import 'create-witness-request.dart';
-//import 'package:morpheus_kyc_user/scan-qr.dart';
+import 'ListAvailableProcessesPage.dart';
+//import 'package:morpheus_kyc_user/ScanQrPage.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -29,13 +29,13 @@ class HomePage extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.content_paste),
-            title: const Text('Create Witness Request'),
+            title: const Text('Query Processes'),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => CreateWitnessRequestPage()
+                      builder: (context) => ListAvailableProcessesPage()
                   )
               );
             },
