@@ -1,27 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:morpheus_kyc_user/morpheus-color.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    // http://127.0.0.1/morpheus/witness-service
-    return HomePageState();
-  }
-}
+import 'create-witness-request.dart';
+//import 'package:morpheus_kyc_user/scan-qr.dart';
 
-class HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('test')
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Text('a')
-          ],
-        ),
-      ),
+      appBar: AppBar(title: const Text('Morpheus')),
+      body: const Center(child: Text('Welcome to Morpheus!')),
+      drawer: Drawer(
+          child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            decoration: const BoxDecoration(
+              color: PRIMARY_COLOR,
+            ),
+            margin: EdgeInsets.zero,
+            child: const Text(
+              'Morpheus',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.content_paste),
+            title: const Text('Create Witness Request'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreateWitnessRequestPage()
+                  )
+              );
+            },
+          ),
+        ],
+      )),
     );
   }
 }
