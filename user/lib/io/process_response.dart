@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'ProcessResponse.g.dart';
+part 'process_response.g.dart';
 
 @JsonSerializable()
 class ProcessResponse {
@@ -8,7 +8,8 @@ class ProcessResponse {
 
   ProcessResponse(this.processes);
 
-  factory ProcessResponse.fromJson(Map<String, dynamic> json) => _$ProcessResponseFromJson(json);
+  factory ProcessResponse.fromJson(Map<String, dynamic> json) =>
+      _$ProcessResponseFromJson(json);
 }
 
 @JsonSerializable()
@@ -20,15 +21,9 @@ class Process {
   final String evidenceSchema;
   final String constraintsSchema;
 
-  Process(
-    this.name,
-    this.version,
-    this.description,
-    this.claimSchema,
-    this.evidenceSchema,
-    this.constraintsSchema
-  );
+  Process(this.name, this.version, this.description, this.claimSchema,
+      this.evidenceSchema, this.constraintsSchema);
 
-  factory Process.fromJson(Map<String, dynamic> json) => _$ProcessFromJson(json);
+  factory Process.fromJson(Map<String, dynamic> json) =>
+      _$ProcessFromJson(json);
 }
-

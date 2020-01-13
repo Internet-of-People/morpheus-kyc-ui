@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/components/witnessrequest/ProcessListView.dart';
-import 'package:morpheus_kyc_user/io/ProcessResponse.dart';
-import 'package:morpheus_kyc_user/io/UrlFetcher.dart';
+import 'package:morpheus_kyc_user/components/witnessrequest/proceess_list_view.dart';
+import 'package:morpheus_kyc_user/io/process_response.dart';
+import 'package:morpheus_kyc_user/io/url_fetcher.dart';
 
 class ListAvailableProcessesPage extends StatefulWidget {
   @override
@@ -12,14 +12,16 @@ class ListAvailableProcessesPage extends StatefulWidget {
   }
 }
 
-class ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> {
+class ListAvailableProcessesPageState
+    extends State<ListAvailableProcessesPage> {
   Future<ProcessResponse> _processesFuture;
-
 
   @override
   void initState() {
     super.initState();
-    _processesFuture = UrlFetcher.fetch('http://10.0.2.2:8080/morpheus/witness-service/processes/list').then((respJson){
+    _processesFuture = UrlFetcher.fetch(
+            'http://10.0.2.2:8080/morpheus/witness-service/processes/list')
+        .then((respJson) {
       return ProcessResponse.fromJson(json.decode(respJson));
     });
   }
@@ -27,17 +29,16 @@ class ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _processesFuture,
-        builder: (BuildContext context, AsyncSnapshot<ProcessResponse> snapshot) {
-          return Scaffold(
+      future: _processesFuture,
+      builder: (BuildContext context, AsyncSnapshot<ProcessResponse> snapshot) {
+        return Scaffold(
             appBar: AppBar(
               title: const Text('Available Processes'),
             ),
             body: snapshot.hasData
                 ? ProcessListView(processes: snapshot.data.processes)
-                : Center(child: CircularProgressIndicator())
-          );
-        },
+                : Center(child: CircularProgressIndicator()));
+      },
     );
   }
 }

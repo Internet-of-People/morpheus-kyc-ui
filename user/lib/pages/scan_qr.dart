@@ -16,30 +16,28 @@ class ScanQRPageState extends State<ScanQRPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Scan QR'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 5,
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: onQRViewCreated,
+        appBar: AppBar(
+          title: Text('Scan QR'),
+        ),
+        body: Column(
+          children: <Widget>[
+            Expanded(
+                flex: 5,
+                child: QRView(
+                  key: qrKey,
+                  onQRViewCreated: onQRViewCreated,
+                )),
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: Text('Scan result: $qrText'),
+              ),
             )
-          ),
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: Text('Scan result: $qrText'),
-            ),
-          )
-        ],
-      )
-    );
+          ],
+        ));
   }
 
-  void onQRViewCreated(QRViewController controller){
+  void onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       setState(() {

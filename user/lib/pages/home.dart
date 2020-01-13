@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/utils/MorpheusColor.dart';
+import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 
-import 'ListAvailableProcessesPage.dart';
-//import 'package:morpheus_kyc_user/ScanQrPage.dart';
+import 'list_available_processes.dart';
+//import 'package:morpheus_kyc_user/scan_qr.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             decoration: const BoxDecoration(
-              color: PRIMARY_COLOR,
+              color: primaryColor,
             ),
             margin: EdgeInsets.zero,
             child: const Text(
@@ -35,9 +35,7 @@ class HomePage extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ListAvailableProcessesPage()
-                  )
-              );
+                      builder: (context) => ListAvailableProcessesPage()));
             },
           ),
         ],

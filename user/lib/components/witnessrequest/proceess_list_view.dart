@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/io/ProcessResponse.dart';
-import 'package:morpheus_kyc_user/pages/ProcessDetailsPage.dart';
+import 'package:morpheus_kyc_user/io/process_response.dart';
+import 'package:morpheus_kyc_user/pages/process_details.dart';
 
-class ProcessListView extends StatelessWidget{
+class ProcessListView extends StatelessWidget {
   final List<Process> processes;
 
   const ProcessListView({Key key, @required this.processes}) : super(key: key);
@@ -25,9 +25,8 @@ class ProcessListView extends StatelessWidget{
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProcessDetailsPage(process: process)
-                      )
-                  );
+                          builder: (context) =>
+                              ProcessDetailsPage(process: process)));
                 },
               ),
             ],

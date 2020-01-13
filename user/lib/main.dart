@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/pages/HomePage.dart';
-import 'package:morpheus_kyc_user/utils/MorpheusColor.dart';
+import 'package:morpheus_kyc_user/pages/home.dart';
+import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Morpheus KYC PoC',
       theme: ThemeData(
-        primarySwatch: PRIMARY_MATERIAL_COLOR,
+        primarySwatch: primaryMaterialColor,
       ),
       home: HomePage(),
     );

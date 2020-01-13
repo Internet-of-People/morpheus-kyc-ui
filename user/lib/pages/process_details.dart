@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:morpheus_kyc_user/io/ProcessResponse.dart';
-import 'package:morpheus_kyc_user/io/UrlFetcher.dart';
+import 'package:morpheus_kyc_user/io/process_response.dart';
+import 'package:morpheus_kyc_user/io/url_fetcher.dart';
 import 'package:json_schema/json_schema.dart';
 
 class ProcessDetailsPage extends StatefulWidget {
@@ -31,23 +31,28 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
   @override
   void initState() {
     super.initState();
-    _fetchClaimSchema = UrlFetcher.fetch(utf8.decode(base64.decode(_process.claimSchema)));
-    _fetchEvidenceSchema = UrlFetcher.fetch(utf8.decode(base64.decode(_process.evidenceSchema)));
+    _fetchClaimSchema =
+        UrlFetcher.fetch(utf8.decode(base64.decode(_process.claimSchema)));
+    _fetchEvidenceSchema =
+        UrlFetcher.fetch(utf8.decode(base64.decode(_process.evidenceSchema)));
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.wait([_fetchClaimSchema, _fetchEvidenceSchema]).then((responses) =>
-        ProcessDetailsResponses(responses[0], responses[1]),
+      future: Future.wait([_fetchClaimSchema, _fetchEvidenceSchema]).then(
+        (responses) => ProcessDetailsResponses(responses[0], responses[1]),
       ),
-      builder: (BuildContext context, AsyncSnapshot<ProcessDetailsResponses> snapshot) {
+      builder: (BuildContext context,
+          AsyncSnapshot<ProcessDetailsResponses> snapshot) {
         List<Widget> claimDetails = <Widget>[];
         List<Widget> evidenceDetails = <Widget>[];
 
-        if(snapshot.hasData) {
-          final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
-          final evidenceSchema = JsonSchema.createSchema(snapshot.data.evidenceSchameResponse);
+        if (snapshot.hasData) {
+          final claimSchema =
+              JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
+          final evidenceSchema =
+              JsonSchema.createSchema(snapshot.data.evidenceSchameResponse);
 
           claimDetails = <Widget>[
             Column(
@@ -109,20 +114,21 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
                   expansionCallback: (index, isExpanded) {
                     setState(() {
                       _detailsInfoState[index] = !isExpanded;
-                      _detailsInfoState[(index-1).abs()]=false; // yes, hacky. Closes the other one
+                      _detailsInfoState[(index - 1).abs()] =
+                          false; // yes, hacky. Closes the other one
                     });
                   },
                   children: <ExpansionPanel>[
                     ExpansionPanel(
-                      headerBuilder: (context, isExpanded) => ListTile(title: const Text('Claim Schema Details')),
-                      body: Column(children: claimDetails),
-                      isExpanded: _detailsInfoState[0]
-                    ),
+                        headerBuilder: (context, isExpanded) =>
+                            ListTile(title: const Text('Claim Schema Details')),
+                        body: Column(children: claimDetails),
+                        isExpanded: _detailsInfoState[0]),
                     ExpansionPanel(
-                      headerBuilder: (context, isExpanded) => ListTile(title: const Text('Evidence Schema Details')),
-                      body: Column(children: evidenceDetails),
-                      isExpanded: _detailsInfoState[1]
-                    ),
+                        headerBuilder: (context, isExpanded) => ListTile(
+                            title: const Text('Evidence Schema Details')),
+                        body: Column(children: evidenceDetails),
+                        isExpanded: _detailsInfoState[1]),
                   ],
                 ),
                 ButtonBar(
@@ -134,8 +140,7 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
                   ],
                 )
               ],
-            )
-        );
+            ));
       },
     );
   }
@@ -145,5 +150,6 @@ class ProcessDetailsResponses {
   final String claimSchemaResponse;
   final String evidenceSchameResponse;
 
-  ProcessDetailsResponses(this.claimSchemaResponse, this.evidenceSchameResponse);
+  ProcessDetailsResponses(
+      this.claimSchemaResponse, this.evidenceSchameResponse);
 }

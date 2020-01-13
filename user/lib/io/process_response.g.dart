@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'ProcessResponse.dart';
+part of 'process_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -31,8 +31,7 @@ Process _$ProcessFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$ProcessToJson(Process instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ProcessToJson(Process instance) => <String, dynamic>{
       'name': instance.name,
       'version': instance.version,
       'description': instance.description,
