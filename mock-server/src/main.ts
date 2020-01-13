@@ -17,8 +17,8 @@ class Server {
     this.app.get(`${Server.ROOT_PATH}/processes/list`, async (_, res): Promise<void> => {
       console.log('Serving processes/list...');
       await this.sleep();
-      // claimSchema: http://127.0.0.1:8080/morpheus/witness-service/claim-schemas/confirmedEUCitizen
-      // evidenceSchema: http://127.0.0.1:8080/morpheus/witness-service/evidence-schemas/confirmedEUCitizen
+      // claimSchema: http://10.0.2.2:8080/morpheus/witness-service/claim-schemas/confirmedEUCitizen
+      // evidenceSchema: http://10.0.2.2:8080/morpheus/witness-service/evidence-schemas/confirmedEUCitizen
       console.log('Served');
       res.status(200).json({processes});
     });

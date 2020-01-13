@@ -1,11 +1,26 @@
 [
   {
     "name": "Proving EU Citizenship",
-    "id": "com.bank1.processes.confirmeucitizenship",
     "version": 1,
-    "description": "By providing the data defined in the claim schema we can prove your EU citizenship",
-    "claimSchema": "aHR0cDovLzEyNy4wLjAuMTo4MDgwL21vcnBoZXVzL3dpdG5lc3Mtc2VydmljZS9jbGFpbS1zY2hlbWFzL2NvbmZpcm1lZEVVQ2l0aXplbg==",
-    "evidenceSchema": "aHR0cDovLzEyNy4wLjAuMTo4MDgwL21vcnBoZXVzL3dpdG5lc3Mtc2VydmljZS9ldmlkZW5jZS1zY2hlbWFzL2NvbmZpcm1lZEVVQ2l0aXplbg==",
+    "description": "By providing some personal information we can prove that you're a EU citizen.",
+    "claimSchema": "aHR0cDovLzEwLjAuMi4yOjgwODAvbW9ycGhldXMvd2l0bmVzcy1zZXJ2aWNlL2NsYWltLXNjaGVtYXMvY29uZmlybWVkRVVDaXRpemVu",
+    "evidenceSchema": "aHR0cDovLzEwLjAuMi4yOjgwODAvbW9ycGhldXMvd2l0bmVzcy1zZXJ2aWNlL2V2aWRlbmNlLXNjaGVtYXMvY29uZmlybWVkRVVDaXRpemVu",
+    "constraintsSchema": null
+  },
+  {
+    "name": "Proving Member Status",
+    "version": 1,
+    "description": "We can provide you a membership confirmation that you're our active customer.",
+    "claimSchema": null,
+    "evidenceSchema": null,
+    "constraintsSchema": null
+  },
+  {
+    "name": "Request Account Statistics",
+    "version": 1,
+    "description": "We can provide a detailed statistics back to six months for loan or other reason.",
+    "claimSchema": null,
+    "evidenceSchema": null,
     "constraintsSchema": null
   }
 ]

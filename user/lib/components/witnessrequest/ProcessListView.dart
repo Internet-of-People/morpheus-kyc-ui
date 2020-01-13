@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/io/process-response-dto.dart';
+import 'package:morpheus_kyc_user/io/ProcessResponse.dart';
 import 'package:morpheus_kyc_user/pages/ProcessDetailsPage.dart';
 
 class ProcessListView extends StatelessWidget{
-  final List<ProcessDTO> processes;
+  final List<Process> processes;
 
   const ProcessListView({Key key, @required this.processes}) : super(key: key);
 

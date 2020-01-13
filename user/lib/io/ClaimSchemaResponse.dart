@@ -1,7 +1,27 @@
+import 'package:json_annotation/json_annotation.dart';
+
+//part 'ClaimSchemaResponse.g.dart';
+
+@JsonSerializable()
+class ClaimSchemaResponse {
+  String type;
+
+  //factory ClaimSchemaResponse.fromJson(Map<String, dynamic> json) => _$ProcessResponseFromJson(json);
+}
+
+@JsonSerializable()
+class PlaceOfBirth {
+  final String country;
+  final String city;
+
+  PlaceOfBirth(this.country, this.city);
+}
+
+/*
 {
   "type": "object",
   "required": ["address","placeOfBirth","dateOfBirth"],
-  "description": "We need you to provide some personal data presented on your ID card.",
+  "description": "This claim contains the subject's address, place of birth and date of birth visible on their ID card.",
   "properties": {
     "address": {
       "type": "string",
@@ -34,3 +54,4 @@
     }
   }
 }
+* */

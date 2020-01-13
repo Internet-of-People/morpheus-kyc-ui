@@ -1,29 +1,27 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'process-response-dto.g.dart';
+part 'ProcessResponse.g.dart';
 
 @JsonSerializable()
-class ProcessResponseDTO {
-  final List<ProcessDTO> processes;
+class ProcessResponse {
+  final List<Process> processes;
 
-  ProcessResponseDTO(this.processes);
+  ProcessResponse(this.processes);
 
-  factory ProcessResponseDTO.fromJson(Map<String, dynamic> json) => _$ProcessResponseDTOFromJson(json);
+  factory ProcessResponse.fromJson(Map<String, dynamic> json) => _$ProcessResponseFromJson(json);
 }
 
 @JsonSerializable()
-class ProcessDTO {
+class Process {
   final String name;
-  final String id;
   final int version;
   final String description;
   final String claimSchema;
   final String evidenceSchema;
   final String constraintsSchema;
 
-  ProcessDTO(
+  Process(
     this.name,
-    this.id,
     this.version,
     this.description,
     this.claimSchema,
@@ -31,6 +29,6 @@ class ProcessDTO {
     this.constraintsSchema
   );
 
-  factory ProcessDTO.fromJson(Map<String, dynamic> json) => _$ProcessDTOFromJson(json);
+  factory Process.fromJson(Map<String, dynamic> json) => _$ProcessFromJson(json);
 }
 

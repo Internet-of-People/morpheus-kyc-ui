@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:morpheus_kyc_user/components/witnessrequest/ProcessListView.dart';
-import 'package:morpheus_kyc_user/io/process-response-dto.dart';
-import 'dart:developer' as developer;
+import 'package:morpheus_kyc_user/io/ProcessResponse.dart';
+import 'package:morpheus_kyc_user/io/UrlFetcher.dart';
 
 class ListAvailableProcessesPage extends StatefulWidget {
   @override
@@ -14,39 +13,22 @@ class ListAvailableProcessesPage extends StatefulWidget {
 }
 
 class ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> {
-  Future<ProcessResponseDTO> _processesFuture;
+  Future<ProcessResponse> _processesFuture;
 
 
   @override
   void initState() {
     super.initState();
-    _processesFuture = fetchProcesses();
-  }
-
-  Future<ProcessResponseDTO> fetchProcesses() async {
-    developer.log('Fetching processes...');
-
-    try {
-      final response = await http.get('http://10.0.2.2:8080/morpheus/witness-service/processes/list');
-      developer.log('Got response, status code: ${response.statusCode}');
-
-      if(response.statusCode == 200) {
-        return ProcessResponseDTO.fromJson(json.decode(response.body));
-      }
-      else {
-        throw Exception('Failed to fetch processes. Status code: ${response.statusCode}');
-      }
-    }
-    catch(e){
-      throw Exception('Failed to fetch processes. Reason: ${e}');
-    }
+    _processesFuture = UrlFetcher.fetch('http://10.0.2.2:8080/morpheus/witness-service/processes/list').then((respJson){
+      return ProcessResponse.fromJson(json.decode(respJson));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _processesFuture,
-        builder: (BuildContext context, AsyncSnapshot<ProcessResponseDTO> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<ProcessResponse> snapshot) {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Available Processes'),
@@ -58,5 +40,4 @@ class ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> 
         },
     );
   }
-
 }
