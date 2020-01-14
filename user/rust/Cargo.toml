@@ -1,0 +1,12 @@
+[package]
+name = "dart_rust_integration_test"
+version = "0.1.0"
+authors = ["IoP Ventures LLC <info@iop-ventures.com>"]
+license = "LGPL-3.0-or-later"
+edition = "2018"
+
+[dependencies]
+
+[lib]
+name = "rust_integration_test"
+crate-type = ["cdylib"]
