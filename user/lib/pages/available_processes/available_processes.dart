@@ -12,15 +12,14 @@ class ListAvailableProcessesPage extends StatefulWidget {
   }
 }
 
-class ListAvailableProcessesPageState
-    extends State<ListAvailableProcessesPage> {
+class ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> {
   Future<ProcessResponse> _processesFuture;
 
   @override
   void initState() {
     super.initState();
-    _processesFuture = UrlFetcher.fetch(
-            'http://10.0.2.2:8080/morpheus/witness-service/processes/list')
+    _processesFuture = UrlFetcher
+        .fetch('http://10.0.2.2:8080/morpheus/witness-service/processes/list')
         .then((respJson) {
       return ProcessResponse.fromJson(json.decode(respJson));
     });
@@ -36,7 +35,7 @@ class ListAvailableProcessesPageState
               title: const Text('Available Processes'),
             ),
             body: snapshot.hasData
-                ? ProcessListView(processes: snapshot.data.processes)
+                ? ProcessListView(snapshot.data.processes)
                 : Center(child: CircularProgressIndicator()));
       },
     );

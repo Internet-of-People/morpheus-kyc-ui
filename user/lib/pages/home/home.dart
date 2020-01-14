@@ -35,7 +35,9 @@ class HomePage extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ListAvailableProcessesPage()));
+                      builder: (context) => ListAvailableProcessesPage()
+                  )
+              );
             },
           ),
         ],

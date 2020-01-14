@@ -3,15 +3,17 @@ import 'dart:convert';
 import 'package:morpheus_kyc_user/io/process_response.dart';
 import 'package:morpheus_kyc_user/io/url_fetcher.dart';
 import 'package:json_schema/json_schema.dart';
+import 'package:morpheus_kyc_user/pages/create_claim_data/provide_claim_data.dart';
+import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 
 class ProcessDetailsPage extends StatefulWidget {
-  final Process process;
+  final Process _process;
 
-  const ProcessDetailsPage({Key key, @required this.process}) : super(key: key);
+  const ProcessDetailsPage(this._process, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return ProcessDetailsPageState(this.process);
+    return ProcessDetailsPageState(this._process);
   }
 }
 
@@ -41,10 +43,14 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
       future: Future.wait([_fetchClaimSchema, _fetchEvidenceSchema]).then(
         (responses) => ProcessDetailsResponses(responses[0], responses[1]),
       ),
-      builder: (BuildContext context,
-          AsyncSnapshot<ProcessDetailsResponses> snapshot) {
+      builder: (
+          BuildContext context,
+          AsyncSnapshot<ProcessDetailsResponses> snapshot
+      ) {
         List<Widget> claimDetails = <Widget>[];
         List<Widget> evidenceDetails = <Widget>[];
+
+        Function onButtonPressed;
 
         if (snapshot.hasData) {
           final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
@@ -87,6 +93,17 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
               ],
             )
           ];
+
+          onButtonPressed = (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProvideClaimDataPage(
+                      _process.name, claimSchema, evidenceSchema
+                    )
+                )
+            );
+          };
         }
 
         final subheadStyle = Theme.of(context).textTheme.subhead;
@@ -141,16 +158,14 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
                     ],
                   ),
                 ),
-                ButtonBar(
-                  children: <Widget>[
-                    RaisedButton(
-                      child: const Text('Create Witness Request'),
-                      onPressed: null,
-                    )
-                  ],
-                )
               ],
             ),
+          ),
+          floatingActionButton: FloatingActionButton.extended(
+              label: const Text('Create Witness Request'),
+              icon: Icon(Icons.assignment),
+              backgroundColor: primaryMaterialColor,
+              onPressed: onButtonPressed
           ),
         );
       },
