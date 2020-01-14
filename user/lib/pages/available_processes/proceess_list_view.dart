@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus_kyc_user/io/process_response.dart';
-import 'package:morpheus_kyc_user/pages/process_details.dart';
+import 'package:morpheus_kyc_user/pages/process_details/process_details.dart';
 
 class ProcessListView extends StatelessWidget {
   final List<Process> processes;

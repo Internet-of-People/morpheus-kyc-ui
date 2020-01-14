@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 
-import 'list_available_processes.dart';
+import '../available_processes/available_processes.dart';
 //import 'package:morpheus_kyc_user/scan_qr.dart';
 
 class HomePage extends StatelessWidget {

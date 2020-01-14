@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/pages/home.dart';
+import 'package:morpheus_kyc_user/pages/home/home.dart';
 import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 
 void main() => runApp(MyApp());

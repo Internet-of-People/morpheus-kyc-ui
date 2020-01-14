@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/components/witnessrequest/proceess_list_view.dart';
+import 'package:morpheus_kyc_user/pages/available_processes/proceess_list_view.dart';
 import 'package:morpheus_kyc_user/io/process_response.dart';
 import 'package:morpheus_kyc_user/io/url_fetcher.dart';
 

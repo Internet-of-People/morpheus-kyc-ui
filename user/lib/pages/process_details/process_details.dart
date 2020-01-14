@@ -31,10 +31,8 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
   @override
   void initState() {
     super.initState();
-    _fetchClaimSchema =
-        UrlFetcher.fetch(utf8.decode(base64.decode(_process.claimSchema)));
-    _fetchEvidenceSchema =
-        UrlFetcher.fetch(utf8.decode(base64.decode(_process.evidenceSchema)));
+    _fetchClaimSchema = UrlFetcher.fetch(utf8.decode(base64.decode(_process.claimSchema)));
+    _fetchEvidenceSchema = UrlFetcher.fetch(utf8.decode(base64.decode(_process.evidenceSchema)));
   }
 
   @override
@@ -49,10 +47,8 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
         List<Widget> evidenceDetails = <Widget>[];
 
         if (snapshot.hasData) {
-          final claimSchema =
-              JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
-          final evidenceSchema =
-              JsonSchema.createSchema(snapshot.data.evidenceSchameResponse);
+          final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
+          final evidenceSchema = JsonSchema.createSchema(snapshot.data.evidenceSchameResponse);
 
           claimDetails = <Widget>[
             Column(
@@ -92,44 +88,58 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
             )
           ];
         }
+
+        final subheadStyle = Theme.of(context).textTheme.subhead;
+        final captionStyle = Theme.of(context).textTheme.caption;
+
         return Scaffold(
-            appBar: AppBar(
-              title: Text(_process.name),
-            ),
-            body: Column(
+          appBar: AppBar(
+            title: Text(_process.name),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Card(
-                  child: ListTile(
-                    title: Text('Description'),
-                    subtitle: Text(_process.description),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 8.0, top: 16.0, left: 16.0, right: 16.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(children: <Widget>[Text('Description', style: subheadStyle)],),
+                      Row(children: <Widget>[Expanded(child: Text(_process.description, style: captionStyle,))]),
+                    ],
                   ),
                 ),
-                Card(
-                  child: ListTile(
-                    title: Text('Version'),
-                    subtitle: Text(_process.version.toString()),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 8.0, top: 8.0, left: 16.0, right: 16.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(children: <Widget>[Text('Version', style: subheadStyle)]),
+                      Row(children: <Widget>[Expanded(child: Text(_process.version.toString(), style: captionStyle))]),
+                    ],
                   ),
                 ),
-                ExpansionPanelList(
-                  expansionCallback: (index, isExpanded) {
-                    setState(() {
-                      _detailsInfoState[index] = !isExpanded;
-                      _detailsInfoState[(index - 1).abs()] =
-                          false; // yes, hacky. Closes the other one
-                    });
-                  },
-                  children: <ExpansionPanel>[
-                    ExpansionPanel(
-                        headerBuilder: (context, isExpanded) =>
-                            ListTile(title: const Text('Claim Schema Details')),
-                        body: Column(children: claimDetails),
-                        isExpanded: _detailsInfoState[0]),
-                    ExpansionPanel(
-                        headerBuilder: (context, isExpanded) => ListTile(
-                            title: const Text('Evidence Schema Details')),
-                        body: Column(children: evidenceDetails),
-                        isExpanded: _detailsInfoState[1]),
-                  ],
+                Container(
+                  margin: const EdgeInsets.all(16.0),
+                  child: ExpansionPanelList(
+                    expansionCallback: (index, isExpanded) {
+                      setState(() {
+                        _detailsInfoState[index] = !isExpanded;
+                        _detailsInfoState[(index - 1).abs()] = false; // yes, hacky. Closes the other one
+                      });
+                    },
+                    children: <ExpansionPanel>[
+                      ExpansionPanel(
+                          headerBuilder: (context, isExpanded) => ListTile(title: const Text('Claim Schema Details')),
+                          body: Column(children: claimDetails),
+                          isExpanded: _detailsInfoState[0]
+                      ),
+                      ExpansionPanel(
+                          headerBuilder: (context, isExpanded) => ListTile(title: const Text('Evidence Schema Details')),
+                          body: Column(children: evidenceDetails),
+                          isExpanded: _detailsInfoState[1]
+                      ),
+                    ],
+                  ),
                 ),
                 ButtonBar(
                   children: <Widget>[
@@ -140,7 +150,9 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
                   ],
                 )
               ],
-            ));
+            ),
+          ),
+        );
       },
     );
   }
@@ -150,6 +162,5 @@ class ProcessDetailsResponses {
   final String claimSchemaResponse;
   final String evidenceSchameResponse;
 
-  ProcessDetailsResponses(
-      this.claimSchemaResponse, this.evidenceSchameResponse);
+  ProcessDetailsResponses(this.claimSchemaResponse, this.evidenceSchameResponse);
 }
