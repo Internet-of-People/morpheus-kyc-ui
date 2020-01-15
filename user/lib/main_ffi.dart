@@ -6,7 +6,7 @@ typedef NativeRustPingFunction = Pointer<Utf8> Function(Pointer<Utf8>);
 typedef NativePingFunction = Pointer<Utf8> Function(Pointer<Utf8>);
 
 void main(){
-  const path = 'rust_c/target/debug/librust_integration_test.so';
+  const path = 'rust_c/target/release/libnative_add.so';
   DynamicLibrary dl = DynamicLibrary.open(path);
   final ping = dl
       .lookup<NativeFunction<NativeRustPingFunction>>('ping')
