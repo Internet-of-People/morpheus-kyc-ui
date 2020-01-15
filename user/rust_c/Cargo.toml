@@ -13,4 +13,4 @@ android_logger = "0.5"
 
 [lib]
 name = "native_add"
-crate-type = ["cdylib"]
+crate-type = ["rlib","cdylib"]

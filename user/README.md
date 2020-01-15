@@ -16,7 +16,8 @@ $ flutter pub run build_runner build
 
 ### Rust Integration
 
-TODO: add more platforms beside x86_64
+TODO: add more platforms beside x86_64, consider using other ios targets as well
+https://i.stack.imgur.com/jKZE4.png
 
 Put cross compile settings into ~/.cargo/config
 ```bash
@@ -54,9 +55,9 @@ $ ${NDK_HOME}/build/tools/make_standalone_toolchain.py --api 26 --arch x86_64 --
 ```
 
 ```bash
-$ rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+$ rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android aarch64-apple-ios
 ```
 
 ```bash
-cargo build --target aarch64-linux-android --release cargo build --target armv7-linux-androideabi --release cargo build --target i686-linux-android --release --target x86_64-linux-android --release
+cargo build --target aarch64-linux-android --release cargo build --target armv7-linux-androideabi --release cargo build --target i686-linux-android --release --target x86_64-linux-android --release --target aarch64-apple-ios --release
 ```
