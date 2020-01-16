@@ -28,7 +28,7 @@ class SignRequestPageState extends State<SignRequestPage> {
           children: <Widget>[
             DropdownButton<String>(
               value: selectedDid,
-              icon: Icon(Icons.arrow_downward),
+              icon: Icon(Icons.arrow_drop_down),
               iconSize: 24,
               elevation: 16,
               style: TextStyle(
@@ -53,7 +53,7 @@ class SignRequestPageState extends State<SignRequestPage> {
             ),
             DropdownButton<String>(
               value: selectedKey,
-              icon: Icon(Icons.arrow_downward),
+              icon: Icon(Icons.arrow_drop_down),
               iconSize: 24,
               elevation: 16,
               style: TextStyle(

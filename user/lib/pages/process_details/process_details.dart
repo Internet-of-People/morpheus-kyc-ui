@@ -55,7 +55,7 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
 
         Function onButtonPressed;
         String buttonLabel = 'Loading...';
-        Widget buttonIcon = CircularProgressIndicator(backgroundColor: Color(0xffffffff));
+        Widget buttonIcon = CircularProgressIndicator(backgroundColor: Colors.white);
 
         if (snapshot.hasData) {
           final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
