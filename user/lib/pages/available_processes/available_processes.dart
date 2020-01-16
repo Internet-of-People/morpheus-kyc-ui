@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:morpheus_kyc_user/io/api/authority/authority-api.dart';
+import 'package:morpheus_kyc_user/io/api/authority/process_response.dart';
+import 'package:morpheus_kyc_user/io/qrcode_response.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/proceess_list_view.dart';
-import 'package:morpheus_kyc_user/io/process_response.dart';
-import 'package:morpheus_kyc_user/io/url_fetcher.dart';
 
 class ListAvailableProcessesPage extends StatefulWidget {
   @override
@@ -13,30 +12,29 @@ class ListAvailableProcessesPage extends StatefulWidget {
 }
 
 class ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> {
-  Future<ProcessResponse> _processesFuture;
+  AuthorityApi authorityApi;
 
   @override
   void initState() {
     super.initState();
-    _processesFuture = UrlFetcher
-        .fetch('http://10.0.2.2:8080/morpheus/witness-service/processes/list')
-        .then((respJson) {
-      return ProcessResponse.fromJson(json.decode(respJson));
-    });
+
+    final api = QRCodeResponse('http://10.0.2.2:8080'); // TODO it's coming from a QR read
+    authorityApi = AuthorityApi(api.apiUrl); // TODO can we not pass around this one?
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _processesFuture,
-      builder: (BuildContext context, AsyncSnapshot<ProcessResponse> snapshot) {
+      future: authorityApi.getProcesses(),
+      builder: (BuildContext context, AsyncSnapshot<List<Process>> snapshot) {
         return Scaffold(
             appBar: AppBar(
               title: const Text('Available Processes'),
             ),
             body: snapshot.hasData
-                ? ProcessListView(snapshot.data.processes)
-                : Center(child: CircularProgressIndicator()));
+                ? ProcessListView(snapshot.data, authorityApi)
+                : Center(child: CircularProgressIndicator())
+        );
       },
     );
   }

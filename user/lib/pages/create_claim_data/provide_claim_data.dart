@@ -17,21 +17,20 @@ class ProvideClaimDataPage extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
-    return ProvideClaimDataPageState(_processName);
+    return ProvideClaimDataPageState();
   }
 }
 
 class ProvideClaimDataPageState extends State<ProvideClaimDataPage> {
-  final String _processName;
   DateTime _dateOfBirth;
 
-  ProvideClaimDataPageState(this._processName);
+  ProvideClaimDataPageState();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_processName),
+        title: Text(widget._processName),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -130,7 +129,7 @@ class ProvideClaimDataPageState extends State<ProvideClaimDataPage> {
                       child: RaisedButton(
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => CreateEvidenceDataPage()
+                            builder: (context) => CreateEvidenceDataPage(widget._processName)
                           ));
                         },
                         child: const Text(

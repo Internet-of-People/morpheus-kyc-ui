@@ -5,7 +5,6 @@ import confirmedEUCitizenEvidenceSchema from './confirmedEUCitizenEvidenceSchema
 import processes from './processes.json';
 
 class Server {
-  private static readonly ROOT_PATH: string = '/morpheus/witness-service'; 
   private static readonly SLEEP_TIME_SEC: number = 2;
   private app: Application;
 
@@ -14,31 +13,31 @@ class Server {
   }
 
   public start(): void {
-    this.app.get(`${Server.ROOT_PATH}/processes/list`, async (_, res): Promise<void> => {
-      console.log('Serving processes/list...');
+    this.app.get('/processes', async (_, res): Promise<void> => {
+      console.log('Serving processes...');
       await this.sleep();
-      // claimSchema: http://10.0.2.2:8080/morpheus/witness-service/claim-schemas/confirmedEUCitizen
-      // evidenceSchema: http://10.0.2.2:8080/morpheus/witness-service/evidence-schemas/confirmedEUCitizen
-      console.log('Served');
       res.status(200).json({processes});
     });
 
-    this.app.get(`${Server.ROOT_PATH}/claim-schemas/confirmedEUCitizen`, async (_, res): Promise<void> => {
+    this.app.get('/blob/:contentId', async (req, res): Promise<void> => {
+      const { contentId } = req.params;
+      console.log(`Serving blob/${contentId}...`);
       await this.sleep();
-      res.status(200).json(confirmedEUCitizenClaimSchema);
+
+      if(contentId == '2582E821B07B1343104254F34FAAD957BA562035D7DAE3ECBC05878A83F1A22B') {
+        res.status(200).json(confirmedEUCitizenClaimSchema);
+      }
+      else if(contentId == '62945E0028EA952E1633ABB1E60C7BAF892F1BEE7F38E74B416D4082F5CEB430') {
+        res.status(200).json(confirmedEUCitizenEvidenceSchema);
+      }
+      else {
+        res.status(404);
+      }
     });
 
-    this.app.get(`${Server.ROOT_PATH}/evidence-schemas/confirmedEUCitizen`, async (_, res): Promise<void> => {
-      await this.sleep();
-      res.status(200).json(confirmedEUCitizenEvidenceSchema);
-    });
-
-    this.app.post(`${Server.ROOT_PATH}/witness-request/confirmedEUCitizen/sign`, async (req, res): Promise<void> => {
-      await this.sleep();
-      const { body } = req;
-      console.log(body); // signed claim request
-      res.status(200).json({"soon":"it will be here"});
-    });
+    // TODO: sending in witness request
+    // this.app.post(/requests) -> CAPABILITY_LINK
+    // this.app.get(/requests/CAPABILITY_LINK/status) -> status (pending/approved/denied - contains signed witness request)
 
     this.app.listen(8080, '0.0.0.0', (): void => {
       console.log('Listening on 0.0.0.0:8080');

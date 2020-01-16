@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:morpheus_kyc_user/io/process_response.dart';
-import 'package:morpheus_kyc_user/io/url_fetcher.dart';
 import 'package:json_schema/json_schema.dart';
+import 'package:morpheus_kyc_user/io/api/authority/authority-api.dart';
+import 'package:morpheus_kyc_user/io/api/authority/process_response.dart';
 import 'package:morpheus_kyc_user/pages/create_claim_data/provide_claim_data.dart';
 import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 
 class ProcessDetailsPage extends StatefulWidget {
   final Process _process;
+  final AuthorityApi _authorityApi;
 
-  const ProcessDetailsPage(this._process, {Key key}) : super(key: key);
+  const ProcessDetailsPage(
+    this._process,
+    this._authorityApi,
+    {Key key}
+  ) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return ProcessDetailsPageState(this._process);
+    return ProcessDetailsPageState();
   }
 }
 
 class ProcessDetailsPageState extends State<ProcessDetailsPage> {
-  Process _process;
-  Future<String> _fetchClaimSchema;
-  Future<String> _fetchEvidenceSchema;
+  Future<String> _fetchClaimSchemaFut;
+  Future<String> _fetchEvidenceSchemaFut;
   Map<int, bool> _detailsInfoState = {
     0: false,
     1: false,
@@ -28,19 +31,19 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
   bool claimSchemaDetailsOpen;
   bool evidenceSchemaDetailsOpen;
 
-  ProcessDetailsPageState(this._process);
+  ProcessDetailsPageState();
 
   @override
   void initState() {
     super.initState();
-    _fetchClaimSchema = UrlFetcher.fetch(utf8.decode(base64.decode(_process.claimSchema)));
-    _fetchEvidenceSchema = UrlFetcher.fetch(utf8.decode(base64.decode(_process.evidenceSchema)));
+    _fetchClaimSchemaFut = widget._authorityApi.getBlob(widget._process.claimSchema);
+    _fetchEvidenceSchemaFut = widget._authorityApi.getBlob(widget._process.evidenceSchema);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.wait([_fetchClaimSchema, _fetchEvidenceSchema]).then(
+      future: Future.wait([_fetchClaimSchemaFut, _fetchEvidenceSchemaFut]).then(
         (responses) => ProcessDetailsResponses(responses[0], responses[1]),
       ),
       builder: (
@@ -51,6 +54,8 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
         List<Widget> evidenceDetails = <Widget>[];
 
         Function onButtonPressed;
+        String buttonLabel = 'Loading...';
+        Widget buttonIcon = CircularProgressIndicator(backgroundColor: Color(0xffffffff));
 
         if (snapshot.hasData) {
           final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
@@ -94,16 +99,19 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
             )
           ];
 
+
           onButtonPressed = (){
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => ProvideClaimDataPage(
-                      _process.name, claimSchema, evidenceSchema
+                        widget._process.name, claimSchema, evidenceSchema
                     )
                 )
             );
           };
+          buttonLabel = 'Create Witness Request';
+          buttonIcon = Icon(Icons.assignment);
         }
 
         final subheadStyle = Theme.of(context).textTheme.subhead;
@@ -111,7 +119,7 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(_process.name),
+            title: Text(widget._process.name),
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -122,7 +130,7 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
                   child: Column(
                     children: <Widget>[
                       Row(children: <Widget>[Text('Description', style: subheadStyle)],),
-                      Row(children: <Widget>[Expanded(child: Text(_process.description, style: captionStyle,))]),
+                      Row(children: <Widget>[Expanded(child: Text(widget._process.description, style: captionStyle,))]),
                     ],
                   ),
                 ),
@@ -131,7 +139,7 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
                   child: Column(
                     children: <Widget>[
                       Row(children: <Widget>[Text('Version', style: subheadStyle)]),
-                      Row(children: <Widget>[Expanded(child: Text(_process.version.toString(), style: captionStyle))]),
+                      Row(children: <Widget>[Expanded(child: Text(widget._process.version.toString(), style: captionStyle))]),
                     ],
                   ),
                 ),
@@ -162,10 +170,10 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
             ),
           ),
           floatingActionButton: FloatingActionButton.extended(
-              label: const Text('Create Witness Request'),
-              icon: Icon(Icons.assignment),
+              label: Text(buttonLabel),
+              icon: buttonIcon,
               backgroundColor: primaryMaterialColor,
-              onPressed: onButtonPressed
+              onPressed: onButtonPressed,
           ),
         );
       },
