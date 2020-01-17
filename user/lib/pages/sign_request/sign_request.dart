@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 
 class SignRequestPage extends StatefulWidget {
   final String _processName;
@@ -13,8 +13,40 @@ class SignRequestPage extends StatefulWidget {
 }
 
 class SignRequestPageState extends State<SignRequestPage> {
-  String selectedDid = 'did:morpheus:ezFoo1';
   String selectedKey = 'key1';
+
+  void onSignButtonPressed() async {
+    showDialog(
+      context: context,
+      builder: (context){
+        return AlertDialog(
+          title: const Text('Confirm Signing'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text('You\'r about to sign with this key:'),
+                Text('$selectedKey', style: Theme.of(context).textTheme.caption),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('CANCEL', style: TextStyle(color: Colors.black45)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('SIGN'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,77 +58,45 @@ class SignRequestPageState extends State<SignRequestPage> {
         margin: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            DropdownButton<String>(
-              value: selectedDid,
-              icon: Icon(Icons.arrow_drop_down),
-              iconSize: 24,
-              elevation: 16,
-              style: TextStyle(
-                  color: Colors.deepPurple
-              ),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String newValue) {
-                setState(() {
-                  selectedDid = newValue;
-                });
-              },
-              items: <String>['did:morpheus:ezFoo1', 'did:morpheus:ezFoo2']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            DropdownButton<String>(
-              value: selectedKey,
-              icon: Icon(Icons.arrow_drop_down),
-              iconSize: 24,
-              elevation: 16,
-              style: TextStyle(
-                  color: Colors.deepPurple
-              ),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String newValue) {
-                setState(() {
-                  selectedKey = newValue;
-                });
-              },
-              items: <String>['key1', 'key2']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            ButtonBar(
+            Row(
+              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                RaisedButton(
-                  onPressed: () async {
-                    final url = 'mailto:<email address>?subject=<subject>&body=<body>';
-                    if(await canLaunch(url)){
-                      await launch(url);
-                    }
-                    else {
-                      print('Could not launch $url');
-                    }
-                  },
-                  child: Text(
-                    'Sign',
+                Expanded(child: DropdownButton<String>(
+                  value: selectedKey,
+                  icon: Icon(Icons.arrow_drop_down),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: TextStyle(
+                      color: Colors.deepPurple
                   ),
-                ),
-              ],
-            )
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      selectedKey = newValue;
+                    });
+                  },
+                  items: <String>['key1', 'key2']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ))
+              ]
+            ),
           ],
         ),
-      )
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Sign'),
+        icon: const Icon(Icons.create),
+        backgroundColor: primaryMaterialColor,
+        onPressed: onSignButtonPressed,
+      ),
     );
   }
 }

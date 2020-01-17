@@ -34,6 +34,22 @@ class CreateEvidenceDataPageState extends State<CreateEvidenceDataPage> {
     super.dispose();
   }
 
+  void onSavePressed(context, path) async {
+    final file = File(path);
+    print(base64Encode(await file.readAsBytes()));
+    await file.delete();
+
+    Navigator.pop(context);
+    Navigator.push(context, MaterialPageRoute(
+      builder: (_) => SignRequestPage(widget._processName)
+    ));
+  }
+
+  void onTryAgainPressed(context, path) async {
+    await File(path).delete();
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,28 +81,13 @@ class CreateEvidenceDataPageState extends State<CreateEvidenceDataPage> {
                   Image.file(File(path)),
                   ButtonBar(
                     children: <Widget>[
-                      RaisedButton(
-                        onPressed: () async {
-                          await File(path).delete();
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          'Try Again',
-                        ),
+                      IconButton(
+                        icon: const Icon(Icons.done),
+                        onPressed: () => onSavePressed(context, path),
                       ),
-                      RaisedButton(
-                        onPressed: () async {
-                          final file = File(path);
-                          print(base64Encode(await file.readAsBytes()));
-                          await file.delete();
-                          Navigator.pop(context);
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (_) => SignRequestPage(widget._processName)
-                          ));
-                        },
-                        child: Text(
-                          'Save',
-                        ),
+                      IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () => onTryAgainPressed(context, path),
                       ),
                     ],
                   )

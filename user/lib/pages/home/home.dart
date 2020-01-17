@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:morpheus_kyc_user/io/qrcode_response.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/available_processes.dart';
+import 'package:morpheus_kyc_user/pages/scan_qr/scan_qr.dart';
 import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
-
-//import 'package:morpheus_kyc_user/scan_qr.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -72,14 +72,27 @@ class HomePageState extends State<HomePage> {
             )
           ),
           ListTile(
-            leading: const Icon(Icons.content_paste),
-            title: const Text('Query Processes'),
+            leading: const Icon(Icons.camera_alt),
+            title: const Text('Scan Authority Info'),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ListAvailableProcessesPage()
+                      builder: (context) => ScanQRPage()
+                  )
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.android),
+            title: const Text('Local Debug'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ListAvailableProcessesPage(QRCodeResponse('http://10.0.2.2:8080'))
                   )
               );
             },
