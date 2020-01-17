@@ -15,7 +15,8 @@ pub extern "C" fn ping(message_raw: *const c_char) -> *mut c_char{
 
 
 
-async fn perform_async(message: String) -> String {
+async fn perform_async(message: String, delay_secs: u32) -> String {
+    tokio::time::delay_for(std::time::Duration::from_secs(delay_secs.into())).await;
     format!("You sent '{}'. It works even with async operations involved.", message)
 }
 
@@ -28,11 +29,11 @@ thread_local!{
 }
 
 #[no_mangle]
-pub extern "C" fn ping_async_blocking(message_raw: *const c_char) -> *mut c_char {
+pub extern "C" fn ping_async_blocking(message_raw: *const c_char, delay_secs: u32) -> *mut c_char {
     let message = str_in(message_raw);
     println!("Blocking on ping call");
     let reply = REACTOR.with(|reactor|
-        reactor.borrow_mut().block_on( perform_async(message) )
+        reactor.borrow_mut().block_on( perform_async(message, delay_secs) )
     );
     println!("Finished blocking");
     string_out(reply)
@@ -43,13 +44,13 @@ pub extern "C" fn ping_async_blocking(message_raw: *const c_char) -> *mut c_char
 type PingCallback = extern "C" fn(*mut c_char) -> ();
 
 #[no_mangle]
-pub extern "C" fn ping_async(message_raw: *const c_char, callback: PingCallback) -> () {
+pub extern "C" fn ping_async(message_raw: *const c_char, delay_secs: u32, callback: PingCallback) -> () {
     lazy_static::initialize(&THREAD);
 
     let message = str_in(message_raw);
     HANDLE.with(|handle|
         handle.spawn( async move {
-            let reply = perform_async(message).await;
+            let reply = perform_async(message, delay_secs).await;
             callback( string_out(reply) )
         })
     );
