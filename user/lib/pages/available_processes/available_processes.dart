@@ -5,6 +5,10 @@ import 'package:morpheus_kyc_user/io/qrcode_response.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/proceess_list_view.dart';
 
 class ListAvailableProcessesPage extends StatefulWidget {
+  final QRCodeResponse _qrCodeResponse;
+
+  const ListAvailableProcessesPage(this._qrCodeResponse, {Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return ListAvailableProcessesPageState();
@@ -17,9 +21,7 @@ class ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> 
   @override
   void initState() {
     super.initState();
-
-    final api = QRCodeResponse('http://10.0.2.2:8080'); // TODO it's coming from a QR read
-    authorityApi = AuthorityApi(api.apiUrl); // TODO can we not pass around this one?
+    authorityApi = AuthorityApi(widget._qrCodeResponse.apiUrl); // TODO can we not pass around this one?
   }
 
   @override
