@@ -4,23 +4,58 @@ use std::sync::{Arc, Mutex};
 use lazy_static::lazy_static;
 use tokio::sync::oneshot;
 
-fn str_in(s: *const c_char) -> String {
-    let c_str = unsafe { CStr::from_ptr(s) };
-    let s = c_str.to_str().unwrap();
-    s.to_owned()
-}
 
-fn string_out(s: String) -> *mut c_char  {
-    let c_str = CString::new(s).unwrap();
-    c_str.into_raw()
-}
 
 #[no_mangle]
 pub extern "C" fn ping(message_raw: *const c_char) -> *mut c_char{
     let message = str_in(message_raw);
-    let reply = format!("You sent '{}'. It works.", message);
+    let reply = format!("You sent '{}'. It works, but blocks.", message);
     string_out(reply)
 }
+
+
+
+async fn perform_async(message: String) -> String {
+    format!("You sent '{}'. It works even with async operations involved.", message)
+}
+
+use std::cell::RefCell;
+thread_local!{
+    static REACTOR: RefCell<tokio::runtime::Runtime> = RefCell::new(
+        tokio::runtime::Builder::new().enable_all().basic_scheduler().build()
+            .expect("Failed to initialize Tokio runtime")
+     );
+}
+
+#[no_mangle]
+pub extern "C" fn ping_async_blocking(message_raw: *const c_char) -> *mut c_char {
+    let message = str_in(message_raw);
+    println!("Blocking on ping call");
+    let reply = REACTOR.with(|reactor|
+        reactor.borrow_mut().block_on( perform_async(message) )
+    );
+    println!("Finished blocking");
+    string_out(reply)
+}
+
+
+
+type PingCallback = extern "C" fn(*mut c_char) -> ();
+
+#[no_mangle]
+pub extern "C" fn ping_async(message_raw: *const c_char, callback: PingCallback) -> () {
+    lazy_static::initialize(&THREAD);
+
+    let message = str_in(message_raw);
+    HANDLE.with(|handle|
+        handle.spawn( async move {
+            let reply = perform_async(message).await;
+            callback( string_out(reply) )
+        })
+    );
+}
+
+
 
 thread_local!{
     static HANDLE: tokio::runtime::Handle = RUNTIME.lock().unwrap().handle().to_owned();
@@ -41,17 +76,15 @@ lazy_static! {
     };
 }
 
-type PingCallback = extern "C" fn(*mut c_char) -> ();
 
-#[no_mangle]
-pub extern "C" fn ping_async(message_raw: *const c_char, callback: PingCallback) -> () {
-    lazy_static::initialize(&THREAD);
 
-    let message = str_in(message_raw);
-    let reply = format!("You sent '{}'. It works.", message);
-    HANDLE.with(|handle|
-        handle.spawn( async move {
-            callback( string_out(reply) )
-        })
-    );
+fn str_in(s: *const c_char) -> String {
+    let c_str = unsafe { CStr::from_ptr(s) };
+    let s = c_str.to_str().unwrap();
+    s.to_owned()
+}
+
+fn string_out(s: String) -> *mut c_char  {
+    let c_str = CString::new(s).unwrap();
+    c_str.into_raw()
 }

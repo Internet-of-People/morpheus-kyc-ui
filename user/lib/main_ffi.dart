@@ -25,10 +25,15 @@ void main(){
       .lookup<NativeFunction<rust_ping_async>>('ping_async')
       .asFunction<PingAsync>();
 
-  print(Utf8.fromUtf8(ping(Utf8.toUtf8("FROM_DART").cast())));
+  final pingAsyncBlocking = lib
+      .lookup<NativeFunction<rust_ping>>('ping_async_blocking')
+      .asFunction<Ping>();
+
+  print(Utf8.fromUtf8(ping(Utf8.toUtf8("Blocking ping from Dart").cast())));
+  print(Utf8.fromUtf8(pingAsyncBlocking(Utf8.toUtf8("Different blocking ping from Dart").cast())));
 
   pingAsync(
-      Utf8.toUtf8("FROM_DART_ASYNC").cast(),
+      Utf8.toUtf8("Fully async ping from Dart").cast(),
       Pointer.fromFunction<Callback>(callback)
   );
 }
