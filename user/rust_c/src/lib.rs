@@ -9,15 +9,27 @@ use tokio::sync::oneshot;
 #[no_mangle]
 pub extern "C" fn ping(message_raw: *const c_char) -> *mut c_char{
     let message = str_in(message_raw);
-    let reply = format!("You sent '{}'. It works, but blocks.", message);
+    let reply = format!("From Rust: You sent '{}'. It works, but blocks.", message);
     string_out(reply)
+}
+
+#[no_mangle]
+pub extern "C" fn ping_callback(message_raw: *const c_char, delay_secs: u32, callback: PingCallback) -> () {
+    let message = str_in(message_raw);
+    println!("RUST: Blocking on ping call");
+    let reply = REACTOR.with(|reactor|
+        reactor.borrow_mut().block_on( perform_async(message, delay_secs) )
+    );
+    println!("RUST: Finished blocking");
+    callback( string_out(reply) );
+    println!("RUST: called callback");
 }
 
 
 
 async fn perform_async(message: String, delay_secs: u32) -> String {
     tokio::time::delay_for(std::time::Duration::from_secs(delay_secs.into())).await;
-    format!("You sent '{}'. It works even with async operations involved.", message)
+    format!("From Rust: You sent '{}'. It works even with async operations involved.", message)
 }
 
 use std::cell::RefCell;
@@ -31,14 +43,13 @@ thread_local!{
 #[no_mangle]
 pub extern "C" fn ping_async_blocking(message_raw: *const c_char, delay_secs: u32) -> *mut c_char {
     let message = str_in(message_raw);
-    println!("Blocking on ping call");
+    println!("RUST: Blocking on ping call");
     let reply = REACTOR.with(|reactor|
         reactor.borrow_mut().block_on( perform_async(message, delay_secs) )
     );
-    println!("Finished blocking");
+    println!("RUST: Finished blocking");
     string_out(reply)
 }
-
 
 
 type PingCallback = extern "C" fn(*mut c_char) -> ();
