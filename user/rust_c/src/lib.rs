@@ -14,14 +14,15 @@ pub extern "C" fn ping(message_raw: *const c_char) -> *mut c_char{
 }
 
 #[no_mangle]
-pub extern "C" fn ping_callback(message_raw: *const c_char, delay_secs: u32, callback: PingCallback) -> () {
+pub extern "C" fn ping_callback(message_raw: *const c_char, delay_secs: u32, callback: PingCallback, request_id_raw: *const c_char) -> () {
     let message = str_in(message_raw);
+    let request_id = str_in(request_id_raw);
     println!("RUST: Blocking on ping call");
     let reply = REACTOR.with(|reactor|
         reactor.borrow_mut().block_on( perform_async(message, delay_secs) )
     );
     println!("RUST: Finished blocking");
-    callback( string_out(reply) );
+    callback( string_out(reply), string_out(request_id) );
     println!("RUST: called callback");
 }
 
@@ -52,17 +53,18 @@ pub extern "C" fn ping_async_blocking(message_raw: *const c_char, delay_secs: u3
 }
 
 
-type PingCallback = extern "C" fn(*mut c_char) -> ();
+type PingCallback = extern "C" fn(*mut c_char, *const c_char) -> ();
 
 #[no_mangle]
-pub extern "C" fn ping_async(message_raw: *const c_char, delay_secs: u32, callback: PingCallback) -> () {
+pub extern "C" fn ping_async(message_raw: *const c_char, delay_secs: u32, callback: PingCallback, request_id_raw: *const c_char) -> () {
     lazy_static::initialize(&THREAD);
 
     let message = str_in(message_raw);
+    let request_id = str_in(request_id_raw);
     HANDLE.with(|handle|
         handle.spawn( async move {
             let reply = perform_async(message, delay_secs).await;
-            callback( string_out(reply) )
+            callback( string_out(reply), string_out(request_id) )
         })
     );
 }
