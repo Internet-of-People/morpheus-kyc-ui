@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
+import 'package:morpheus_kyc_user/io/api/authority/authority-api.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
-import 'package:morpheus_kyc_user/store/reducers.dart';
+import 'package:morpheus_kyc_user/store/reducers/app_state_reducer.dart';
 import 'package:morpheus_kyc_user/store/state.dart';
 import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
-import 'package:redux/redux.dart';
 
 void main() => runApp(KYCApp(
     store: Store<AppState>(
-      appReducers,
-      initialState: AppState(null),
+      appReducer,
+      initialState: AppState(
+        dids: null,
+        authorityApi: AuthorityApi()
+      ),
     ),
 ));
 
@@ -20,7 +24,7 @@ class KYCApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StoreProvider(
+    return StoreProvider<AppState>(
       store: store,
       child: MaterialApp(
         title: 'Morpheus KYC PoC',

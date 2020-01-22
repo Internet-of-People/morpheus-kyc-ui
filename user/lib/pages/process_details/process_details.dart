@@ -55,7 +55,11 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
 
         Function onButtonPressed;
         String buttonLabel = 'Loading...';
-        Widget buttonIcon = CircularProgressIndicator(backgroundColor: Colors.white);
+        Widget buttonIcon = SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(backgroundColor: Colors.white),
+        );
 
         if (snapshot.hasData) {
           final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
@@ -154,12 +158,12 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
                     },
                     children: <ExpansionPanel>[
                       ExpansionPanel(
-                          headerBuilder: (context, isExpanded) => ListTile(title: const Text('Claim Schema Details')),
+                          headerBuilder: (context, isExpanded) => ListTile(title: const Text('Required Personal Information')),
                           body: Column(children: claimDetails),
                           isExpanded: _detailsInfoState[0]
                       ),
                       ExpansionPanel(
-                          headerBuilder: (context, isExpanded) => ListTile(title: const Text('Evidence Schema Details')),
+                          headerBuilder: (context, isExpanded) => ListTile(title: const Text('Required Evidence')),
                           body: Column(children: evidenceDetails),
                           isExpanded: _detailsInfoState[1]
                       ),
