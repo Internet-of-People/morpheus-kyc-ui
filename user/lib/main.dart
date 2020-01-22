@@ -1,36 +1,34 @@
-import 'dart:ffi';
-
-import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
+import 'package:morpheus_kyc_user/store/reducers.dart';
+import 'package:morpheus_kyc_user/store/state.dart';
 import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
+import 'package:redux/redux.dart';
 
-/*final DynamicLibrary nativeAddLib =
-Platform.isAndroid
-    ? DynamicLibrary.open("libnative_add.so")
-    : DynamicLibrary.process();*/
-
-void main() => runApp(KYCApp());
-
-typedef NativeRustPingFunction = Pointer<Utf8> Function(Pointer<Utf8>);
-typedef NativePingFunction = Pointer<Utf8> Function(Pointer<Utf8>);
+void main() => runApp(KYCApp(
+    store: Store<AppState>(
+      appReducers,
+      initialState: AppState(null),
+    ),
+));
 
 class KYCApp extends StatelessWidget {
-  // This widget is the root of your application.
+  final Store<AppState> store;
+
+  const KYCApp({Key key, @required this.store}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    /*final ping = nativeAddLib
-        .lookup<NativeFunction<NativeRustPingFunction>>('ping')
-        .asFunction<NativePingFunction>();
-
-    print(Utf8.fromUtf8(ping(Utf8.toUtf8("FROM_DART").cast())));*/
-
-    return MaterialApp(
-      title: 'Morpheus KYC PoC',
-      theme: ThemeData(
-        primarySwatch: primaryMaterialColor,
+    return StoreProvider(
+      store: store,
+      child: MaterialApp(
+        title: 'Morpheus KYC PoC',
+        theme: ThemeData(
+          primarySwatch: primaryMaterialColor,
+        ),
+        home: HomePage(),
       ),
-      home: HomePage(),
     );
   }
 }
