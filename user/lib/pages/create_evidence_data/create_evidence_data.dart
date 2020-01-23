@@ -3,14 +3,16 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:json_schema/json_schema.dart';
 import 'package:morpheus_kyc_user/pages/sign_request/sign_request.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CreateEvidenceDataPage extends StatefulWidget {
   final String _processName;
+  final JsonSchema _evidenceSchema; // TODO
 
-  const CreateEvidenceDataPage(this._processName, {Key key}) : super(key: key);
+  const CreateEvidenceDataPage(this._processName, this._evidenceSchema, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
