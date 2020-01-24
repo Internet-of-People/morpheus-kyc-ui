@@ -16,7 +16,7 @@ final pingCallback = lib.lookup<NativeFunction<NativeFuncPing>>('ping_callback')
 
 class RustAPI {
   static int _counter=0;
-  static Map<String, dynamic> _resultMap=HashMap<String, dynamic>();
+  static final Map<String, dynamic> _resultMap=HashMap<String, dynamic>();
 
   static void _callback(Pointer<Utf8> result, Pointer<Utf8> requestId){
     final id = Utf8.fromUtf8(requestId);

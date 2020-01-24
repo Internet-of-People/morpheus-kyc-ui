@@ -67,7 +67,10 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
   }
 
   Widget _buildDate(String name, JsonSchema schema) {
-    return DateSelector(toBeginningOfSentenceCase(name));
+    return DateSelector(
+        toBeginningOfSentenceCase(name),
+        schema.getValidators().orElse((_) => null)
+    );
   }
 
   Widget _buildContainer(Widget child, bool topLevel) {

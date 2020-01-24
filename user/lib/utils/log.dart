@@ -2,22 +2,27 @@ import 'dart:developer' as developer;
 
 class Log {
   static const String appName = 'MORPHEUS';
+  final Type _className;
 
-  static void debug(String message) {
-    _log(message, LogLevel.Debug);
+  Log(this._className);
+
+  void debug(String message) {
+    _log(_className, message, LogLevel.Debug);
   }
 
-  static void trace(String message) {
-    _log(message, LogLevel.Trace);
+  void trace(String message) {
+    _log(_className, message, LogLevel.Trace);
   }
 
-  static void info(String message) {
-    _log(message, LogLevel.Info);
+  void info(String message) {
+    _log(_className, message, LogLevel.Info);
   }
 
-  static void _log(String message, int loglevel) {
-    developer.log('${DateTime.now()} - $message',
-        level: loglevel, name: appName);
+  static void _log(Type className, String message, int loglevel) {
+    developer.log(
+        '${DateTime.now()} [$className] - $message',
+        level: loglevel, name: appName
+    );
   }
 }
 

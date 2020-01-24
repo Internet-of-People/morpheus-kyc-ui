@@ -2,12 +2,14 @@ import 'package:http/http.dart' as http;
 import 'package:morpheus_kyc_user/utils/log.dart';
 
 class UrlFetcher {
+  static Log _log = Log(UrlFetcher);
+
   static Future<String> fetch(String url) async {
-    Log.debug('GET $url...');
+    _log.debug('GET $url...');
 
     try {
       final response = await http.get(url);
-      Log.debug('Status code: ${response.statusCode} $url');
+      _log.debug('Status code: ${response.statusCode} $url');
 
       if (response.statusCode == 200) {
         return response.body;
@@ -18,7 +20,7 @@ class UrlFetcher {
         );
       }
     } catch (e) {
-      Log.debug(e.toString());
+      _log.debug(e.toString());
       throw Exception('Error while fetching $url. Reason: $e');
     }
   }

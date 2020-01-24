@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:json_schema/json_schema.dart';
 import 'package:morpheus_kyc_user/utils/form_field_validators_extra.dart';
+import 'package:morpheus_kyc_user/utils/log.dart';
 import 'package:optional/optional.dart';
 
 const _subTypeKey = 'subtype';
@@ -9,6 +10,8 @@ const _subTypeKey = 'subtype';
 abstract class _SubTypes {
   static final String date = 'date';
 }
+
+final _log = Log(JsonSchema);
 
 extension JsonSchemaExt on JsonSchema {
   bool isString() {
@@ -27,24 +30,35 @@ extension JsonSchemaExt on JsonSchema {
 
   Optional<FormFieldValidator> getValidators() {
     final List<FieldValidator> validators = [];
+    final List<String> debug = [];
 
     if(this.parent != null && this.parent.requiredProperties.contains(this.propertyName)){
       validators.add(RequiredValidator(errorText: 'Required'));
+      debug.add('required');
     }
 
     if(this.minLength != null) {
       validators.add(MinLengthValidator(this.minLength, errorText: 'Min length is ${this.minLength}'));
+      debug.add('minLength');
     }
 
     if(this.maxLength != null) {
       validators.add(MaxLengthValidator(this.maxLength, errorText: 'Max length is ${this.maxLength}'));
+      debug.add('maxLength');
     }
 
     final rangeValidator = _getNumericRangeValidator(this);
     if(rangeValidator.isPresent){
       validators.add(rangeValidator.value);
+      debug.add('range');
     }
 
+    if(this.pattern != null){
+      validators.add(PatternValidator(this.pattern.pattern, errorText: 'Invalid pattern'));
+      debug.add('pattern');
+    }
+
+    _log.debug('[Validation] ${this.propertyName} got validators attached: ${debug.join(', ')}');
     return validators.isEmpty ? Optional.empty() : Optional.of(MultiValidator(validators));
   }
 }
