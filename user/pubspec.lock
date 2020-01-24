@@ -375,6 +375,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1+2"
+  optional:
+    dependency: "direct main"
+    description:
+      name: optional
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.1"
   package_config:
     dependency: transitive
     description:

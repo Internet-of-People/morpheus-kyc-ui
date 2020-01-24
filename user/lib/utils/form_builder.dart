@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:json_schema/json_schema.dart';
-import 'package:morpheus_kyc_user/io/json_schema_ext.dart';
-import 'package:morpheus_kyc_user/pages/create_claim_data/date_selector.dart';
+import 'package:morpheus_kyc_user/utils/date_selector.dart';
+import 'package:morpheus_kyc_user/utils/json_schema_ext.dart';
 
-class SchemaDefinedForm extends StatefulWidget {
+class SchemaDefinedFormContent extends StatefulWidget {
   final JsonSchema _schema;
   final String _schemaTitle;
-  final _formKey = GlobalKey<FormState>();
 
-  SchemaDefinedForm(this._schema, this._schemaTitle, {Key key}) : super(key: key);
+  SchemaDefinedFormContent(this._schema, this._schemaTitle, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return SchemaDefinedFormState();
+    return SchemaDefinedFormContentState();
   }
 }
 
-class SchemaDefinedFormState extends State<SchemaDefinedForm> {
+class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: widget._formKey,
-      child: _buildObject(widget._schemaTitle, widget._schema, true),
-    );
+    return _buildObject(widget._schemaTitle, widget._schema, true);
   }
 
   _buildWidgetFormSchema(String name, JsonSchema schema, bool topLevel){
@@ -50,7 +46,11 @@ class SchemaDefinedFormState extends State<SchemaDefinedForm> {
     ];
 
     for (final entry in schema.properties.entries) {
-      objectChildren.add(_buildWidgetFormSchema(entry.key, entry.value, topLevel));
+      objectChildren.add(_buildWidgetFormSchema(
+          entry.key,
+          entry.value,
+          topLevel,
+      ));
     }
 
     return Column(children: objectChildren);
@@ -62,13 +62,7 @@ class SchemaDefinedFormState extends State<SchemaDefinedForm> {
           hintText: schema.description,
           labelText: toBeginningOfSentenceCase(name)
       ),
-      // onEditingComplete: ()=>_formKey.currentState.validate(),
-      //                          onChanged: (_) => _formKey.currentState.validate(),
-      //                          validator: MultiValidator([
-      //                            RequiredValidator(errorText: 'Required'),
-      //                            MinLengthValidator(2, errorText: 'Min length is 2'),
-      //                            MaxLengthValidator(50, errorText: 'Max length is 50')
-      //                          ]),
+      validator: schema.getValidators().orElse((_) => null),
     );
   }
 
