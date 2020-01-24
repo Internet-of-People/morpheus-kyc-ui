@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/io/api/authority/authority-api.dart';
+import 'package:morpheus_kyc_user/io/api/authority/authority_api.dart';
 import 'package:morpheus_kyc_user/io/api/authority/process_response.dart';
 import 'package:morpheus_kyc_user/pages/process_details/process_details.dart';
 

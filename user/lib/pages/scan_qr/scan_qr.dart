@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
-import 'package:morpheus_kyc_user/io/api/authority/authority-api.dart';
-import 'package:morpheus_kyc_user/store/actions.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/available_processes.dart';
+import 'package:morpheus_kyc_user/store/actions.dart';
 import 'package:morpheus_kyc_user/store/state.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:redux/redux.dart';
 
 class ScanQRPage extends StatefulWidget {
   @override

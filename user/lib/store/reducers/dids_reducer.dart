@@ -1,6 +1,5 @@
+import 'package:morpheus_kyc_user/store/actions.dart';
 import 'package:redux/redux.dart';
-
-import '../actions.dart';
 
 final didsReducer = combineReducers<List<String>>([
   TypedReducer<List<String>, SetDidsAction>(_setDids)

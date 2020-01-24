@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:json_schema/json_schema.dart';
-import 'package:morpheus_kyc_user/io/api/authority/authority-api.dart';
+import 'package:morpheus_kyc_user/io/api/authority/authority_api.dart';
 import 'package:morpheus_kyc_user/io/api/authority/process_response.dart';
 import 'package:morpheus_kyc_user/pages/create_claim_data/provide_claim_data.dart';
 import 'package:morpheus_kyc_user/utils/morpheus_color.dart';

@@ -1,5 +1,3 @@
-import 'package:morpheus_kyc_user/io/api/authority/authority-api.dart';
-
 class SetAuthorityApiUrlAction {
   final String url;
 
@@ -10,4 +8,10 @@ class SetDidsAction {
   final List<String> dids;
 
   SetDidsAction(this.dids);
+}
+
+class SetWitnessRequestClaimDataAction {
+  final Map<String, dynamic> claimData;
+
+  SetWitnessRequestClaimDataAction(this.claimData);
 }
