@@ -4,13 +4,14 @@ import 'package:json_schema/json_schema.dart';
 import 'package:morpheus_kyc_user/utils/schema_form/date_selector.dart';
 import 'package:morpheus_kyc_user/utils/schema_form/json_form_field.dart';
 import 'package:morpheus_kyc_user/utils/schema_form/json_schema_ext.dart';
+import 'package:morpheus_kyc_user/utils/schema_form/photo_selector.dart';
+import 'package:morpheus_kyc_user/utils/schema_form/photo_selector_controller.dart';
 
 class SchemaDefinedFormContent extends StatefulWidget {
   final JsonSchema _schema;
-  final String _schemaTitle;
   final JsonSchemaFormTree _schemaTree;
 
-  SchemaDefinedFormContent(this._schema, this._schemaTitle, this._schemaTree, {Key key}) : super(key: key);
+  SchemaDefinedFormContent(this._schema, this._schemaTree, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -21,12 +22,17 @@ class SchemaDefinedFormContent extends StatefulWidget {
 class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
   @override
   Widget build(BuildContext context) {
-    return _buildObject(widget._schemaTitle, widget._schema, true, widget._schemaTree);
+    return _buildObject(widget._schema.description, widget._schema, true, widget._schemaTree);
   }
 
   _buildWidgetFormSchema(String name, JsonSchema schema, bool topLevel, JsonSchemaFormTree schemaTree){
     if(schema.isString()){
       final field = _buildText(name, schema);
+      schemaTree[name] = field.valueProvider;
+      return _buildContainer(field.widget, topLevel);
+    }
+    else if(schema.isPhoto()) {
+      final field = _buildPhoto(name, schema);
       schemaTree[name] = field.valueProvider;
       return _buildContainer(field.widget, topLevel);
     }
@@ -46,12 +52,30 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
   }
 
   Widget _buildObject(String name, JsonSchema schema, bool topLevel, JsonSchemaFormTree schemaTree){
-    final style = topLevel ? Theme.of(context).textTheme.headline : Theme.of(context).textTheme.title;
-    List<Widget> objectChildren = [
-      Row(
-        children: <Widget>[Text(toBeginningOfSentenceCase(name), style: style)],
-      )
-    ];
+    List<Widget> objectChildren = [];
+
+    if(topLevel){
+      objectChildren.add(Row(
+        children: <Widget>[
+          Expanded(child: Card(
+            child: Container(
+              margin: const EdgeInsets.all(16.0),
+              child: Text(
+                toBeginningOfSentenceCase(name),
+                style: Theme.of(context).textTheme.caption
+              ),
+            ),
+          ))],
+      ));
+    }
+    else {
+      objectChildren.add(Row(
+        children: <Widget>[Text(
+            toBeginningOfSentenceCase(name),
+            style: Theme.of(context).textTheme.subhead
+        )],
+      ));
+    }
 
     for (final entry in schema.properties.entries) {
       objectChildren.add(_buildWidgetFormSchema(
@@ -79,22 +103,30 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
   }
 
   JsonSchemaFormField<String> _buildDate(String name, JsonSchema schema) {
-    final dateSelectorField = DateSelector(
+    final field = DateSelector(
         toBeginningOfSentenceCase(name),
         schema.getValidators().orElse((_) => null),
         TextEditingController(),
     );
 
-    return JsonSchemaFormField.dateSelector(dateSelectorField, name);
+    return JsonSchemaFormField.dateSelector(field, name);
+  }
+
+  JsonSchemaFormField<String> _buildPhoto(String name, JsonSchema schema) {
+    final field = PhotoSelector(
+      toBeginningOfSentenceCase(name),
+      schema.getValidators().orElse((_) => null),
+      PhotoSelectorController(),
+    );
+
+    return JsonSchemaFormField.photoSelector(field, name);
   }
 
   Widget _buildContainer(Widget child, bool topLevel) {
-    if(topLevel) {
-      return Card(
-        child: Container(
-          margin: const EdgeInsets.all(16.0),
-          child: child,
-        ),
+    if(topLevel){
+      return Container(
+        margin: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
+        child: child
       );
     }
     return child;

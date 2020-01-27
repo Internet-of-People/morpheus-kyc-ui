@@ -20,7 +20,6 @@ class DateSelector extends StatefulWidget {
 class DateSelectorState extends State<DateSelector> {
   DateTime _dateOfBirth;
 
-
   @override
   Widget build(BuildContext context) {
     return InkWell(

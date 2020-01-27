@@ -9,6 +9,7 @@ const _subTypeKey = 'subtype';
 
 abstract class _SubTypes {
   static final String date = 'date';
+  static final String photo = 'photo';
 }
 
 final _log = Log(JsonSchema);
@@ -22,6 +23,12 @@ extension JsonSchemaExt on JsonSchema {
     return this.type == SchemaType.string &&
         this.schemaMap.containsKey(_subTypeKey) &&
         this.schemaMap[_subTypeKey] == _SubTypes.date;
+  }
+
+  bool isPhoto(){
+    return this.type == SchemaType.string &&
+        this.schemaMap.containsKey(_subTypeKey) &&
+        this.schemaMap[_subTypeKey] == _SubTypes.photo;
   }
 
   bool isObject() {

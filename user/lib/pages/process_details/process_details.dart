@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_schema/json_schema.dart';
 import 'package:morpheus_kyc_user/io/api/authority/authority_api.dart';
 import 'package:morpheus_kyc_user/io/api/authority/process_response.dart';
-import 'package:morpheus_kyc_user/pages/create_claim_data/provide_claim_data.dart';
+import 'package:morpheus_kyc_user/pages/create_witness_request/create_witness_request.dart';
 import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 
 class ProcessDetailsPage extends StatefulWidget {
@@ -50,74 +50,6 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
           BuildContext context,
           AsyncSnapshot<ProcessDetailsResponses> snapshot
       ) {
-        List<Widget> claimDetails = <Widget>[];
-        List<Widget> evidenceDetails = <Widget>[];
-
-        Function onButtonPressed;
-        String buttonLabel = 'Loading...';
-        Widget buttonIcon = SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(backgroundColor: Colors.white),
-        );
-
-        if (snapshot.hasData) {
-          final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
-          final evidenceSchema = JsonSchema.createSchema(snapshot.data.evidenceSchameResponse);
-
-          claimDetails = <Widget>[
-            Column(
-              children: <Widget>[
-                ListTile(
-                  title: const Text('Description'),
-                  subtitle: Text(claimSchema.description),
-                )
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                ListTile(
-                  title: const Text('Required Data'),
-                  subtitle: Text(claimSchema.requiredProperties.join(', ')),
-                )
-              ],
-            )
-          ];
-
-          evidenceDetails = <Widget>[
-            Column(
-              children: <Widget>[
-                ListTile(
-                  title: const Text('Description'),
-                  subtitle: Text(evidenceSchema.description),
-                )
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                ListTile(
-                  title: const Text('Required Data'),
-                  subtitle: Text(evidenceSchema.requiredProperties.join(', ')),
-                )
-              ],
-            )
-          ];
-
-
-          onButtonPressed = (){
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ProvideClaimDataPage(
-                        widget._process.name, claimSchema, evidenceSchema
-                    )
-                )
-            );
-          };
-          buttonLabel = 'Create Witness Request';
-          buttonIcon = Icon(Icons.assignment);
-        }
-
         final subheadStyle = Theme.of(context).textTheme.subhead;
         final captionStyle = Theme.of(context).textTheme.caption;
 
@@ -157,30 +89,121 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
                       });
                     },
                     children: <ExpansionPanel>[
-                      ExpansionPanel(
-                          headerBuilder: (context, isExpanded) => ListTile(title: const Text('Required Personal Information')),
-                          body: Column(children: claimDetails),
-                          isExpanded: _detailsInfoState[0]
-                      ),
-                      ExpansionPanel(
-                          headerBuilder: (context, isExpanded) => ListTile(title: const Text('Required Evidence')),
-                          body: Column(children: evidenceDetails),
-                          isExpanded: _detailsInfoState[1]
-                      ),
+                      _buildClaimPanel(snapshot),
+                      _buildEvidencePanel(snapshot),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton.extended(
-              label: Text(buttonLabel),
-              icon: buttonIcon,
-              backgroundColor: primaryMaterialColor,
-              onPressed: onButtonPressed,
-          ),
+          floatingActionButton: _buildButton(snapshot)
         );
       },
+    );
+  }
+
+  FloatingActionButton _buildButton(AsyncSnapshot<ProcessDetailsResponses> snapshot) {
+    Function onButtonPressed;
+    String buttonLabel = 'Loading...';
+    Widget buttonIcon = SizedBox(
+      width: 20,
+      height: 20,
+      child: CircularProgressIndicator(backgroundColor: Colors.white),
+    );
+
+    if (snapshot.hasData) {
+      final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
+      final evidenceSchema = JsonSchema.createSchema(snapshot.data.evidenceSchameResponse);
+
+      onButtonPressed = (){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CreateWitnessRequest(
+                    widget._process.name, claimSchema, evidenceSchema
+                )
+            )
+        );
+      };
+      buttonLabel = 'Create Witness Request';
+      buttonIcon = Icon(Icons.assignment);
+    }
+
+    return FloatingActionButton.extended(
+      label: Text(buttonLabel),
+      icon: buttonIcon,
+      backgroundColor: primaryMaterialColor,
+      onPressed: onButtonPressed,
+    );
+  }
+
+  ExpansionPanel _buildClaimPanel(AsyncSnapshot<ProcessDetailsResponses> snapshot) {
+    List<Widget> claimDetails = <Widget>[];
+    String title = 'Loading...';
+
+    if(snapshot.hasData){
+      final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
+      claimDetails = <Widget>[
+        Column(
+          children: <Widget>[
+            ListTile(
+              title: const Text('Description'),
+              subtitle: Text(claimSchema.description),
+            )
+          ],
+        ),
+        Column(
+          children: <Widget>[
+            ListTile(
+              title: const Text('Required Data'),
+              subtitle: Text(claimSchema.requiredProperties.join(', ')),
+            )
+          ],
+        )
+      ];
+
+      title = 'Required Personal Information';
+    }
+
+    return ExpansionPanel(
+        headerBuilder: (context, isExpanded) => ListTile(title: Text(title)),
+        body: Column(children: claimDetails),
+        isExpanded: _detailsInfoState[0]
+    );
+  }
+
+  ExpansionPanel _buildEvidencePanel(AsyncSnapshot<ProcessDetailsResponses> snapshot){
+    List<Widget> evidenceDetails = <Widget>[];
+    String title = 'Loading...';
+
+    if(snapshot.hasData) {
+      final evidenceSchema = JsonSchema.createSchema(snapshot.data.evidenceSchameResponse);
+      evidenceDetails = <Widget>[
+        Column(
+          children: <Widget>[
+            ListTile(
+              title: const Text('Description'),
+              subtitle: Text(evidenceSchema.description),
+            )
+          ],
+        ),
+        Column(
+          children: <Widget>[
+            ListTile(
+              title: const Text('Required Data'),
+              subtitle: Text(evidenceSchema.requiredProperties.join(', ')),
+            )
+          ],
+        )
+      ];
+      title = 'Required Evidence';
+    }
+
+    return ExpansionPanel(
+        headerBuilder: (context, isExpanded) => ListTile(title: Text(title)),
+        body: Column(children: evidenceDetails),
+        isExpanded: _detailsInfoState[1]
     );
   }
 }

@@ -5,6 +5,7 @@
   "properties": {
     "photo": {
       "type": "string",
+      "subtype": "photo",
       "description": "A Base64 encoded photo blob",
       "maskable": true
     }
