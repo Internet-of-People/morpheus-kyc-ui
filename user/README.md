@@ -61,3 +61,16 @@ $ ./build-libraries.sh
 
 TODO: add more platforms beside x86_64, consider using other ios targets as well
 https://i.stack.imgur.com/jKZE4.png
+
+# TODO
+
+This must be in the cargo config to be able to cross compile everything. Needs more investigation:
+```bash
+[target.x86_64-linux-android]
+ar = "/home/mudlee/Android/Sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android-ar"
+linker = "/home/mudlee/Android/Sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android29-clang"
+
+[target.aarch64-linux-android]
+ar = "/home/mudlee/Android/Sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-ar"
+linker = "/home/mudlee/Android/Sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang"
+```

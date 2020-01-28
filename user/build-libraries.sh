@@ -12,13 +12,14 @@ TOOLCHAINPATH=$NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin
 
 cd $SDK_PATH
 AR=$TOOLCHAINPATH/x86_64-linux-android-ar CC=$TOOLCHAINPATH/x86_64-linux-android29-clang cargo build --target x86_64-linux-android --release
-#AR=$TOOLCHAINPATH/arm-linux-androideabi-ar CC=$TOOLCHAINPATH/arm-linux-androideabi-ld cargo build --target armv7-linux-androideabi --release
+AR=$TOOLCHAINPATH/aarch64-linux-android-ar linker=$TOOLCHAINPATH/aarch64-linux-android29-clang cargo build --target aarch64-linux-android --release
+
 cd -
 
 JNI_LIBS=native_sdk/android/src/main/jniLibs
 
 rm -rf $JNI_LIBS
 mkdir -p $JNI_LIBS/x86_64
-#mkdir -p $JNI_LIBS/armeabi-v7a
+mkdir -p $JNI_LIBS/arm64-v8a
 cp $SDK_PATH/target/x86_64-linux-android/release/libmorpheus_sdk.so $JNI_LIBS/x86_64
-#cp $SDK_PATH/target/armv7-linux-androideabi/release/libmorpheus_sdk.so $JNI_LIBS/armeabi-v7a
+cp $SDK_PATH/target/aarch64-linux-android/release/libmorpheus_sdk.so $JNI_LIBS/arm64-v8a
