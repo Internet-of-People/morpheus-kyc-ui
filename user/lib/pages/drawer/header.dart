@@ -74,7 +74,7 @@ class HeaderState extends State<Header> {
           items: widget.dids.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              child: Text(value, overflow: TextOverflow.ellipsis),
             );
           }).toList(),
         ),

@@ -15,3 +15,9 @@ class SetWitnessRequestClaimDataAction {
 
   SetWitnessRequestClaimDataAction(this.claimData);
 }
+
+class SetSDKLoadingAction {
+  final loading;
+
+  SetSDKLoadingAction(this.loading);
+}

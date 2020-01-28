@@ -4,60 +4,60 @@ Morpheus KYC Demo - User
 
 ## Development
 
-### Building JSON Factories
+### Requirements
 
-For more info visit:
-- https://flutter.dev/docs/development/data-and-backend/json
-- https://github.com/dart-lang/json_serializable/tree/master/example
+* Rust, Cargo
+* Flutter, Dart
+* Bash
+* Android SDK, NDK
 
-```bash
-$ flutter pub run build_runner build
-```
+#### Setup Android SDK, NDK
 
-### Rust Integration
+1. Download [Android Studio](https://goo.gl/XxQghQ) which will install the Android SDK as well, usually under home, like: `~/Android/Sdk`.
+1. Set an environment variable for it: `export ANDROID_HOME=~/Android/Sdk`
+1. Download [NDK 21](https://developer.android.com/ndk/downloads/) and put to `$ANDROID_HOME/ndk`
 
-TODO: add more platforms beside x86_64, consider using other ios targets as well
-https://i.stack.imgur.com/jKZE4.png
-
-Put cross compile settings into ~/.cargo/config
-```bash
-[target.x86_64-linux-android]
-ar = "/home/mudlee/NDK/x86_64/bin/x86_64-linux-android-ar"
-linker = "/home/mudlee/NDK/x86_64/bin/x86_64-linux-android-clang"
-```
-
-```
-TODO
-[target.armv7-linux-androideabi]
-#ar = "/Users/andrei/projects/libertaria/nursery/connect-android/greetings/NDK/arm/bin/arm-linux-androideabi-ar"
-#linker = "/Users/andrei/projects/libertaria/nursery/connect-android/greetings/NDK/arm/bin/arm-linux-androideabi-clang"
-ar = "/Users/mudlee/Projects/iop/nursery/connect-android/NDK/arm/bin/arm-linux-androideabi-ar"
-linker = "/Users/mudlee/Projects/iop/nursery/connect-android/NDK/arm/bin/arm-linux-androideabi-clang"
-
-[target.i686-linux-android]
-#ar = "/Users/andrei/projects/libertaria/nursery/connect-android/greetings/NDK/x86/bin/i686-linux-android-ar"
-#linker = "/Users/andrei/projects/libertaria/nursery/connect-android/greetings/NDK/x86/bin/i686-linux-android-clang"
-ar = "/Users/mudlee/Projects/iop/nursery/connect-android/NDK/x86/bin/i686-linux-android-ar"
-linker = "/Users/mudlee/Projects/iop/nursery/connect-android/NDK/x86/bin/i686-linux-android-clang"
-```
-
-```bash
-$ export ANDROID_HOME=~/Android/Sdk # this might vary
-$ export NDK_HOME=$ANDROID_HOME/ndk-bundle
-```
-
-```bash
-$ mkdir NDK # TODO: move it under Sdk somewhere
-$ ${NDK_HOME}/build/tools/make_standalone_toolchain.py --api 26 --arch arm64 --install-dir NDK/arm64 
-$ ${NDK_HOME}/build/tools/make_standalone_toolchain.py --api 26 --arch arm --install-dir NDK/arm 
-$ ${NDK_HOME}/build/tools/make_standalone_toolchain.py --api 26 --arch x86 --install-dir NDK/x86
-$ ${NDK_HOME}/build/tools/make_standalone_toolchain.py --api 26 --arch x86_64 --install-dir NDK/x86_64
-```
+#### Setup Rust Targets for Cross-Platform Compilation
 
 ```bash
 $ rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android aarch64-apple-ios
 ```
 
+### Building JSON Factories
+
+For more info visit:
+* https://flutter.dev/docs/development/data-and-backend/json
+* https://github.com/dart-lang/json_serializable/tree/master/example
+
 ```bash
-cargo build --target aarch64-linux-android --release cargo build --target armv7-linux-androideabi --release cargo build --target i686-linux-android --release --target x86_64-linux-android --release --target aarch64-apple-ios --release
+$ flutter pub run build_runner build
 ```
+
+### Rust SDK
+
+We use a Rust SDK backend for various tasks. To be able to use it, we have to have a dyamic library 
+built out from it which is then included in to the application bundle (such as apk).
+
+To achieve this, one must follow the steps below.
+
+#### 1. Update Rust Code
+
+As the Rust code is included in this repository as a git submodule, you have to sync it.
+
+```bash
+# Note: run it in this repository's root.
+$ git submodule update --init --recursive --remote
+```
+
+#### 2. Build Dynamic Library Files
+
+Here, you only have to run one script, which will does two things:
+* it will build all cross-platform libraries we support and
+* it will copy these artifacts to the right place. 
+
+```bash
+$ ./build-libraries.sh
+```
+
+TODO: add more platforms beside x86_64, consider using other ios targets as well
+https://i.stack.imgur.com/jKZE4.png

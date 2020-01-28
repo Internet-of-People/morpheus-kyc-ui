@@ -10,6 +10,10 @@ class Log {
     _log(_className, message, LogLevel.Debug);
   }
 
+  void error(String message) {
+    _log(_className, message, LogLevel.Error);
+  }
+
   void trace(String message) {
     _log(_className, message, LogLevel.Trace);
   }
@@ -21,7 +25,8 @@ class Log {
   static void _log(Type className, String message, int loglevel) {
     developer.log(
         '${DateTime.now()} [$className] - $message',
-        level: loglevel, name: appName
+        level: loglevel,
+        name: appName
     );
   }
 }
@@ -30,4 +35,5 @@ class LogLevel {
   static const int Trace = 500;
   static const int Debug = 1000;
   static const int Info = 1500;
+  static const int Error = 1500;
 }

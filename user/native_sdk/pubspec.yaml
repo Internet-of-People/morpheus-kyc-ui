@@ -1,0 +1,21 @@
+name: native_sdk
+description: A plugin for Morpheus Rust SDK
+version: 1.0.0
+author:
+homepage: https://iop.global
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    androidPackage: com.example.native_sdk
+    pluginClass: NativeSdkPlugin

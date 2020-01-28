@@ -1,0 +1,4 @@
+[submodule "user/morpheus-rust"]
+	path = user/morpheus-rust
+	url = git@gitlab.iop-ventures.com:iop-stack/dids-and-claims/morpheus-rust.git
+	branch = c_api
