@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:morpheus_kyc_user/store/actions.dart';
+import 'package:morpheus_kyc_user/store/state/app_state.dart';
 import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
+import 'package:redux/redux.dart';
 
 class Header extends StatefulWidget{
   final List<String> dids;
@@ -13,8 +17,6 @@ class Header extends StatefulWidget{
 }
 
 class HeaderState extends State<Header> {
-  String selectedDid;
-
   @override
   Widget build(BuildContext context) {
     List<Widget> header = [
@@ -38,21 +40,23 @@ class HeaderState extends State<Header> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Row(children: header),
-              Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: _buildDidsDropdown()
+              StoreConnector(
+                converter: (Store<AppState> store) => _DropDownStoreContext(
+                  store.state.activeDid,
+                  (newActiveDid) => store.dispatch(SetActiveDIDAction(newActiveDid))
+                ),
+                builder: (_,_DropDownStoreContext storeContext) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: _buildDidsDropdown(storeContext)
+                ),
               )
             ]
         )
     );
   }
 
-  List<Widget> _buildDidsDropdown() {
+  List<Widget> _buildDidsDropdown(_DropDownStoreContext storeContext) {
     if(widget.dids != null) {
-      if(selectedDid==null) {
-        selectedDid = widget.dids[0];
-      }
-
       return [Container(
         padding: EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
         margin: EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
@@ -61,15 +65,13 @@ class HeaderState extends State<Header> {
             borderRadius: BorderRadius.circular(4.0)
         ),
         child: DropdownButton<String>(
-          value: selectedDid,
+          value: storeContext.activeDid,
           isExpanded: true,
           icon: Icon(Icons.arrow_drop_down,color: Colors.black),
           style: TextStyle(color: Colors.black),
           underline: Container(height: 0),
           onChanged: (String newValue) {
-            setState(() {
-              selectedDid = newValue;
-            });
+            setState(()  => storeContext.setActiveDid(newValue));
           },
           items: widget.dids.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
@@ -82,5 +84,17 @@ class HeaderState extends State<Header> {
     }
 
     return [];
+  }
+}
+
+class _DropDownStoreContext {
+  String activeDid;
+  void Function(String newActiveDid) dispatch;
+
+  _DropDownStoreContext(this.activeDid, this.dispatch);
+
+  void setActiveDid(String newActiveDid) {
+    activeDid = newActiveDid;
+    dispatch(newActiveDid);
   }
 }

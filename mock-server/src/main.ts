@@ -1,15 +1,20 @@
 import express from 'express';
 import { Application } from 'express';
+import bodyParser from 'body-parser';
+import { Md5 } from 'ts-md5/dist/md5';
 import confirmedEUCitizenClaimSchema from './confirmedEUCitizenClaimSchema.json';
 import confirmedEUCitizenEvidenceSchema from './confirmedEUCitizenEvidenceSchema.json';
+import signedWitnessStatement from './signedWitnessStatement.json';
 import processes from './processes.json';
 
+
 class Server {
-  private static readonly SLEEP_TIME_SEC: number = 2;
+  private static readonly SLEEP_TIME_SEC: number = 1;
   private app: Application;
 
   constructor() {
     this.app = express();
+    this.app.use(bodyParser.json());
   }
 
   public start(): void {
@@ -35,9 +40,18 @@ class Server {
       }
     });
 
-    // TODO: sending in witness request
-    // this.app.post(/requests) -> CAPABILITY_LINK
-    // this.app.get(/requests/CAPABILITY_LINK/status) -> status (pending/approved/denied - contains signed witness request)
+    this.app.post('/requests', async (req, res): Promise<void> => {
+      await this.sleep();
+      res.status(202).json(Md5.hashStr(req.body));
+    });
+
+    this.app.get('/requests/:capabilityLink/status', async (req, res) => {
+      await this.sleep();
+      res.status(200).json({
+        status: 'APPROVED',
+        signedStatement: signedWitnessStatement
+      });
+    });
 
     this.app.listen(8080, '0.0.0.0', (): void => {
       console.log('Listening on 0.0.0.0:8080');

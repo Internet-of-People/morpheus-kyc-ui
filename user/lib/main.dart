@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:morpheus_kyc_user/io/api/authority/witness_request.dart';
 import 'package:morpheus_kyc_user/io/api/native_sdk.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
 import 'package:morpheus_kyc_user/store/actions.dart';
@@ -18,7 +17,7 @@ void main() => runApp(KYCApp(
       appReducer,
       initialState: AppState(
         loading: true,
-        witnessRequest: WitnessRequest(),
+        activeDid: null
       ),
     ),
 ));
@@ -96,6 +95,7 @@ class KYCAppState extends State<KYCApp> {
       }
 
       NativeSDK.instance.realLedger('http://35.187.56.222:4703'); // TESTNET
+      widget._store.dispatch(SetActiveDIDAction(NativeSDK.instance.listDids()[0]));
     } catch(e) {
       _log.error('Error using SDK: $e');
     } finally {

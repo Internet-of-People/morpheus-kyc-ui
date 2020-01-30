@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:json_schema/json_schema.dart';
+import 'package:morpheus_kyc_user/io/api/authority/witness_request.dart';
 import 'package:morpheus_kyc_user/io/api/ledger/did.dart';
 import 'package:morpheus_kyc_user/io/api/native_sdk.dart';
-import 'package:morpheus_kyc_user/store/actions.dart';
+import 'package:morpheus_kyc_user/pages/home/home.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
 import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 import 'package:morpheus_kyc_user/utils/schema_form/form_builder.dart';
@@ -84,9 +85,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       appBar: AppBar(
         title: Text(widget._processName),
       ),
-      body: StoreConnector(
-        converter: (Store<AppState> store) => _StepperStoreContext(store),
-        builder: (_, _StepperStoreContext store) => Stepper(
+      body: Stepper(
           currentStep: _currentStep,
           onStepContinue: _onStepContinue,
           onStepCancel: _onStepCancel,
@@ -182,7 +181,6 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
                 )
             ),
           ]
-        ),
       )
     );
   }
@@ -232,8 +230,51 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
     }
   }
 
-  _onSign(){
+  _onSign(String activeDid) async {
+    final claim = Claim(activeDid, _claimData);
+    final claimant = Claimant(activeDid,_selectedKey);
 
+    final request = WitnessRequest(
+      claim,
+      claimant,
+      "TBD_PROCESS",
+      _evidenceData,
+      "TBD_NONCE",
+    );
+
+    String signedRequest = NativeSDK.instance.signWitnessRequest(
+        request.toJson().toString(),
+        _selectedKey
+    );
+
+    //String capabilityLink = await AuthorityApi.instance.sendWitnessRequest(signedRequest);
+    //RequestStatusResponse requestStatus = await AuthorityApi.instance.checkRequestStatus(capabilityLink);
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(children: <Widget>[
+          Text('Request Approved')
+        ],),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('Your request has been approved, statement is now available under your statements menu.')
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder:(context) => HomePage()
+              ));
+            },
+          ),
+        ],
+      )
+    );
   }
 
   Widget _buildStepperNavigation(BuildContext context, { onStepCancel, onStepContinue }) {
@@ -254,12 +295,15 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       textTheme: ButtonTextTheme.normal,
       child: Text('CONTINUE'),
     );
-    final signButton = FlatButton(
-      onPressed: _onSign,
-      color: themeData.primaryColor,
-      textColor: Colors.white,
-      textTheme: ButtonTextTheme.normal,
-      child: Text('SIGN'),
+    final signButton = StoreConnector(
+      converter: (Store<AppState> store) => store.state.activeDid,
+      builder: (_, String activeDid) => FlatButton(
+        onPressed: () => _onSign(activeDid),
+        color: themeData.primaryColor,
+        textColor: Colors.white,
+        textTheme: ButtonTextTheme.normal,
+        child: Text('SIGN'),
+      ),
     );
 
     List<Widget> buttons = [];
@@ -290,18 +334,6 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
           children: buttons
         ),
       ),
-    );
-  }
-}
-
-class _StepperStoreContext {
-  final Store<AppState> _store;
-
-  _StepperStoreContext(this._store);
-
-  void setClaimData(Map<String, dynamic> claimData) {
-    _store.dispatch(
-        SetWitnessRequestClaimDataAction(claimData)
     );
   }
 }
