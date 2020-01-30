@@ -7,11 +7,9 @@ import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 
 class ProcessDetailsPage extends StatefulWidget {
   final Process _process;
-  final AuthorityApi _authorityApi;
 
   const ProcessDetailsPage(
     this._process,
-    this._authorityApi,
     {Key key}
   ) : super(key: key);
 
@@ -36,8 +34,8 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
   @override
   void initState() {
     super.initState();
-    _fetchClaimSchemaFut = widget._authorityApi.getBlob(widget._process.claimSchema);
-    _fetchEvidenceSchemaFut = widget._authorityApi.getBlob(widget._process.evidenceSchema);
+    _fetchClaimSchemaFut = AuthorityApi.instance.getBlob(widget._process.claimSchema);
+    _fetchEvidenceSchemaFut = AuthorityApi.instance.getBlob(widget._process.evidenceSchema);
   }
 
   @override

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../drawer/drawer.dart';
+import 'package:morpheus_kyc_user/pages/drawer/drawer.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,8 +17,12 @@ class HomePageState extends State<HomePage> {
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 16.0),
+              child: Image(image: AssetImage('assets/Icon-512x512.png'),width: 100,),
+            ),
             const Text('Welcome to Morpheus!', style: TextStyle(
-                fontSize: 24
+              fontSize: 24
             )),
             Container(
               margin: const EdgeInsets.all(16.0),

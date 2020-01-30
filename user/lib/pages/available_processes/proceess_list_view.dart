@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/io/api/authority/authority_api.dart';
 import 'package:morpheus_kyc_user/io/api/authority/process_response.dart';
 import 'package:morpheus_kyc_user/pages/process_details/process_details.dart';
 
 class ProcessListView extends StatelessWidget {
   final List<Process> _processes;
-  final AuthorityApi _authorityApi;
 
   const ProcessListView(
     this._processes,
-    this._authorityApi,
     {Key key}
   ) : super(key: key);
 
@@ -33,7 +30,6 @@ class ProcessListView extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => ProcessDetailsPage(
                             process,
-                            _authorityApi
                           )
                       )
                   );

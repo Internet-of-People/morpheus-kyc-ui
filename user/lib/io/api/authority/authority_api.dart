@@ -4,11 +4,16 @@ import 'package:morpheus_kyc_user/io/api/authority/process_response.dart';
 import 'package:morpheus_kyc_user/io/url_fetcher.dart';
 
 class AuthorityApi {
-  String _apiUrl;
+  static AuthorityApi _instance;
+  final String _apiUrl;
 
-  set apiUrl(String newUrl) {
-    _apiUrl = newUrl;
-  }
+  AuthorityApi(this._apiUrl);
+
+  static AuthorityApi get instance => _instance == null ? throw Exception('AuthorityApi is no yet set') : _instance;
+
+  static AuthorityApi setAsEmulator() => _instance = AuthorityApi('http://10.0.2.2:8080');
+
+  static AuthorityApi setAsRealDevice(url) => _instance = AuthorityApi(url);
 
   Future<List<Process>> getProcesses() async {
     return UrlFetcher
