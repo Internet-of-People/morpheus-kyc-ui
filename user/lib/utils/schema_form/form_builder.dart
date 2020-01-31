@@ -26,24 +26,29 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
   }
 
   _buildWidgetFormSchema(String name, JsonSchema schema, bool topLevel, JsonSchemaFormTree schemaTree){
+    final alreadyThere = schemaTree.contains(name);
+
     if(schema.isString()){
-      final field = _buildText(name, schema);
-      schemaTree.add(name, field.valueProvider);
+      final controller = alreadyThere ? schemaTree.get<JsonSchemaFormTreeValue>(name).widgetController : TextEditingController();
+      final field = _buildText(name, schema, controller);
+      schemaTree.putIfAbsent(name, JsonSchemaFormTreeValue(field.valueProvider, controller));
       return _buildContainer(field.widget, topLevel);
     }
     else if(schema.isPhoto()) {
-      final field = _buildPhoto(name, schema);
-      schemaTree.add(name, field.valueProvider);
+      final controller = alreadyThere ? schemaTree.get<JsonSchemaFormTreeValue>(name).widgetController : PhotoSelectorController();
+      final field = _buildPhoto(name, schema, controller);
+      schemaTree.putIfAbsent(name, JsonSchemaFormTreeValue(field.valueProvider, controller));
       return _buildContainer(field.widget, topLevel);
     }
     else if(schema.isDate()) {
-      final field = _buildDate(name, schema);
-      schemaTree.add(name, field.valueProvider);
+      final controller = alreadyThere ? schemaTree.get<JsonSchemaFormTreeValue>(name).widgetController : TextEditingController();
+      final field = _buildDate(name, schema, controller);
+      schemaTree.putIfAbsent(name, JsonSchemaFormTreeValue(field.valueProvider, controller));
       return _buildContainer(field.widget, topLevel);
     }
     else if(schema.isObject()) {
-      JsonSchemaFormTree subTree = JsonSchemaFormTree();
-      schemaTree.add(name, subTree);
+      JsonSchemaFormTree subTree = alreadyThere ? schemaTree.get<JsonSchemaFormTree>(name) : JsonSchemaFormTree();
+      schemaTree.putSubtreeIfAbsent(name, subTree);
       return _buildContainer(_buildObject(name, schema, false, subTree), topLevel);
     }
     else {
@@ -89,33 +94,33 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
     return Column(children: objectChildren);
   }
 
-  JsonSchemaFormField<String> _buildText(String name, JsonSchema schema){
+  JsonSchemaFormField<String> _buildText(String name, JsonSchema schema, TextEditingController controller){
     final textField = TextFormField(
       decoration: InputDecoration(
           hintText: schema.description,
           labelText: toBeginningOfSentenceCase(name)
       ),
-      controller: TextEditingController(),
+      controller: controller,
       validator: schema.getValidators().orElse((_) => null),
     );
 
     return JsonSchemaFormField.textField(textField, name);
   }
 
-  JsonSchemaFormField<String> _buildDate(String name, JsonSchema schema) {
+  JsonSchemaFormField<String> _buildDate(String name, JsonSchema schema, TextEditingController controller) {
     final field = DateSelector(
         toBeginningOfSentenceCase(name),
         schema.getValidators().orElse((_) => null),
-        TextEditingController(),
+        controller,
     );
 
     return JsonSchemaFormField.dateSelector(field, name);
   }
 
-  JsonSchemaFormField<String> _buildPhoto(String name, JsonSchema schema) {
+  JsonSchemaFormField<String> _buildPhoto(String name, JsonSchema schema, PhotoSelectorController controller) {
     final field = PhotoSelectorFormField(
       title: toBeginningOfSentenceCase(name),
-      controller: PhotoSelectorController(),
+      controller: controller,
       validator: schema.getValidators().orElse((_) => null)
     );
 
@@ -133,10 +138,27 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
   }
 }
 
+class JsonSchemaFormTreeValue {
+  final ValueProvider valueProvider;
+  final dynamic widgetController;
+
+  JsonSchemaFormTreeValue(this.valueProvider, this.widgetController);
+}
+
 class JsonSchemaFormTree {
   final Map<String, dynamic> _root = Map();
 
-  void add(String key, dynamic value) => _root[key] = value;
+  void putIfAbsent(String key, JsonSchemaFormTreeValue value) {
+    if(_root[key] == null) {
+      _root[key] = value;
+    }
+  }
+
+  void putSubtreeIfAbsent(String key, JsonSchemaFormTree subTree) {
+    if(_root[key] == null) {
+      _root[key] = subTree;
+    }
+  }
 
   T get<T>(String key) => _root[key];
 
@@ -154,7 +176,7 @@ class JsonSchemaFormTree {
         parsed[entry.key] = _parseTree(entry.value as JsonSchemaFormTree);
       }
       else {
-        parsed[entry.key] = (entry.value as ValueProvider)();
+        parsed[entry.key] = (entry.value as JsonSchemaFormTreeValue).valueProvider();
       }
     }
 
