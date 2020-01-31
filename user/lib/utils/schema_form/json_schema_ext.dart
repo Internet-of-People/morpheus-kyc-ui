@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:json_schema/json_schema.dart';
@@ -40,8 +42,17 @@ extension JsonSchemaExt on JsonSchema {
     final List<String> debug = [];
 
     if(this.parent != null && this.parent.requiredProperties.contains(this.propertyName)){
-      validators.add(RequiredValidator(errorText: 'Required'));
-      debug.add('required');
+      if(this.isString() || this.isDate()) {
+        validators.add(RequiredValidator(errorText: 'Required'));
+        debug.add('required');
+      }
+      else if(this.isPhoto()) {
+        validators.add(NotNullOrEmptyValidator<File>(errorText: 'Required'));
+        debug.add('required');
+      }
+      else {
+        _log.error('Field ${this.propertyName} has a type ${this.type}, which has no required validator implemented');
+      }
     }
 
     if(this.minLength != null) {

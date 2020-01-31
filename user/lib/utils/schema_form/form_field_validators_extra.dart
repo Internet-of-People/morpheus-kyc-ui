@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 class MinValidator extends TextFieldValidator {
   final num min;
 
-  MinValidator(this.min, {String errorText})
+  MinValidator(this.min, {@required String errorText})
       : super(errorText);
 
   @override
@@ -20,7 +21,7 @@ class MinValidator extends TextFieldValidator {
 class MaxValidator extends TextFieldValidator {
   final num max;
 
-  MaxValidator(this.max, {String errorText})
+  MaxValidator(this.max, {@required String errorText})
       : super(errorText);
 
   @override
@@ -31,5 +32,19 @@ class MaxValidator extends TextFieldValidator {
     } catch (_) {
       return false;
     }
+  }
+}
+
+class NotNullOrEmptyValidator<T> extends FieldValidator<T> {
+  NotNullOrEmptyValidator({@required String errorText}) : super(errorText);
+
+  @override
+  bool isValid(T value) {
+    return value != null;
+  }
+
+  @override
+  String call(T value) {
+    return isValid(value) ? null : errorText;
   }
 }

@@ -26,7 +26,7 @@ class JsonSchemaFormField<T> {
     return JsonSchemaFormField(widget, () => widget.controller.text.isEmpty ? null : widget.controller.text);
   }
 
-  static JsonSchemaFormField<String> photoSelector(PhotoSelector widget, String name) {
+  static JsonSchemaFormField<String> photoSelector(PhotoSelectorFormField widget, String name) {
     if(widget.controller == null) {
       throw Exception('To be able to use $JsonSchemaFormField, \'$name\' has to have a controller');
     }

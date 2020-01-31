@@ -28,22 +28,22 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
   _buildWidgetFormSchema(String name, JsonSchema schema, bool topLevel, JsonSchemaFormTree schemaTree){
     if(schema.isString()){
       final field = _buildText(name, schema);
-      schemaTree[name] = field.valueProvider;
+      schemaTree.add(name, field.valueProvider);
       return _buildContainer(field.widget, topLevel);
     }
     else if(schema.isPhoto()) {
       final field = _buildPhoto(name, schema);
-      schemaTree[name] = field.valueProvider;
+      schemaTree.add(name, field.valueProvider);
       return _buildContainer(field.widget, topLevel);
     }
     else if(schema.isDate()) {
       final field = _buildDate(name, schema);
-      schemaTree[name] = field.valueProvider;
+      schemaTree.add(name, field.valueProvider);
       return _buildContainer(field.widget, topLevel);
     }
     else if(schema.isObject()) {
       JsonSchemaFormTree subTree = JsonSchemaFormTree();
-      schemaTree[name] = subTree;
+      schemaTree.add(name, subTree);
       return _buildContainer(_buildObject(name, schema, false, subTree), topLevel);
     }
     else {
@@ -113,10 +113,10 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
   }
 
   JsonSchemaFormField<String> _buildPhoto(String name, JsonSchema schema) {
-    final field = PhotoSelector(
-      toBeginningOfSentenceCase(name),
-      schema.getValidators().orElse((_) => null),
-      PhotoSelectorController(),
+    final field = PhotoSelectorFormField(
+      title: toBeginningOfSentenceCase(name),
+      controller: PhotoSelectorController(),
+      validator: schema.getValidators().orElse((_) => null)
     );
 
     return JsonSchemaFormField.photoSelector(field, name);
@@ -136,7 +136,11 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
 class JsonSchemaFormTree {
   final Map<String, dynamic> _root = Map();
 
-  operator []=(String key, dynamic value) => _root[key] = value;
+  void add(String key, dynamic value) => _root[key] = value;
+
+  T get<T>(String key) => _root[key];
+
+  bool contains(String key) => _root[key] != null;
 
   Map<String, dynamic> asMapWithValues() {
     return _parseTree(this);

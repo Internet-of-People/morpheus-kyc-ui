@@ -21,11 +21,11 @@ abstract class _Step {
 }
 
 class CreateWitnessRequest extends StatefulWidget{
+  final JsonSchemaFormTree _claimSchemaTree = JsonSchemaFormTree();
+  final JsonSchemaFormTree _evidenceSchemaTree = JsonSchemaFormTree();
   final String _processName;
   final JsonSchema _claimSchema;
   final JsonSchema _evidenceSchema;
-  final JsonSchemaFormTree _claimSchemaTree = JsonSchemaFormTree();
-  final JsonSchemaFormTree _evidenceSchemaTree = JsonSchemaFormTree();
 
   CreateWitnessRequest(
     this._processName,
@@ -43,8 +43,9 @@ class CreateWitnessRequest extends StatefulWidget{
 class CreateWitnessRequestState extends State<CreateWitnessRequest> {
   final GlobalKey<FormState> _claimFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _evidenceFormKey = GlobalKey<FormState>();
+
   bool _claimFormAutovalidate = false;
-  bool _evidenceFormAutovalidate = false; // TODO
+  bool _evidenceFormAutovalidate = false;
   Map<String, dynamic> _claimData;
   Map<String, dynamic> _evidenceData;
   int _currentStep = _Step.claimSchema;
@@ -115,7 +116,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
                     margin: const EdgeInsets.all(8.0),
                     child: Form(
                       key: _evidenceFormKey,
-                      autovalidate: _claimFormAutovalidate,
+                      autovalidate: _evidenceFormAutovalidate,
                       child: _evidenceForm,
                     ),
                   ),
