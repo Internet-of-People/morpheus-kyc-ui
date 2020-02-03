@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
+import 'package:morpheus_common/utils/morpheus_color.dart';
 
 class SignRequestPage extends StatefulWidget {
   final String _processName;

@@ -26,7 +26,7 @@ class HomePageState extends State<HomePage> {
             )),
             Container(
               margin: const EdgeInsets.all(16.0),
-              child: const Text('This application is for users described in the KYC use case.'),
+              child: const Text('This application is for user participants described in the Morpheus specification.'),
             )
           ],
         )

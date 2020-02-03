@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:morpheus_common/utils/morpheus_color.dart';
 import 'package:morpheus_kyc_user/store/actions.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
-import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 import 'package:redux/redux.dart';
 
 class Header extends StatefulWidget{

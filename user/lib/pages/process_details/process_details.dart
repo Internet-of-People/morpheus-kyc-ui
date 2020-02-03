@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:json_schema/json_schema.dart';
-import 'package:morpheus_kyc_user/io/api/authority/authority_api.dart';
-import 'package:morpheus_kyc_user/io/api/authority/process_response.dart';
+import 'package:morpheus_common/io/api/authority/authority_api.dart';
+import 'package:morpheus_common/io/api/authority/process_response.dart';
+import 'package:morpheus_common/utils/morpheus_color.dart';
 import 'package:morpheus_kyc_user/pages/create_witness_request/create_witness_request.dart';
-import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 
 class ProcessDetailsPage extends StatefulWidget {
   final Process _process;

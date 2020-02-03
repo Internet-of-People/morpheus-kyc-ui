@@ -2,17 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:morpheus_kyc_user/io/api/native_sdk.dart';
+import 'package:morpheus_common/io/api/native_sdk.dart';
+import 'package:morpheus_common/utils/log.dart';
+import 'package:morpheus_common/utils/morpheus_color.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
 import 'package:morpheus_kyc_user/store/actions.dart';
 import 'package:morpheus_kyc_user/store/reducers/app_state_reducer.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
-import 'package:morpheus_kyc_user/utils/log.dart';
-import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:redux/redux.dart';
 
-void main() => runApp(KYCApp(
+void main() => runApp(UserApp(
     Store<AppState>(
       appReducer,
       initialState: AppState(
@@ -22,23 +22,24 @@ void main() => runApp(KYCApp(
     ),
 ));
 
-class KYCApp extends StatefulWidget {
+class UserApp extends StatefulWidget {
   final Store<AppState> _store;
 
-  const KYCApp(this._store, {Key key}) : super(key: key);
+  const UserApp(this._store, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return KYCAppState();
+    return UserAppState();
   }
 }
 
-class KYCAppState extends State<KYCApp> {
+class UserAppState extends State<UserApp> {
   Future<Directory> _applicationsDocDirFut;
-  final Log _log = Log(KYCApp);
+  final Log _log = Log(UserApp);
 
   @override
   void initState() {
+    _log.debug('Initializing app state...');
     super.initState();
     _applicationsDocDirFut = getApplicationDocumentsDirectory();
   }
@@ -49,13 +50,14 @@ class KYCAppState extends State<KYCApp> {
       future: _applicationsDocDirFut,
       builder: (context, AsyncSnapshot<Directory> snapshot) {
         if(snapshot.hasData && widget._store.state.loading) {
+          _log.debug('Using directory for storage: ${snapshot.data}');
           _loadVault(snapshot.data);
         }
 
         return StoreProvider<AppState>(
           store: widget._store,
           child: MaterialApp(
-            title: 'Morpheus KYC PoC',
+            title: 'User App',
             theme: ThemeData(
               primarySwatch: primaryMaterialColor,
             ),

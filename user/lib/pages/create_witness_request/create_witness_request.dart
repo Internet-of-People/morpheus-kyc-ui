@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:json_schema/json_schema.dart';
-import 'package:morpheus_kyc_user/io/api/authority/witness_request.dart';
-import 'package:morpheus_kyc_user/io/api/ledger/did.dart';
-import 'package:morpheus_kyc_user/io/api/native_sdk.dart';
+import 'package:morpheus_common/io/api/authority/witness_request.dart';
+import 'package:morpheus_common/io/api/ledger/did.dart';
+import 'package:morpheus_common/io/api/native_sdk.dart';
+import 'package:morpheus_common/utils/morpheus_color.dart';
+import 'package:morpheus_common/utils/schema_form/form_builder.dart';
+import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
-import 'package:morpheus_kyc_user/utils/morpheus_color.dart';
-import 'package:morpheus_kyc_user/utils/schema_form/form_builder.dart';
-import 'package:morpheus_kyc_user/utils/schema_form/map_as_table.dart';
 import 'package:redux/redux.dart';
 
 abstract class _Step {
