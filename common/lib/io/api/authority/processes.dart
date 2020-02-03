@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'process_response.g.dart';
+part 'processes.g.dart';
 
 @JsonSerializable()
 class ProcessResponse {

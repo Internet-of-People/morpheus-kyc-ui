@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:morpheus_common/io/api/authority/process_response.dart';
-import 'package:morpheus_common/io/api/authority/witness_request.dart';
+import 'package:morpheus_common/io/api/authority/processes.dart';
+import 'package:morpheus_common/io/api/authority/requests.dart';
 import 'package:morpheus_common/utils/log.dart';
 
 class AuthorityApi {
@@ -18,34 +18,38 @@ class AuthorityApi {
 
   static AuthorityApi setAsRealDevice(url) => _instance = AuthorityApi(url);
 
-  Future<List<Process>> getProcesses() async {
-    return get('$_apiUrl/processes')
+  Future<ProcessResponse> getProcesses() async {
+    return _get('/processes')
       .then((respJson) =>
-        ProcessResponse
-          .fromJson(json.decode(respJson))
-          .processes
+        ProcessResponse.fromJson(json.decode(respJson))
       );
   }
 
   Future<String> getBlob(String contentId) async {
-    return get('$_apiUrl/blob/$contentId');
+    return _get('/blob/$contentId');
   }
 
   Future<String> sendWitnessRequest(String request) {
-    return post('$_apiUrl/requests', request, 202);
+    return _post('/requests', request, 202);
   }
 
   Future<RequestStatusResponse> checkRequestStatus(String capabilityLink) {
-    return get('$_apiUrl/requests/$capabilityLink/status').then(
-        (resp) => RequestStatusResponse.fromJson(json.decode(resp))
+    return _get('/requests/$capabilityLink/status').then(
+      (resp) => RequestStatusResponse.fromJson(json.decode(resp))
     );
   }
 
-  static Future<String> post(String url, dynamic body, int expectedStatus) async {
-    _log.debug('POST $url...');
+  Future<WitnessRequestsResponse> getWitnessRequests() {
+    return _get('$_apiUrl/requests').then(
+      (resp) => WitnessRequestsResponse.fromJson(json.decode(resp))
+    );
+  }
+
+  Future<String> _post(String url, dynamic body, int expectedStatus) async {
+    _log.debug('POST $_apiUrl/$url...');
 
     try {
-      final response = await http.post(url,body: body);
+      final response = await http.post('$_apiUrl$url',body: body);
       _log.debug('Status code: ${response.statusCode} $url');
 
       if (response.statusCode == expectedStatus) {
@@ -62,11 +66,11 @@ class AuthorityApi {
     }
   }
 
-  static Future<String> get(String url) async {
-    _log.debug('GET $url...');
+  Future<String> _get(String url) async {
+    _log.debug('GET $_apiUrl/$url...');
 
     try {
-      final response = await http.get(url);
+      final response = await http.get('$_apiUrl$url');
       _log.debug('Status code: ${response.statusCode} $url');
 
       if (response.statusCode == 200) {

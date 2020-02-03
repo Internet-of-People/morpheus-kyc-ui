@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:json_schema/json_schema.dart';
-import 'package:morpheus_common/io/api/authority/witness_request.dart';
+import 'package:morpheus_common/io/api/authority/requests.dart';
 import 'package:morpheus_common/io/api/ledger/did.dart';
 import 'package:morpheus_common/io/api/native_sdk.dart';
 import 'package:morpheus_common/utils/morpheus_color.dart';

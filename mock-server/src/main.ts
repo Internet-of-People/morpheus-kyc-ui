@@ -53,6 +53,14 @@ class Server {
       });
     });
 
+    this.app.get('/requests', async (req, res) => {
+      await this.sleep();
+      res.status(200).json([
+        {hashlin: 'HASHLINK1', metadata: {dateOfRequest: 1580736433, status: 'PENDING', process: 'PROCESS_HASHLINK'}},
+        {hashlin: 'HASHLINK2', metadata: {dateOfRequest: 1580736133, status: 'ACCEPTED', process: 'PROCESS_HASHLINK'}}
+      ]);
+    });
+
     this.app.listen(8080, '0.0.0.0', (): void => {
       console.log('Listening on 0.0.0.0:8080');
     });

@@ -1,6 +1,54 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'witness_request.g.dart';
+part 'requests.g.dart';
+
+@JsonSerializable()
+class WitnessRequestsResponse {
+  final List<WitnessRequestWithMetaData> requests;
+
+  WitnessRequestsResponse(this.requests);
+
+  factory WitnessRequestsResponse.fromJson(Map<String, dynamic> json) => _$WitnessRequestsResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WitnessRequestsResponseToJson(this);
+}
+
+@JsonSerializable()
+class RequestStatusResponse {
+  final RequestStatus status;
+  final SignedStatement signedStatement;
+
+  RequestStatusResponse(this.status, this.signedStatement);
+
+  factory RequestStatusResponse.fromJson(Map<String, dynamic> json) => _$RequestStatusResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RequestStatusResponseToJson(this);
+}
+
+@JsonSerializable()
+class WitnessRequestWithMetaData {
+  final String hashlink;
+  final WitnessRequestMetaData metadata;
+
+  WitnessRequestWithMetaData(this.hashlink, this.metadata);
+
+  factory WitnessRequestWithMetaData.fromJson(Map<String, dynamic> json) => _$WitnessRequestWithMetaDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WitnessRequestWithMetaDataToJson(this);
+}
+
+@JsonSerializable()
+class WitnessRequestMetaData {
+  final int dateOfRequest;
+  final RequestStatus status;
+  final String process;
+
+  WitnessRequestMetaData(this.dateOfRequest, this.status, this.process);
+
+  factory WitnessRequestMetaData.fromJson(Map<String, dynamic> json) => _$WitnessRequestMetaDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WitnessRequestMetaDataToJson(this);
+}
 
 @JsonSerializable()
 class WitnessRequest {
@@ -58,18 +106,6 @@ enum RequestStatus {
   PENDING,
   APPROVED,
   DENIED,
-}
-
-@JsonSerializable()
-class RequestStatusResponse {
-  final RequestStatus status;
-  final SignedStatement signedStatement;
-
-  RequestStatusResponse(this.status, this.signedStatement);
-
-  factory RequestStatusResponse.fromJson(Map<String, dynamic> json) => _$RequestStatusResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RequestStatusResponseToJson(this);
 }
 
 @JsonSerializable()

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/io/api/authority/process_response.dart';
+import 'package:morpheus_common/io/api/authority/processes.dart';
 import 'package:morpheus_kyc_user/pages/process_details/process_details.dart';
 
 class ProcessListView extends StatelessWidget {

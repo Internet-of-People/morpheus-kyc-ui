@@ -22,5 +22,5 @@ For more info visit:
 * https://github.com/dart-lang/json_serializable/tree/master/example
 
 ```bash
-$ flutter pub run build_runner build
+$ flutter pub run build_runner build --delete-conflicting-outputs
 ```

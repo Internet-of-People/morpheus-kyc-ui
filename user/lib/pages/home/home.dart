@@ -19,7 +19,7 @@ class HomePageState extends State<HomePage> {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 16.0),
-              child: Image(image: AssetImage('assets/Icon-512x512.png'),width: 100,),
+              child: Image(image: AssetImage('assets/morpheus_logo.png'),width: 100,),
             ),
             const Text('Welcome to Morpheus!', style: TextStyle(
               fontSize: 24
