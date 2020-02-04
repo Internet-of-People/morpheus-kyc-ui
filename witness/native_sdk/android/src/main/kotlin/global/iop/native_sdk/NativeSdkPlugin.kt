@@ -1,4 +1,4 @@
-package com.example.native_sdk
+package global.iop.native_sdk
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin
