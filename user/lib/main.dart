@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:morpheus_common/io/api/native_sdk.dart';
+import 'package:morpheus_common/theme/theme.dart';
 import 'package:morpheus_common/utils/log.dart';
-import 'package:morpheus_common/utils/morpheus_color.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
 import 'package:morpheus_kyc_user/store/actions.dart';
 import 'package:morpheus_kyc_user/store/reducers/app_state_reducer.dart';
@@ -58,9 +58,7 @@ class UserAppState extends State<UserApp> {
           store: widget._store,
           child: MaterialApp(
             title: 'User App',
-            theme: ThemeData(
-              primarySwatch: primaryMaterialColor,
-            ),
+            theme: MorpheusTheme.theme,
             home: snapshot.hasData ? HomePage() : CircularProgressIndicator(),
           ),
         );

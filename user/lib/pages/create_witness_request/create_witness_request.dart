@@ -6,7 +6,6 @@ import 'package:json_schema/json_schema.dart';
 import 'package:morpheus_common/io/api/authority/requests.dart';
 import 'package:morpheus_common/io/api/ledger/did.dart';
 import 'package:morpheus_common/io/api/native_sdk.dart';
-import 'package:morpheus_common/utils/morpheus_color.dart';
 import 'package:morpheus_common/utils/schema_form/form_builder.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
@@ -140,7 +139,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
                       style: TextStyle(color: Colors.black),
                       underline: Container(
                         height: 2,
-                        color: primaryColor,
+                        color: Theme.of(context).primaryColor,
                       ),
                       onChanged: (String newValue) {
                         setState(() {

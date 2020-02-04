@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:morpheus_common/utils/morpheus_color.dart';
 import 'package:morpheus_common/widgets/did_selector.dart';
 import 'package:morpheus_kyc_user/store/actions.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
@@ -34,7 +33,7 @@ class HeaderState extends State<Header> {
 
     return DrawerHeader(
         decoration: BoxDecoration(
-          color: primaryColor,
+          color: Theme.of(context).primaryColor,
         ),
         margin: EdgeInsets.zero,
         child: Column(

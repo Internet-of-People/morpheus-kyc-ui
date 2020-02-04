@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:morpheus_common/theme/theme.dart';
 import 'package:witness/pages/home.dart';
 
 void main() async {
@@ -12,9 +13,7 @@ class WitnessApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Witness',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: MorpheusTheme.theme,
       home: HomePage(),
     );
   }
