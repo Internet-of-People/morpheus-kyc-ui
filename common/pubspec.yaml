@@ -9,6 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # For state management
+  redux: ^4.0.0
+  flutter_redux: ^0.6.0
+  # Other
   json_annotation: ^3.0.1
   http: ^0.12.0+4
   intl: ^0.15.8

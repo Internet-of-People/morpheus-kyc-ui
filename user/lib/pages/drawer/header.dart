@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:morpheus_common/state/actions.dart';
 import 'package:morpheus_common/widgets/did_selector.dart';
-import 'package:morpheus_kyc_user/store/actions.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
 import 'package:redux/redux.dart';
 

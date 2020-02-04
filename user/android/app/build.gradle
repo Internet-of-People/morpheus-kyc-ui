@@ -37,7 +37,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "global.iop.kyc"
+        applicationId "com.example.kyc"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()

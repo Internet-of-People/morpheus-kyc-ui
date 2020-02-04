@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus_common/io/api/authority/authority_api.dart';
 import 'package:morpheus_common/io/api/native_sdk.dart';
+import 'package:witness/drawer/header.dart';
 import 'package:witness/pages/requests.dart';
 
 class MainDrawer extends StatelessWidget {

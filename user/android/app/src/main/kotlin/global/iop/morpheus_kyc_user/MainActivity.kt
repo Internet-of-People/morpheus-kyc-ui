@@ -1,4 +1,4 @@
-package global.iop.morpheus_kyc_user
+package com.example.morpheus_kyc_user
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
