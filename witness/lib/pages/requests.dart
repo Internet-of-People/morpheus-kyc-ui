@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus_common/io/api/authority/authority_api.dart';
 import 'package:morpheus_common/io/api/authority/requests.dart';
+import 'package:witness/pages/request_details.dart';
 
 class RequestsPage extends StatefulWidget {
   @override
@@ -14,17 +15,18 @@ class RequestsPageState extends State<RequestsPage> {
   Widget build(BuildContext context) => FutureBuilder<WitnessRequestsResponse>(
     future: AuthorityApi.instance.getWitnessRequests(),
     builder: (context, AsyncSnapshot<WitnessRequestsResponse> snapshot) {
+      print(snapshot.error);
       return Scaffold(
           appBar: AppBar(title: const Text('Witness')),
           body: snapshot.hasData
               ? _buildList(snapshot.data.requests)
-              : Center(child: CircularProgressIndicator())
+              : Center(child: CircularProgressIndicator()),
       );
     },
   );
 
   Widget _buildList(List<WitnessRequestWithMetaData> requests) {
-    return SingleChildScrollView(
+    return Container(
       child: ListView.builder(
           itemCount: requests.length,
           itemBuilder:(context, int index) {
@@ -32,16 +34,48 @@ class RequestsPageState extends State<RequestsPage> {
             return Column(
               children: <Widget>[
                 Divider(height: 5.0),
-                ListTile(
-                  title: Text(request.metadata.status.toString()),
-                  subtitle: Text('TBD'),
-                  onTap: () {
-                  },
-                ),
+                _buildRequestRow(request)
               ],
             );
           }
       ),
     );
+  }
+
+  Widget _buildRequestRow(WitnessRequestWithMetaData request) {
+    return Row(children: <Widget>[
+      Padding(
+        child: _iconByStatus(request.metadata.status),
+        padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
+      ),
+      Expanded(child: ListTile(
+        title: Text(request.metadata.status.toString()),
+        subtitle: Text('TBD'),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RequestDetailsPage(request)
+              )
+          );
+        },
+      ))
+    ]);
+  }
+
+  Icon _iconByStatus(RequestStatus status) {
+    switch(status) {
+      case RequestStatus.APPROVED:
+        return Icon(Icons.done, color: Theme.of(context).primaryColor,);
+        break;
+      case RequestStatus.DENIED:
+        return Icon(Icons.block, color: Colors.red,);
+        break;
+      case RequestStatus.PENDING:
+        return Icon(Icons.sync, color: Colors.deepOrange,);
+        break;
+      default:
+        throw Exception('Invalid status: $status');
+    }
   }
 }

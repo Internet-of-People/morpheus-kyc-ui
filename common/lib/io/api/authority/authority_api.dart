@@ -40,7 +40,7 @@ class AuthorityApi {
   }
 
   Future<WitnessRequestsResponse> getWitnessRequests() {
-    return _get('$_apiUrl/requests').then(
+    return _get('/requests').then(
       (resp) => WitnessRequestsResponse.fromJson(json.decode(resp))
     );
   }
