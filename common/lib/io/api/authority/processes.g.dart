@@ -8,10 +8,7 @@ part of 'processes.dart';
 
 ProcessResponse _$ProcessResponseFromJson(Map<String, dynamic> json) {
   return ProcessResponse(
-    (json['processes'] as List)
-        ?.map((e) =>
-            e == null ? null : Process.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    (json['processes'] as List)?.map((e) => e as String)?.toList(),
   );
 }
 

@@ -6,7 +6,7 @@ part 'did.g.dart';
 class DIDDocument {
   final String did;
   final List<DIDKey> keys;
-  final Map<DIDKeyRight, List<int>> rights;
+  final Map<RightType, List<DIDKeyRight>> rights;
   final int atHeight;
   final bool tombstoned;
 
@@ -17,17 +17,51 @@ class DIDDocument {
 
 @JsonSerializable()
 class DIDKey {
+  final int index;
   final String auth;
   final int validFromHeight;
   final int validUntilHeight;
-  final bool revoked;
+  final bool valid;
+  final bool tombstoned;
+  final int tombstonedAtHeight;
+  final int queriedAtHeight;
 
-  DIDKey(this.auth, this.validFromHeight, this.validUntilHeight, this.revoked);
+  DIDKey(
+    this.index,
+    this.auth,
+    this.validFromHeight,
+    this.validUntilHeight,
+    this.valid,
+    this.tombstoned,
+    this.tombstonedAtHeight,
+    this.queriedAtHeight
+  );
 
   factory DIDKey.fromJson(Map<String, dynamic> json) => _$DIDKeyFromJson(json);
 }
 
-enum DIDKeyRight {
+enum RightType {
   impersonate,
   update
+}
+
+@JsonSerializable()
+class DIDKeyRight {
+  final String keyLink;
+  final List<DIDKeyRightHistory> history;
+  final bool valid;
+
+  DIDKeyRight(this.keyLink, this.history, this.valid);
+
+  factory DIDKeyRight.fromJson(Map<String, dynamic> json) => _$DIDKeyRightFromJson(json);
+}
+
+@JsonSerializable()
+class DIDKeyRightHistory {
+  final int height;
+  final bool valid;
+
+  DIDKeyRightHistory(this.height, this.valid);
+
+  factory DIDKeyRightHistory.fromJson(Map<String, dynamic> json) => _$DIDKeyRightHistoryFromJson(json);
 }

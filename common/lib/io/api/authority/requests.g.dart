@@ -119,10 +119,8 @@ WitnessRequest _$WitnessRequestFromJson(Map<String, dynamic> json) {
     json['claim'] == null
         ? null
         : Claim.fromJson(json['claim'] as Map<String, dynamic>),
-    json['claimant'] == null
-        ? null
-        : Claimant.fromJson(json['claimant'] as Map<String, dynamic>),
-    json['process'] as String,
+    json['claimant'] as String,
+    json['processId'] as String,
     json['evidence'] as Map<String, dynamic>,
     json['nonce'] as String,
   );
@@ -132,7 +130,7 @@ Map<String, dynamic> _$WitnessRequestToJson(WitnessRequest instance) =>
     <String, dynamic>{
       'claim': instance.claim,
       'claimant': instance.claimant,
-      'process': instance.process,
+      'processId': instance.processId,
       'evidence': instance.evidence,
       'nonce': instance.nonce,
     };
@@ -163,18 +161,6 @@ Claim _$ClaimFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$ClaimToJson(Claim instance) => <String, dynamic>{
       'subject': instance.subject,
       'content': instance.content,
-    };
-
-Claimant _$ClaimantFromJson(Map<String, dynamic> json) {
-  return Claimant(
-    json['did'] as String,
-    json['auth'] as String,
-  );
-}
-
-Map<String, dynamic> _$ClaimantToJson(Claimant instance) => <String, dynamic>{
-      'did': instance.did,
-      'auth': instance.auth,
     };
 
 SignedStatement _$SignedStatementFromJson(Map<String, dynamic> json) {

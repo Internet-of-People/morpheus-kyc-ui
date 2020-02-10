@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:json_schema/json_schema.dart';
+import 'package:morpheus_common/io/api/authority/authority_api.dart';
 import 'package:morpheus_common/io/api/authority/requests.dart';
 import 'package:morpheus_common/io/api/ledger/did.dart';
 import 'package:morpheus_common/io/api/native_sdk.dart';
+import 'package:morpheus_common/utils/nonce.dart';
 import 'package:morpheus_common/utils/schema_form/form_builder.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
@@ -23,11 +25,13 @@ class CreateWitnessRequest extends StatefulWidget{
   final JsonSchemaFormTree _claimSchemaTree = JsonSchemaFormTree();
   final JsonSchemaFormTree _evidenceSchemaTree = JsonSchemaFormTree();
   final String _processName;
+  final String _processContentId;
   final JsonSchema _claimSchema;
   final JsonSchema _evidenceSchema;
 
   CreateWitnessRequest(
     this._processName,
+    this._processContentId,
     this._claimSchema,
     this._evidenceSchema,
     {Key key}
@@ -43,8 +47,8 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
   final GlobalKey<FormState> _claimFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _evidenceFormKey = GlobalKey<FormState>();
 
-  bool _claimFormAutovalidate = false;
-  bool _evidenceFormAutovalidate = false;
+  bool _claimFormAutoValidate = false;
+  bool _evidenceFormAutoValidate = false;
   Map<String, dynamic> _claimData;
   Map<String, dynamic> _evidenceData;
   int _currentStep = _Step.claimSchema;
@@ -58,6 +62,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
   SchemaDefinedFormContent _evidenceForm;
   List<String> _availableKeys;
   String _selectedKey;
+  int _selectedKeyIndex;
 
   @override
   void initState() {
@@ -76,7 +81,8 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
     _availableKeys = DIDDocument.fromJson(
         json.decode(NativeSDK.instance.getDocument(NativeSDK.instance.listDids()[0]))
     ).keys.map((key) => key.auth).toList();
-    _selectedKey = _availableKeys[0];
+    _selectedKeyIndex = 0;
+    _selectedKey = _availableKeys[_selectedKeyIndex];
   }
 
   @override
@@ -100,7 +106,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
                     margin: const EdgeInsets.all(8.0),
                     child: Form(
                       key: _claimFormKey,
-                      autovalidate: _claimFormAutovalidate,
+                      autovalidate: _claimFormAutoValidate,
                       child: _claimForm,
                     ),
                   ),
@@ -115,7 +121,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
                     margin: const EdgeInsets.all(8.0),
                     child: Form(
                       key: _evidenceFormKey,
-                      autovalidate: _evidenceFormAutovalidate,
+                      autovalidate: _evidenceFormAutoValidate,
                       child: _evidenceForm,
                     ),
                   ),
@@ -143,7 +149,8 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
                       ),
                       onChanged: (String newValue) {
                         setState(() {
-                          _selectedKey = newValue;
+                          _selectedKeyIndex = _availableKeys.indexOf(newValue);
+                          _selectedKey = _availableKeys[_selectedKeyIndex];
                         });
                       },
                       items: _availableKeys.map<DropdownMenuItem<String>>((String value) {
@@ -190,7 +197,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       if (!_claimFormKey.currentState.validate()) {
         setState(() {
           _stepStates[_Step.claimSchema] = StepState.error;
-          _claimFormAutovalidate = true;
+          _claimFormAutoValidate = true;
         });
         return;
       }
@@ -205,7 +212,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       if (!_evidenceFormKey.currentState.validate()) {
         setState(() {
           _stepStates[_Step.evidenceSchema] = StepState.error;
-          _evidenceFormAutovalidate = true;
+          _evidenceFormAutoValidate = true;
         });
         return;
       }
@@ -232,23 +239,25 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
 
   _onSign(String activeDid) async {
     final claim = Claim(activeDid, _claimData);
-    final claimant = Claimant(activeDid,_selectedKey);
 
     final request = WitnessRequest(
       claim,
-      claimant,
-      "TBD_PROCESS",
+      '$activeDid#$_selectedKeyIndex',
+      widget._processContentId,
       _evidenceData,
-      "TBD_NONCE",
+      nonce264(),
     );
 
     String signedRequest = NativeSDK.instance.signWitnessRequest(
         request.toJson().toString(),
         _selectedKey
     );
+    print(signedRequest);
 
-    //String capabilityLink = await AuthorityApi.instance.sendWitnessRequest(signedRequest);
-    //RequestStatusResponse requestStatus = await AuthorityApi.instance.checkRequestStatus(capabilityLink);
+    String capabilityLink = await AuthorityApi.instance.sendWitnessRequest(signedRequest);
+    print(capabilityLink);
+    RequestStatusResponse requestStatus = await AuthorityApi.instance.checkRequestStatus(capabilityLink);
+    print(requestStatus);
 
     await showDialog(
       context: context,

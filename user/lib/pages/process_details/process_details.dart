@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:json_schema/json_schema.dart';
-import 'package:morpheus_common/io/api/authority/authority_api.dart';
+import 'package:morpheus_common/io/api/authority/content.dart';
 import 'package:morpheus_common/io/api/authority/processes.dart';
 import 'package:morpheus_kyc_user/pages/create_witness_request/create_witness_request.dart';
 
 class ProcessDetailsPage extends StatefulWidget {
+  final String _processContentId;
   final Process _process;
 
   const ProcessDetailsPage(
+    this._processContentId,
     this._process,
     {Key key}
   ) : super(key: key);
@@ -33,21 +35,21 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
   @override
   void initState() {
     super.initState();
-    _fetchClaimSchemaFut = AuthorityApi.instance.getBlob(widget._process.claimSchema);
-    _fetchEvidenceSchemaFut = AuthorityApi.instance.getBlob(widget._process.evidenceSchema);
+    _fetchClaimSchemaFut = ContentResolver.resolve(widget._process.claimSchema);
+    _fetchEvidenceSchemaFut = ContentResolver.resolve(widget._process.evidenceSchema);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: Future.wait([_fetchClaimSchemaFut, _fetchEvidenceSchemaFut]).then(
-        (responses) => ProcessDetailsResponses(responses[0], responses[1]),
+        (responses) => ResolvedSchemas(responses[0], responses[1]),
       ),
       builder: (
           BuildContext context,
-          AsyncSnapshot<ProcessDetailsResponses> snapshot
+          AsyncSnapshot<ResolvedSchemas> snapshot
       ) {
-        final subheadStyle = Theme.of(context).textTheme.subhead;
+        final subheadStyle = Theme.of(context).textTheme.subtitle1;
         final captionStyle = Theme.of(context).textTheme.caption;
 
         return Scaffold(
@@ -100,7 +102,7 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
     );
   }
 
-  FloatingActionButton _buildButton(AsyncSnapshot<ProcessDetailsResponses> snapshot) {
+  FloatingActionButton _buildButton(AsyncSnapshot<ResolvedSchemas> snapshot) {
     Function onButtonPressed;
     String buttonLabel = 'Loading...';
     Widget buttonIcon = SizedBox(
@@ -110,15 +112,18 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
     );
 
     if (snapshot.hasData) {
-      final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
-      final evidenceSchema = JsonSchema.createSchema(snapshot.data.evidenceSchameResponse);
+      final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchema);
+      final evidenceSchema = JsonSchema.createSchema(snapshot.data.evidenceSchema);
 
       onButtonPressed = (){
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => CreateWitnessRequest(
-                    widget._process.name, claimSchema, evidenceSchema
+                    widget._processContentId,
+                    widget._process.name,
+                    claimSchema,
+                    evidenceSchema,
                 )
             )
         );
@@ -134,12 +139,12 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
     );
   }
 
-  ExpansionPanel _buildClaimPanel(AsyncSnapshot<ProcessDetailsResponses> snapshot) {
+  ExpansionPanel _buildClaimPanel(AsyncSnapshot<ResolvedSchemas> snapshot) {
     List<Widget> claimDetails = <Widget>[];
     String title = 'Loading...';
 
     if(snapshot.hasData){
-      final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchemaResponse);
+      final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchema);
       claimDetails = <Widget>[
         Column(
           children: <Widget>[
@@ -169,12 +174,12 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
     );
   }
 
-  ExpansionPanel _buildEvidencePanel(AsyncSnapshot<ProcessDetailsResponses> snapshot){
+  ExpansionPanel _buildEvidencePanel(AsyncSnapshot<ResolvedSchemas> snapshot){
     List<Widget> evidenceDetails = <Widget>[];
     String title = 'Loading...';
 
     if(snapshot.hasData) {
-      final evidenceSchema = JsonSchema.createSchema(snapshot.data.evidenceSchameResponse);
+      final evidenceSchema = JsonSchema.createSchema(snapshot.data.evidenceSchema);
       evidenceDetails = <Widget>[
         Column(
           children: <Widget>[
@@ -204,9 +209,9 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
   }
 }
 
-class ProcessDetailsResponses {
-  final String claimSchemaResponse;
-  final String evidenceSchameResponse;
+class ResolvedSchemas {
+  final String claimSchema;
+  final String evidenceSchema;
 
-  ProcessDetailsResponses(this.claimSchemaResponse, this.evidenceSchameResponse);
+  ResolvedSchemas(this.claimSchema, this.evidenceSchema);
 }

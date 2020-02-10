@@ -14,8 +14,13 @@ DIDDocument _$DIDDocumentFromJson(Map<String, dynamic> json) {
             e == null ? null : DIDKey.fromJson(e as Map<String, dynamic>))
         ?.toList(),
     (json['rights'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(_$enumDecodeNullable(_$DIDKeyRightEnumMap, k),
-          (e as List)?.map((e) => e as int)?.toList()),
+      (k, e) => MapEntry(
+          _$enumDecodeNullable(_$RightTypeEnumMap, k),
+          (e as List)
+              ?.map((e) => e == null
+                  ? null
+                  : DIDKeyRight.fromJson(e as Map<String, dynamic>))
+              ?.toList()),
     ),
     json['atHeight'] as int,
     json['tombstoned'] as bool,
@@ -27,7 +32,7 @@ Map<String, dynamic> _$DIDDocumentToJson(DIDDocument instance) =>
       'did': instance.did,
       'keys': instance.keys,
       'rights':
-          instance.rights?.map((k, e) => MapEntry(_$DIDKeyRightEnumMap[k], e)),
+          instance.rights?.map((k, e) => MapEntry(_$RightTypeEnumMap[k], e)),
       'atHeight': instance.atHeight,
       'tombstoned': instance.tombstoned,
     };
@@ -64,23 +69,63 @@ T _$enumDecodeNullable<T>(
   return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
-const _$DIDKeyRightEnumMap = {
-  DIDKeyRight.impersonate: 'impersonate',
-  DIDKeyRight.update: 'update',
+const _$RightTypeEnumMap = {
+  RightType.impersonate: 'impersonate',
+  RightType.update: 'update',
 };
 
 DIDKey _$DIDKeyFromJson(Map<String, dynamic> json) {
   return DIDKey(
+    json['index'] as int,
     json['auth'] as String,
     json['validFromHeight'] as int,
     json['validUntilHeight'] as int,
-    json['revoked'] as bool,
+    json['valid'] as bool,
+    json['tombstoned'] as bool,
+    json['tombstonedAtHeight'] as int,
+    json['queriedAtHeight'] as int,
   );
 }
 
 Map<String, dynamic> _$DIDKeyToJson(DIDKey instance) => <String, dynamic>{
+      'index': instance.index,
       'auth': instance.auth,
       'validFromHeight': instance.validFromHeight,
       'validUntilHeight': instance.validUntilHeight,
-      'revoked': instance.revoked,
+      'valid': instance.valid,
+      'tombstoned': instance.tombstoned,
+      'tombstonedAtHeight': instance.tombstonedAtHeight,
+      'queriedAtHeight': instance.queriedAtHeight,
+    };
+
+DIDKeyRight _$DIDKeyRightFromJson(Map<String, dynamic> json) {
+  return DIDKeyRight(
+    json['keyLink'] as String,
+    (json['history'] as List)
+        ?.map((e) => e == null
+            ? null
+            : DIDKeyRightHistory.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    json['valid'] as bool,
+  );
+}
+
+Map<String, dynamic> _$DIDKeyRightToJson(DIDKeyRight instance) =>
+    <String, dynamic>{
+      'keyLink': instance.keyLink,
+      'history': instance.history,
+      'valid': instance.valid,
+    };
+
+DIDKeyRightHistory _$DIDKeyRightHistoryFromJson(Map<String, dynamic> json) {
+  return DIDKeyRightHistory(
+    json['height'] as int,
+    json['valid'] as bool,
+  );
+}
+
+Map<String, dynamic> _$DIDKeyRightHistoryToJson(DIDKeyRightHistory instance) =>
+    <String, dynamic>{
+      'height': instance.height,
+      'valid': instance.valid,
     };

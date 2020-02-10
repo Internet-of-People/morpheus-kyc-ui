@@ -3,7 +3,7 @@ import 'package:morpheus_common/io/api/authority/processes.dart';
 import 'package:morpheus_kyc_user/pages/process_details/process_details.dart';
 
 class ProcessListView extends StatelessWidget {
-  final List<Process> _processes;
+  final Map<String, Process> _processes;
 
   const ProcessListView(
     this._processes,
@@ -12,33 +12,43 @@ class ProcessListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final items = _buildItems(context);
+
     return Container(
       child: ListView.builder(
         itemCount: _processes.length,
         padding: const EdgeInsets.all(15.0),
-        itemBuilder: (BuildContext context, int index) {
-          final process = _processes[index];
-          return Column(
-            children: <Widget>[
-              Divider(height: 5.0),
-              ListTile(
-                title: Text('${process.name}'),
-                subtitle: Text('${process.description}'),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProcessDetailsPage(
-                            process,
-                          )
-                      )
-                  );
-                },
-              ),
-            ],
-          );
-        },
+        itemBuilder: (_, index) => items[index]
       ),
     );
+  }
+
+  List<Column> _buildItems(context) {
+    List<Column> columns = [];
+    for(final entry in _processes.entries) {
+      final process = entry.value;
+      final processContentId = entry.key;
+      columns.add(Column(
+        children: <Widget>[
+          Divider(height: 5.0),
+          ListTile(
+            title: Text('${process.name}'),
+            subtitle: Text('${process.description}'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProcessDetailsPage(
+                        processContentId,
+                        process,
+                      )
+                  )
+              );
+            },
+          ),
+        ],
+      ));
+    }
+    return columns;
   }
 }

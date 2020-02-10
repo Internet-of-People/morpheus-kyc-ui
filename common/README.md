@@ -24,3 +24,9 @@ For more info visit:
 ```bash
 $ flutter pub run build_runner build --delete-conflicting-outputs
 ```
+
+### Running Tests
+
+```bash
+$ flutter test
+```

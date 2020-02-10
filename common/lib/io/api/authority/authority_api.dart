@@ -49,7 +49,13 @@ class AuthorityApi {
     _log.debug('POST $_apiUrl/$url...');
 
     try {
-      final response = await http.post('$_apiUrl$url',body: body);
+      final response = await http.post(
+        '$_apiUrl$url',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: body
+      );
       _log.debug('Status code: ${response.statusCode} $url');
 
       if (response.statusCode == expectedStatus) {

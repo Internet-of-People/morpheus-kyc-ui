@@ -53,12 +53,12 @@ class WitnessRequestMetaData {
 @JsonSerializable()
 class WitnessRequest {
   final Claim claim;
-  final Claimant claimant;
-  final String process;
+  final String claimant;
+  final String processId;
   final Map<String, dynamic> evidence;
   final String nonce;
 
-  WitnessRequest(this.claim, this.claimant, this.process, this.evidence, this.nonce);
+  WitnessRequest(this.claim, this.claimant, this.processId, this.evidence, this.nonce);
 
   factory WitnessRequest.fromJson(Map<String, dynamic> json) => _$WitnessRequestFromJson(json);
 
@@ -88,18 +88,6 @@ class Claim {
   factory Claim.fromJson(Map<String, dynamic> json) => _$ClaimFromJson(json);
 
   Map<String, dynamic> toJson() => _$ClaimToJson(this);
-}
-
-@JsonSerializable()
-class Claimant {
-  final String did;
-  final String auth;
-
-  Claimant(this.did, this.auth);
-
-  factory Claimant.fromJson(Map<String, dynamic> json) => _$ClaimantFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ClaimantToJson(this);
 }
 
 enum RequestStatus {
