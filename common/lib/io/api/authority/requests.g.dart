@@ -20,7 +20,7 @@ WitnessRequestsResponse _$WitnessRequestsResponseFromJson(
 Map<String, dynamic> _$WitnessRequestsResponseToJson(
         WitnessRequestsResponse instance) =>
     <String, dynamic>{
-      'requests': instance.requests,
+      'requests': instance.requests?.map((e) => e?.toJson())?.toList(),
     };
 
 RequestStatusResponse _$RequestStatusResponseFromJson(
@@ -31,6 +31,7 @@ RequestStatusResponse _$RequestStatusResponseFromJson(
         ? null
         : SignedStatement.fromJson(
             json['signedStatement'] as Map<String, dynamic>),
+    json['rejectionReason'] as String,
   );
 }
 
@@ -38,7 +39,8 @@ Map<String, dynamic> _$RequestStatusResponseToJson(
         RequestStatusResponse instance) =>
     <String, dynamic>{
       'status': _$RequestStatusEnumMap[instance.status],
-      'signedStatement': instance.signedStatement,
+      'signedStatement': instance.signedStatement?.toJson(),
+      'rejectionReason': instance.rejectionReason,
     };
 
 T _$enumDecode<T>(
@@ -94,7 +96,7 @@ Map<String, dynamic> _$WitnessRequestWithMetaDataToJson(
         WitnessRequestWithMetaData instance) =>
     <String, dynamic>{
       'hashlink': instance.hashlink,
-      'metadata': instance.metadata,
+      'metadata': instance.metadata?.toJson(),
     };
 
 WitnessRequestMetaData _$WitnessRequestMetaDataFromJson(
@@ -128,7 +130,7 @@ WitnessRequest _$WitnessRequestFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$WitnessRequestToJson(WitnessRequest instance) =>
     <String, dynamic>{
-      'claim': instance.claim,
+      'claim': instance.claim?.toJson(),
       'claimant': instance.claimant,
       'processId': instance.processId,
       'evidence': instance.evidence,
@@ -174,7 +176,7 @@ SignedStatement _$SignedStatementFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$SignedStatementToJson(SignedStatement instance) =>
     <String, dynamic>{
-      'signature': instance.signature,
+      'signature': instance.signature?.toJson(),
       'statement': instance.statement,
     };
 

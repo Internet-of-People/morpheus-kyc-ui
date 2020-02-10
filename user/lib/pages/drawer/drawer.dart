@@ -3,6 +3,7 @@ import 'package:morpheus_common/io/api/authority/authority_api.dart';
 import 'package:morpheus_common/io/api/native_sdk.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/available_processes.dart';
 import 'package:morpheus_kyc_user/pages/drawer/header.dart';
+import 'package:morpheus_kyc_user/pages/requests/requests.dart';
 import 'package:morpheus_kyc_user/pages/scan_qr/scan_qr.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -39,7 +40,21 @@ class MainDrawer extends StatelessWidget {
                     )
                 );
               },
-            )
+            ),
+            ListTile(
+              leading: const Icon(Icons.library_books),
+              title: const Text('Requests'),
+              onTap: () {
+                AuthorityApi.setAsEmulator();
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RequestsPage()
+                    )
+                );
+              },
+            ),
           ],
         )
     );

@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'requests.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class WitnessRequestsResponse {
   final List<WitnessRequestWithMetaData> requests;
 
@@ -13,19 +13,20 @@ class WitnessRequestsResponse {
   Map<String, dynamic> toJson() => _$WitnessRequestsResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class RequestStatusResponse {
   final RequestStatus status;
   final SignedStatement signedStatement;
+  final String rejectionReason;
 
-  RequestStatusResponse(this.status, this.signedStatement);
+  RequestStatusResponse(this.status, this.signedStatement, this.rejectionReason);
 
   factory RequestStatusResponse.fromJson(Map<String, dynamic> json) => _$RequestStatusResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$RequestStatusResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class WitnessRequestWithMetaData {
   final String hashlink;
   final WitnessRequestMetaData metadata;
@@ -50,7 +51,7 @@ class WitnessRequestMetaData {
   Map<String, dynamic> toJson() => _$WitnessRequestMetaDataToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class WitnessRequest {
   final Claim claim;
   final String claimant;
@@ -96,7 +97,7 @@ enum RequestStatus {
   DENIED,
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class SignedStatement {
   final Signature signature;
   final dynamic statement;

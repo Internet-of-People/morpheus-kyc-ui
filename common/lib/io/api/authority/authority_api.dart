@@ -9,14 +9,15 @@ class AuthorityApi {
   static Log _log = Log(AuthorityApi);
   static AuthorityApi _instance;
   final String _apiUrl;
+  final String name;
 
-  AuthorityApi(this._apiUrl);
+  AuthorityApi(this._apiUrl, this.name);
 
   static AuthorityApi get instance => _instance == null ? throw Exception('AuthorityApi is no yet set') : _instance;
 
-  static AuthorityApi setAsEmulator() => _instance = AuthorityApi('http://10.0.2.2:8080');
+  static AuthorityApi setAsEmulator() => _instance = AuthorityApi('http://10.0.2.2:8080', 'Government Office');
 
-  static AuthorityApi setAsRealDevice(url) => _instance = AuthorityApi(url);
+  static AuthorityApi setAsRealDevice(url) => _instance = AuthorityApi(url, 'Government Office');
 
   Future<ProcessResponse> getProcesses() async {
     return _get('/processes')

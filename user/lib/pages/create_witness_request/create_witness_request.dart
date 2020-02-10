@@ -11,7 +11,9 @@ import 'package:morpheus_common/utils/nonce.dart';
 import 'package:morpheus_common/utils/schema_form/form_builder.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
+import 'package:morpheus_kyc_user/store/actions/actions.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
+import 'package:morpheus_kyc_user/store/state/requests_state.dart';
 import 'package:redux/redux.dart';
 
 abstract class _Step {
@@ -237,25 +239,33 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
     }
   }
 
-  _onSign(String activeDid) async {
-    final claim = Claim(activeDid, _claimData);
+  _onSign(SignButtonStoreContext storeContext) async {
+    final claim = Claim(storeContext.activeDid, _claimData);
 
     final request = WitnessRequest(
       claim,
-      '$activeDid#$_selectedKeyIndex',
+      '${storeContext.activeDid}#$_selectedKeyIndex',
       widget._processContentId,
       _evidenceData,
       nonce264(),
     );
 
+
     String signedRequest = NativeSDK.instance.signWitnessRequest(
         request.toJson().toString(),
         _selectedKey
     );
-    print(signedRequest);
 
     String capabilityLink = await AuthorityApi.instance.sendWitnessRequest(signedRequest);
     print(capabilityLink);
+
+    storeContext.dispatch(SentRequest(
+      widget._processName,
+      DateTime.now(),
+      AuthorityApi.instance.name,
+      capabilityLink,
+    ));
+
     RequestStatusResponse requestStatus = await AuthorityApi.instance.checkRequestStatus(capabilityLink);
     print(requestStatus);
 
@@ -305,9 +315,12 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       child: Text('CONTINUE'),
     );
     final signButton = StoreConnector(
-      converter: (Store<AppState> store) => store.state.activeDid,
-      builder: (_, String activeDid) => FlatButton(
-        onPressed: () => _onSign(activeDid),
+      converter: (Store<AppState> store) => SignButtonStoreContext(
+          store.state.activeDid,
+          (sentRequest) => store.dispatch(AddRequestAction(sentRequest))
+      ),
+      builder: (_, SignButtonStoreContext storeContext) => FlatButton(
+        onPressed: () => _onSign(storeContext),
         color: themeData.primaryColor,
         textColor: Colors.white,
         textTheme: ButtonTextTheme.normal,
@@ -345,4 +358,11 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       ),
     );
   }
+}
+
+class SignButtonStoreContext {
+  final String activeDid;
+  final void Function(SentRequest sentRequest) dispatch;
+
+  SignButtonStoreContext(this.activeDid, this.dispatch);
 }
