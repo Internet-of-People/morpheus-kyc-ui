@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus_common/io/api/authority/authority_api.dart';
-import 'package:morpheus_common/io/api/native_sdk.dart';
+import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/available_processes.dart';
 import 'package:morpheus_kyc_user/pages/drawer/header.dart';
 import 'package:morpheus_kyc_user/pages/requests/requests.dart';

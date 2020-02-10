@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:morpheus_common/io/api/authority/processes.dart';
 import 'package:morpheus_common/io/api/authority/requests.dart';
+import 'package:morpheus_common/io/api/core/requests.dart';
 import 'package:morpheus_common/utils/log.dart';
 
 class AuthorityApi {
@@ -30,8 +31,8 @@ class AuthorityApi {
     return _get('/blob/$contentId');
   }
 
-  Future<String> sendWitnessRequest(String request) {
-    return _post('/requests', request, 202);
+  Future<String> sendWitnessRequest(SignedWitnessRequest request) {
+    return _post('/requests', json.encode(request.toJson()), 202);
   }
 
   Future<RequestStatusResponse> checkRequestStatus(String capabilityLink) {

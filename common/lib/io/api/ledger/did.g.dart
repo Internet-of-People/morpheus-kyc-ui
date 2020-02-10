@@ -30,9 +30,9 @@ DIDDocument _$DIDDocumentFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$DIDDocumentToJson(DIDDocument instance) =>
     <String, dynamic>{
       'did': instance.did,
-      'keys': instance.keys,
-      'rights':
-          instance.rights?.map((k, e) => MapEntry(_$RightTypeEnumMap[k], e)),
+      'keys': instance.keys?.map((e) => e?.toJson())?.toList(),
+      'rights': instance.rights?.map((k, e) => MapEntry(
+          _$RightTypeEnumMap[k], e?.map((e) => e?.toJson())?.toList())),
       'atHeight': instance.atHeight,
       'tombstoned': instance.tombstoned,
     };
@@ -113,7 +113,7 @@ DIDKeyRight _$DIDKeyRightFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$DIDKeyRightToJson(DIDKeyRight instance) =>
     <String, dynamic>{
       'keyLink': instance.keyLink,
-      'history': instance.history,
+      'history': instance.history?.map((e) => e?.toJson())?.toList(),
       'valid': instance.valid,
     };
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus_common/io/api/authority/authority_api.dart';
 import 'package:morpheus_common/io/api/authority/requests.dart';
+import 'package:morpheus_common/widgets/request_status_icon.dart';
 import 'package:witness/pages/request_details.dart';
 
 class RequestsPage extends StatefulWidget {
@@ -45,7 +46,7 @@ class RequestsPageState extends State<RequestsPage> {
   Widget _buildRequestRow(WitnessRequestWithMetaData request) {
     return Row(children: <Widget>[
       Padding(
-        child: _iconByStatus(request.metadata.status),
+        child: RequestIcon.byStatus(context, request.metadata.status),
         padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
       ),
       Expanded(child: ListTile(
@@ -61,21 +62,5 @@ class RequestsPageState extends State<RequestsPage> {
         },
       ))
     ]);
-  }
-
-  Icon _iconByStatus(RequestStatus status) {
-    switch(status) {
-      case RequestStatus.APPROVED:
-        return Icon(Icons.done, color: Theme.of(context).primaryColor,);
-        break;
-      case RequestStatus.DENIED:
-        return Icon(Icons.block, color: Colors.red,);
-        break;
-      case RequestStatus.PENDING:
-        return Icon(Icons.sync, color: Colors.deepOrange,);
-        break;
-      default:
-        throw Exception('Invalid status: $status');
-    }
   }
 }

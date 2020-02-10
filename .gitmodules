@@ -1,4 +1,4 @@
 [submodule "morpheus-rust"]
 	path = morpheus-rust
 	url = git@gitlab.iop-ventures.com:iop-stack/dids-and-claims/morpheus-rust.git
-	branch = master
+	branch = json-digest

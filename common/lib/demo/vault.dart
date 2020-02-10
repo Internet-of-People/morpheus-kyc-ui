@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:morpheus_common/io/api/native_sdk.dart';
+import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
 import 'package:morpheus_common/utils/log.dart';
 
 typedef GotActiveDid = void Function(String did);

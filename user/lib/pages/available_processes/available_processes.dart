@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:morpheus_common/io/api/authority/authority_api.dart';
-import 'package:morpheus_common/io/api/authority/content.dart';
 import 'package:morpheus_common/io/api/authority/processes.dart';
+import 'package:morpheus_common/io/api/content_resolver.dart';
+import 'package:morpheus_common/io/api/core/processes.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/proceess_list_view.dart';
 
 class ListAvailableProcessesPage extends StatefulWidget {

@@ -3,27 +3,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:morpheus_common/demo/vault.dart';
-import 'package:morpheus_common/io/api/native_sdk.dart';
+import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
 import 'package:morpheus_common/state/actions.dart';
 import 'package:morpheus_common/theme/theme.dart';
 import 'package:morpheus_common/utils/log.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
-import 'package:morpheus_kyc_user/store/reducers/app_state_reducer.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
-import 'package:morpheus_kyc_user/store/state/requests_state.dart';
+import 'package:morpheus_kyc_user/store/store.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:redux/redux.dart';
 
-void main() => runApp(UserApp(
-    Store<AppState>(
-      appReducer,
-      initialState: AppState(
-        loading: true,
-        activeDid: null,
-        requests: RequestsState([])
-      ),
-    ),
-));
+void main() => runApp(UserApp(storeInstance()));
 
 class UserApp extends StatefulWidget {
   final Store<AppState> _store;

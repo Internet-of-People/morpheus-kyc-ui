@@ -78,7 +78,7 @@ T _$enumDecodeNullable<T>(
 const _$RequestStatusEnumMap = {
   RequestStatus.PENDING: 'PENDING',
   RequestStatus.APPROVED: 'APPROVED',
-  RequestStatus.DENIED: 'DENIED',
+  RequestStatus.REJECTED: 'REJECTED',
 };
 
 WitnessRequestWithMetaData _$WitnessRequestWithMetaDataFromJson(
@@ -114,80 +114,4 @@ Map<String, dynamic> _$WitnessRequestMetaDataToJson(
       'dateOfRequest': instance.dateOfRequest,
       'status': _$RequestStatusEnumMap[instance.status],
       'process': instance.process,
-    };
-
-WitnessRequest _$WitnessRequestFromJson(Map<String, dynamic> json) {
-  return WitnessRequest(
-    json['claim'] == null
-        ? null
-        : Claim.fromJson(json['claim'] as Map<String, dynamic>),
-    json['claimant'] as String,
-    json['processId'] as String,
-    json['evidence'] as Map<String, dynamic>,
-    json['nonce'] as String,
-  );
-}
-
-Map<String, dynamic> _$WitnessRequestToJson(WitnessRequest instance) =>
-    <String, dynamic>{
-      'claim': instance.claim?.toJson(),
-      'claimant': instance.claimant,
-      'processId': instance.processId,
-      'evidence': instance.evidence,
-      'nonce': instance.nonce,
-    };
-
-SignedWitnessRequest _$SignedWitnessRequestFromJson(Map<String, dynamic> json) {
-  return SignedWitnessRequest(
-    json['message'] as String,
-    json['publicKey'] as String,
-    json['signature'] as String,
-  );
-}
-
-Map<String, dynamic> _$SignedWitnessRequestToJson(
-        SignedWitnessRequest instance) =>
-    <String, dynamic>{
-      'message': instance.message,
-      'publicKey': instance.publicKey,
-      'signature': instance.signature,
-    };
-
-Claim _$ClaimFromJson(Map<String, dynamic> json) {
-  return Claim(
-    json['subject'] as String,
-    json['content'] as Map<String, dynamic>,
-  );
-}
-
-Map<String, dynamic> _$ClaimToJson(Claim instance) => <String, dynamic>{
-      'subject': instance.subject,
-      'content': instance.content,
-    };
-
-SignedStatement _$SignedStatementFromJson(Map<String, dynamic> json) {
-  return SignedStatement(
-    json['signature'] == null
-        ? null
-        : Signature.fromJson(json['signature'] as Map<String, dynamic>),
-    json['statement'],
-  );
-}
-
-Map<String, dynamic> _$SignedStatementToJson(SignedStatement instance) =>
-    <String, dynamic>{
-      'signature': instance.signature?.toJson(),
-      'statement': instance.statement,
-    };
-
-Signature _$SignatureFromJson(Map<String, dynamic> json) {
-  return Signature(
-    json['authentication'] as String,
-    json['bytes'] as String,
-  );
-}
-
-Map<String, dynamic> _$SignatureToJson(Signature instance) => <String, dynamic>{
-      'authentication': instance.authentication,
-      'bytes': instance.bytes,
     };

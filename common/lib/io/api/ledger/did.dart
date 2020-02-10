@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'did.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DIDDocument {
   final String did;
   final List<DIDKey> keys;
@@ -13,9 +13,11 @@ class DIDDocument {
   DIDDocument(this.did, this.keys, this.rights, this.atHeight, this.tombstoned);
 
   factory DIDDocument.fromJson(Map<String, dynamic> json) => _$DIDDocumentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DIDDocumentToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DIDKey {
   final int index;
   final String auth;
@@ -38,6 +40,8 @@ class DIDKey {
   );
 
   factory DIDKey.fromJson(Map<String, dynamic> json) => _$DIDKeyFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DIDKeyToJson(this);
 }
 
 enum RightType {
@@ -45,7 +49,7 @@ enum RightType {
   update
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DIDKeyRight {
   final String keyLink;
   final List<DIDKeyRightHistory> history;
@@ -54,9 +58,11 @@ class DIDKeyRight {
   DIDKeyRight(this.keyLink, this.history, this.valid);
 
   factory DIDKeyRight.fromJson(Map<String, dynamic> json) => _$DIDKeyRightFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DIDKeyRightToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DIDKeyRightHistory {
   final int height;
   final bool valid;
@@ -64,4 +70,6 @@ class DIDKeyRightHistory {
   DIDKeyRightHistory(this.height, this.valid);
 
   factory DIDKeyRightHistory.fromJson(Map<String, dynamic> json) => _$DIDKeyRightHistoryFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DIDKeyRightHistoryToJson(this);
 }

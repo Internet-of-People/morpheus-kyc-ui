@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:morpheus_common/io/api/authority/content.dart';
+import 'package:morpheus_common/io/api/core/content.dart';
 
 void main() {
   test('Parses contentId', () {

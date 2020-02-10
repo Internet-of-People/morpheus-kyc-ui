@@ -5,8 +5,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:json_schema/json_schema.dart';
 import 'package:morpheus_common/io/api/authority/authority_api.dart';
 import 'package:morpheus_common/io/api/authority/requests.dart';
+import 'package:morpheus_common/io/api/core/requests.dart';
 import 'package:morpheus_common/io/api/ledger/did.dart';
-import 'package:morpheus_common/io/api/native_sdk.dart';
+import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
 import 'package:morpheus_common/utils/nonce.dart';
 import 'package:morpheus_common/utils/schema_form/form_builder.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
@@ -246,15 +247,19 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       claim,
       '${storeContext.activeDid}#$_selectedKeyIndex',
       widget._processContentId,
-      _evidenceData,
+      //_evidenceData,
+      {},
       nonce264(),
     );
 
-
-    String signedRequest = NativeSDK.instance.signWitnessRequest(
-        request.toJson().toString(),
+    final sdkSignedRequest = NativeSDK.instance.signWitnessRequest(
+        json.encode(request.toJson()),
         _selectedKey
     );
+
+    print(sdkSignedRequest);
+
+    final signedRequest = SignedWitnessRequest.fromJson(json.decode(sdkSignedRequest));
 
     String capabilityLink = await AuthorityApi.instance.sendWitnessRequest(signedRequest);
     print(capabilityLink);
