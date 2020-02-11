@@ -11,7 +11,7 @@ import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
 import 'package:morpheus_common/utils/nonce.dart';
 import 'package:morpheus_common/utils/schema_form/form_builder.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
-import 'package:morpheus_kyc_user/pages/requests/requests.dart';
+import 'package:morpheus_kyc_user/pages/home/home.dart';
 import 'package:morpheus_kyc_user/store/actions/actions.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
 import 'package:morpheus_kyc_user/store/state/requests_state.dart';
@@ -66,6 +66,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
   List<String> _availableKeys;
   String _selectedKey;
   int _selectedKeyIndex;
+  bool _signing = false;
 
   @override
   void initState() {
@@ -247,8 +248,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       claim,
       '${storeContext.activeDid}#$_selectedKeyIndex',
       widget._processContentId,
-      //_evidenceData,
-      {},
+      _evidenceData,
       nonce264(),
     );
 
@@ -257,12 +257,14 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
         _selectedKey
     );
 
-    print(sdkSignedRequest);
+    setState(() {
+      _signing = true;
+    });
 
     final signedRequest = SignedWitnessRequest.fromJson(json.decode(sdkSignedRequest));
+    await Future.delayed(Duration(seconds: 2));
 
     SendWitnessRequestResponse resp = await AuthorityApi.instance.sendWitnessRequest(signedRequest);
-
     storeContext.dispatch(SentRequest(
       widget._processName,
       DateTime.now(),
@@ -270,11 +272,16 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       resp.capabilityLink,
     ));
 
+    setState(() {
+      _signing = false;
+    });
+
     await showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         title: Row(children: <Widget>[
-          Text('Request Approved')
+          Text('Sent')
         ],),
         content: SingleChildScrollView(
           child: ListBody(
@@ -285,11 +292,15 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
         ),
         actions: <Widget>[
           FlatButton(
-            child: Text('OK'),
+            child: Text('BACK TO HOME'),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder:(context) => RequestsPage()
-              ));
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder:(context) => HomePage()
+                  ),
+                  (route) => false
+              );
             },
           ),
         ],
@@ -325,7 +336,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
         color: themeData.primaryColor,
         textColor: Colors.white,
         textTheme: ButtonTextTheme.normal,
-        child: Text('SIGN'),
+        child: Text('SIGN & SEND'),
       ),
     );
 
@@ -344,8 +355,13 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
         buttons.add(cancelButton);
         break;
       case _Step.confirmAndSign:
-        buttons.add(signButton);
-        buttons.add(cancelButton);
+        if(_signing){
+          buttons.add(CircularProgressIndicator());
+        }
+        else {
+          buttons.add(signButton);
+          buttons.add(cancelButton);
+        }
         break;
     }
 
@@ -354,6 +370,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       child: ConstrainedBox(
         constraints: const BoxConstraints.tightFor(height: 48.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: buttons
         ),
       ),
