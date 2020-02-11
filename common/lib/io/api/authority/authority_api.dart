@@ -48,7 +48,7 @@ class AuthorityApi {
   }
 
   Future<String> _post(String url, dynamic body, int expectedStatus) async {
-    _log.debug('POST $_apiUrl/$url...');
+    _log.debug('POST $_apiUrl$url...');
 
     try {
       final response = await http.post(
@@ -75,7 +75,7 @@ class AuthorityApi {
   }
 
   Future<String> _get(String url) async {
-    _log.debug('GET $_apiUrl/$url...');
+    _log.debug('GET $_apiUrl$url...');
 
     try {
       final response = await http.get('$_apiUrl$url');

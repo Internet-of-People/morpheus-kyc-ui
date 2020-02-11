@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/io/api/authority/requests.dart';
+import 'package:witness/pages/requests/request_collected_info.dart';
 
 class RequestDetailsPage extends StatefulWidget {
-  final WitnessRequestWithMetaData _request;
+  final RequestCollectedInfo _info;
 
-  RequestDetailsPage(this._request);
+  RequestDetailsPage(this._info);
 
   @override
   State<StatefulWidget> createState() {
@@ -16,7 +16,7 @@ class RequestDetailsPageState extends State<RequestDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Witness')),
+      appBar: AppBar(title: Text('${widget._info.process.name}')),
       body: Text('TBD')
     );
   }

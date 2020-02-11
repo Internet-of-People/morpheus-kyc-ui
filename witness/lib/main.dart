@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:morpheus_common/demo/vault.dart';
-import 'package:morpheus_common/io/api/native_sdk.dart';
+import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
 import 'package:morpheus_common/state/actions.dart';
 import 'package:morpheus_common/theme/theme.dart';
 import 'package:morpheus_common/utils/log.dart';
@@ -14,7 +13,7 @@ import 'package:witness/pages/home.dart';
 import 'package:witness/store/reducers/app_state_reducer.dart';
 import 'package:witness/store/state/app_state.dart';
 
-void main() async {
+void main() {
   runApp(WitnessApp(
     Store<AppState>(
       appReducer,
@@ -24,7 +23,6 @@ void main() async {
       ),
     ),
   ));
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]);
 }
 
 class WitnessApp extends StatefulWidget {

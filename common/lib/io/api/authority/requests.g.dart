@@ -12,7 +12,7 @@ WitnessRequestsResponse _$WitnessRequestsResponseFromJson(
     (json['requests'] as List)
         ?.map((e) => e == null
             ? null
-            : WitnessRequestWithMetaData.fromJson(e as Map<String, dynamic>))
+            : WitnessRequestStatus.fromJson(e as Map<String, dynamic>))
         ?.toList(),
   );
 }
@@ -76,42 +76,31 @@ T _$enumDecodeNullable<T>(
 }
 
 const _$RequestStatusEnumMap = {
-  RequestStatus.PENDING: 'PENDING',
-  RequestStatus.APPROVED: 'APPROVED',
-  RequestStatus.REJECTED: 'REJECTED',
+  RequestStatus.pending: 'pending',
+  RequestStatus.approved: 'approved',
+  RequestStatus.rejected: 'rejected',
 };
 
-WitnessRequestWithMetaData _$WitnessRequestWithMetaDataFromJson(
-    Map<String, dynamic> json) {
-  return WitnessRequestWithMetaData(
-    json['hashlink'] as String,
-    json['metadata'] == null
+WitnessRequestStatus _$WitnessRequestStatusFromJson(Map<String, dynamic> json) {
+  return WitnessRequestStatus(
+    json['capabilityLink'] as String,
+    json['requestId'] as String,
+    json['dateOfRequest'] == null
         ? null
-        : WitnessRequestMetaData.fromJson(
-            json['metadata'] as Map<String, dynamic>),
-  );
-}
-
-Map<String, dynamic> _$WitnessRequestWithMetaDataToJson(
-        WitnessRequestWithMetaData instance) =>
-    <String, dynamic>{
-      'hashlink': instance.hashlink,
-      'metadata': instance.metadata?.toJson(),
-    };
-
-WitnessRequestMetaData _$WitnessRequestMetaDataFromJson(
-    Map<String, dynamic> json) {
-  return WitnessRequestMetaData(
-    json['dateOfRequest'] as int,
+        : DateTime.parse(json['dateOfRequest'] as String),
     _$enumDecodeNullable(_$RequestStatusEnumMap, json['status']),
-    json['process'] as String,
+    json['processId'] as String,
+    json['notes'] as String,
   );
 }
 
-Map<String, dynamic> _$WitnessRequestMetaDataToJson(
-        WitnessRequestMetaData instance) =>
+Map<String, dynamic> _$WitnessRequestStatusToJson(
+        WitnessRequestStatus instance) =>
     <String, dynamic>{
-      'dateOfRequest': instance.dateOfRequest,
+      'capabilityLink': instance.capabilityLink,
+      'requestId': instance.requestId,
+      'dateOfRequest': instance.dateOfRequest?.toIso8601String(),
       'status': _$RequestStatusEnumMap[instance.status],
-      'process': instance.process,
+      'processId': instance.processId,
+      'notes': instance.notes,
     };

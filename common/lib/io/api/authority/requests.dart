@@ -5,7 +5,7 @@ part 'requests.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class WitnessRequestsResponse {
-  final List<WitnessRequestWithMetaData> requests;
+  final List<WitnessRequestStatus> requests;
 
   WitnessRequestsResponse(this.requests);
 
@@ -28,26 +28,17 @@ class RequestStatusResponse {
 }
 
 @JsonSerializable(explicitToJson: true)
-class WitnessRequestWithMetaData {
-  final String hashlink;
-  final WitnessRequestMetaData metadata;
-
-  WitnessRequestWithMetaData(this.hashlink, this.metadata);
-
-  factory WitnessRequestWithMetaData.fromJson(Map<String, dynamic> json) => _$WitnessRequestWithMetaDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$WitnessRequestWithMetaDataToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class WitnessRequestMetaData {
-  final int dateOfRequest;
+class WitnessRequestStatus {
+  final String capabilityLink;
+  final String requestId;
+  final DateTime dateOfRequest;
   final RequestStatus status;
-  final String process;
+  final String processId;
+  final String notes;
 
-  WitnessRequestMetaData(this.dateOfRequest, this.status, this.process);
+  WitnessRequestStatus(this.capabilityLink, this.requestId, this.dateOfRequest, this.status, this.processId, this.notes);
 
-  factory WitnessRequestMetaData.fromJson(Map<String, dynamic> json) => _$WitnessRequestMetaDataFromJson(json);
+  factory WitnessRequestStatus.fromJson(Map<String, dynamic> json) => _$WitnessRequestStatusFromJson(json);
 
-  Map<String, dynamic> toJson() => _$WitnessRequestMetaDataToJson(this);
+  Map<String, dynamic> toJson() => _$WitnessRequestStatusToJson(this);
 }

@@ -42,9 +42,9 @@ class Claim {
 }
 
 enum RequestStatus {
-  PENDING,
-  APPROVED,
-  REJECTED,
+  pending,
+  approved,
+  rejected,
 }
 
 @JsonSerializable(explicitToJson: true)
