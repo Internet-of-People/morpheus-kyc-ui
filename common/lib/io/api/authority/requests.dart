@@ -42,3 +42,14 @@ class WitnessRequestStatus {
 
   Map<String, dynamic> toJson() => _$WitnessRequestStatusToJson(this);
 }
+
+@JsonSerializable(explicitToJson: true)
+class SendWitnessRequestResponse {
+  final String capabilityLink;
+
+  SendWitnessRequestResponse(this.capabilityLink);
+
+  factory SendWitnessRequestResponse.fromJson(Map<String, dynamic> json) => _$SendWitnessRequestResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SendWitnessRequestResponseToJson(this);
+}

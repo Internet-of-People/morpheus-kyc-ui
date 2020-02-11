@@ -27,13 +27,13 @@ class MapAsTable extends StatelessWidget {
 
     if(topLevel) {
       final List<DataColumn> columns = const [DataColumn(label: Text('Key')), DataColumn(label: Text('Value'))];
-      final List<DataRow> rows = _mapToRow(data, null);
+      final List<DataRow> rows = _mapToRow(data, null, context);
 
       return Optional.of(Container(
         margin: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
         child: Column(
           children: <Widget>[
-            Row(children: [Expanded(child: Text(toBeginningOfSentenceCase(title), style: Theme.of(context).textTheme.subhead,))]),
+            Row(children: [Expanded(child: Text(toBeginningOfSentenceCase(title), style: Theme.of(context).textTheme.subtitle1,))]),
             Row(children: [Expanded(child: DataTable(
               columns: columns,
               rows: rows,
@@ -46,14 +46,14 @@ class MapAsTable extends StatelessWidget {
     return Optional.empty();
   }
 
-  List<DataRow> _mapToRow(Map<String, dynamic> map, String parent){
+  List<DataRow> _mapToRow(Map<String, dynamic> map, String parent, context){
     final List<DataRow> rows = [];
 
     for(final entry in map.entries) {
       final List<DataCell> cells = [];
 
       if(entry.value is Map) {
-        rows.addAll(_mapToRow(entry.value as Map, entry.key));
+        rows.addAll(_mapToRow(entry.value as Map, entry.key, context));
       }
       else {
         cells.add(DataCell(Text(parent == null ? entry.key : '$parent / ${entry.key}')));
@@ -64,7 +64,38 @@ class MapAsTable extends StatelessWidget {
           cells.add(DataCell(entry.value == null ? Text('null') : Image.memory(base64Decode(entry.value))));
         }
         else {
-          cells.add(DataCell(Text(entry.value == null ? 'null' : entry.value)));
+          String text = 'Unknown entry value';
+          if(entry.value == null) {
+            text = 'null';
+          }
+          else if(entry.value is String) {
+            text = entry.value;
+          }
+          else if(entry.value is int) {
+            text = (entry.value as int).toString();
+          }
+          else if(entry.value is DateTime) {
+            text = (entry.value as DateTime).toIso8601String();
+          }
+
+          cells.add(DataCell(
+            Text(text, overflow: TextOverflow.ellipsis),
+            onTap: () async {
+              await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SimpleDialog(
+                    children: <Widget>[
+                      SimpleDialogOption(
+                        onPressed: () {  },
+                        child: Text(text),
+                      ),
+                    ],
+                  );
+                }
+              );
+            }
+          ));
         }
 
         rows.add(DataRow(cells: cells));

@@ -31,8 +31,10 @@ class AuthorityApi {
     return _get('/blob/$contentId');
   }
 
-  Future<String> sendWitnessRequest(SignedWitnessRequest request) {
-    return _post('/requests', json.encode(request.toJson()), 202);
+  Future<SendWitnessRequestResponse> sendWitnessRequest(SignedWitnessRequest request) {
+    return _post('/requests', json.encode(request.toJson()), 202).then(
+      (resp) => SendWitnessRequestResponse.fromJson(json.decode(resp))
+    );
   }
 
   Future<RequestStatusResponse> checkRequestStatus(String capabilityLink) {
@@ -45,6 +47,14 @@ class AuthorityApi {
     return _get('/requests').then(
       (resp) => WitnessRequestsResponse.fromJson(json.decode(resp))
     );
+  }
+
+  Future<void> approveRequest(String capabilityLink) {
+    // TODO
+  }
+
+  Future<void> rejectRequest(String capabilityLink, String rejectionReason) {
+    // TODO
   }
 
   Future<String> _post(String url, dynamic body, int expectedStatus) async {

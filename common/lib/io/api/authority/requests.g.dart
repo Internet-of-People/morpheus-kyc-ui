@@ -104,3 +104,16 @@ Map<String, dynamic> _$WitnessRequestStatusToJson(
       'processId': instance.processId,
       'notes': instance.notes,
     };
+
+SendWitnessRequestResponse _$SendWitnessRequestResponseFromJson(
+    Map<String, dynamic> json) {
+  return SendWitnessRequestResponse(
+    json['capabilityLink'] as String,
+  );
+}
+
+Map<String, dynamic> _$SendWitnessRequestResponseToJson(
+        SendWitnessRequestResponse instance) =>
+    <String, dynamic>{
+      'capabilityLink': instance.capabilityLink,
+    };

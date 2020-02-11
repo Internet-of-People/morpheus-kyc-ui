@@ -46,10 +46,10 @@ class RequestsPageState extends State<RequestsPage> {
     },
   );
 
-  Future<List<RequestInfo>> _futureBuilder() {
-    print('refresing');
+  Future<List<RequestInfo>> _futureBuilder() async {
+    print('refreshing');
     final store = storeInstance();
-    return Future.wait(store.state.requests.requests.map((sentRequest) => _requestFuture(sentRequest)));
+    return await Future.wait(store.state.requests.requests.map((sentRequest) => _requestFuture(sentRequest)));
   }
 
   Future<RequestInfo> _requestFuture(SentRequest sentRequest) async {

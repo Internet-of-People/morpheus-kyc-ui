@@ -28,4 +28,6 @@ class Process {
   Content get constraintsSchemaContent => Content.parse(this.constraintsSchema);
 
   factory Process.fromJson(Map<String, dynamic> json) => _$ProcessFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProcessToJson(this);
 }

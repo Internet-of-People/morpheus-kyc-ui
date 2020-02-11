@@ -11,7 +11,7 @@ import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
 import 'package:morpheus_common/utils/nonce.dart';
 import 'package:morpheus_common/utils/schema_form/form_builder.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
-import 'package:morpheus_kyc_user/pages/home/home.dart';
+import 'package:morpheus_kyc_user/pages/requests/requests.dart';
 import 'package:morpheus_kyc_user/store/actions/actions.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
 import 'package:morpheus_kyc_user/store/state/requests_state.dart';
@@ -261,18 +261,14 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
 
     final signedRequest = SignedWitnessRequest.fromJson(json.decode(sdkSignedRequest));
 
-    String capabilityLink = await AuthorityApi.instance.sendWitnessRequest(signedRequest);
-    print(capabilityLink);
+    SendWitnessRequestResponse resp = await AuthorityApi.instance.sendWitnessRequest(signedRequest);
 
     storeContext.dispatch(SentRequest(
       widget._processName,
       DateTime.now(),
       AuthorityApi.instance.name,
-      capabilityLink,
+      resp.capabilityLink,
     ));
-
-    RequestStatusResponse requestStatus = await AuthorityApi.instance.checkRequestStatus(capabilityLink);
-    print(requestStatus);
 
     await showDialog(
       context: context,
@@ -283,7 +279,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
-              Text('Your request has been approved, statement is now available under your statements menu.')
+              Text('Your request has been sent.')
             ],
           ),
         ),
@@ -292,7 +288,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
             child: Text('OK'),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(
-                builder:(context) => HomePage()
+                builder:(context) => RequestsPage()
               ));
             },
           ),

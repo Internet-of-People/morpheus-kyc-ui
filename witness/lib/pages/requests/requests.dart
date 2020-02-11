@@ -101,6 +101,7 @@ class RequestsPageState extends State<RequestsPage> {
     final Map<String, Process> _processMap = Map();
 
     final response = await AuthorityApi.instance.getWitnessRequests();
+    print(response.toJson());
 
     final processIds = response.requests.map((r) => r.processId).toSet();
 
