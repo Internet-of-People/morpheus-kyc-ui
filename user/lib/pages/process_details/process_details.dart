@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_schema/json_schema.dart';
 import 'package:morpheus_common/io/api/content_resolver.dart';
 import 'package:morpheus_common/io/api/core/processes.dart';
+import 'package:morpheus_common/widgets/nullable_text.dart';
 import 'package:morpheus_kyc_user/pages/create_witness_request/create_witness_request.dart';
 
 class ProcessDetailsPage extends StatefulWidget {
@@ -65,7 +66,7 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
                   child: Column(
                     children: <Widget>[
                       Row(children: <Widget>[Text('Description', style: subheadStyle)],),
-                      Row(children: <Widget>[Expanded(child: Text(widget._process.description, style: captionStyle,))]),
+                      Row(children: <Widget>[Expanded(child: NullableText(text: widget._process.description, style: captionStyle))]),
                     ],
                   ),
                 ),
@@ -120,8 +121,8 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
             context,
             MaterialPageRoute(
                 builder: (context) => CreateWitnessRequest(
-                    widget._processContentId,
                     widget._process.name,
+                    widget._processContentId,
                     claimSchema,
                     evidenceSchema,
                 )
@@ -145,12 +146,12 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
 
     if(snapshot.hasData){
       final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchema);
-      claimDetails = <Widget>[
+      claimDetails = [
         Column(
           children: <Widget>[
             ListTile(
               title: const Text('Description'),
-              subtitle: Text(claimSchema.description),
+              subtitle: NullableText(text: claimSchema.description),
             )
           ],
         ),
@@ -158,7 +159,7 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
           children: <Widget>[
             ListTile(
               title: const Text('Required Data'),
-              subtitle: Text(claimSchema.requiredProperties.join(', ')),
+              subtitle: NullableText(text: claimSchema.requiredProperties.join(', ')),
             )
           ],
         )
@@ -185,7 +186,7 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
           children: <Widget>[
             ListTile(
               title: const Text('Description'),
-              subtitle: Text(evidenceSchema.description),
+              subtitle: NullableText(text: evidenceSchema.description),
             )
           ],
         ),
@@ -193,7 +194,7 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
           children: <Widget>[
             ListTile(
               title: const Text('Required Data'),
-              subtitle: Text(evidenceSchema.requiredProperties.join(', ')),
+              subtitle: NullableText(text: evidenceSchema.requiredProperties.join(', ')),
             )
           ],
         )

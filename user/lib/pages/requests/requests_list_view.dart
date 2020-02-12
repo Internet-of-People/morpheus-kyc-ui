@@ -18,7 +18,6 @@ class RequestsListView extends StatelessWidget {
           padding: const EdgeInsets.all(15.0),
           itemBuilder: (_, index) {
             final request = _requests[index];
-
             return Column(children: <Widget>[
               Divider(height: 5.0),
               Row(children: <Widget>[
