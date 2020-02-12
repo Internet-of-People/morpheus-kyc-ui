@@ -31,6 +31,10 @@ class AuthorityApi {
     return _get('/blob/$contentId');
   }
 
+  Future<String> getPrivateBlob(String contentId) async {
+    return _get('/private-blob/$contentId');
+  }
+
   Future<SendWitnessRequestResponse> sendWitnessRequest(SignedWitnessRequest request) {
     return _post('/requests', json.encode(request.toJson()), 202).then(
       (resp) => SendWitnessRequestResponse.fromJson(json.decode(resp))

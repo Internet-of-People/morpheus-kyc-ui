@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:morpheus_common/io/api/authority/authority_api.dart';
+import 'package:morpheus_common/io/api/authority/requests.dart';
 import 'package:morpheus_common/io/api/core/processes.dart';
+import 'package:morpheus_common/io/api/core/requests.dart';
 import 'package:morpheus_common/widgets/request_status_icon.dart';
 import 'package:witness/pages/requests/request_collected_info.dart';
 import 'package:witness/pages/requests/request_details.dart';
@@ -78,12 +80,12 @@ class RequestsPageState extends State<RequestsPage> {
   Widget _buildRequestRow(RequestCollectedInfo info) {
     return Row(children: <Widget>[
       Padding(
-        child: RequestIcon.byStatus(context, info.status.status),
+        child: RequestIcon.byStatus(context, info.status),
         padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
       ),
       Expanded(child: ListTile(
         title: Text(info.process.name),
-        subtitle: Text(info.request.dateOfRequest.toIso8601String()),
+        subtitle: Text(info.dateOfRequest.toIso8601String()),
         onTap: () {
           Navigator.push(
               context,
@@ -101,8 +103,6 @@ class RequestsPageState extends State<RequestsPage> {
     final Map<String, Process> _processMap = Map();
 
     final response = await AuthorityApi.instance.getWitnessRequests();
-    print(response.toJson());
-
     final processIds = response.requests.map((r) => r.processId).toSet();
 
     await Future.forEach(processIds, (id) async {
@@ -110,10 +110,21 @@ class RequestsPageState extends State<RequestsPage> {
       _processMap[id] = process;
     });
 
-    await Future.forEach(response.requests, (request) async {
-      final status = await AuthorityApi.instance.checkRequestStatus(request.capabilityLink);
-      final process = _processMap[request.processId];
-      _requests.add(RequestCollectedInfo(status,process,request));
+    await Future.forEach(response.requests, (WitnessRequestStatus witnessRequestStatus) async {
+      final request = SignedWitnessRequest.fromJson(
+          json.decode(await AuthorityApi.instance.getPrivateBlob(witnessRequestStatus.requestId))
+      );
+      final requestStatus = await AuthorityApi.instance.checkRequestStatus(witnessRequestStatus.capabilityLink);
+      final process = _processMap[witnessRequestStatus.processId];
+
+      _requests.add(RequestCollectedInfo(
+        process: process,
+        dateOfRequest: witnessRequestStatus.dateOfRequest,
+        notes: witnessRequestStatus.notes,
+        request: request,
+        status: witnessRequestStatus.status,
+        statement: requestStatus.signedStatement,
+      ));
     });
 
     return _requests;

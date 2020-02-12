@@ -19,7 +19,7 @@ class WitnessRequest {
 
 @JsonSerializable(explicitToJson: true)
 class SignedWitnessRequest {
-  final Map<String, dynamic> content;
+  final WitnessRequest content;
   final Signature signature;
 
   SignedWitnessRequest(this.content, this.signature);

@@ -1,10 +1,21 @@
-import 'package:morpheus_common/io/api/authority/requests.dart';
+import 'package:flutter/material.dart';
 import 'package:morpheus_common/io/api/core/processes.dart';
+import 'package:morpheus_common/io/api/core/requests.dart';
 
 class RequestCollectedInfo {
-  final RequestStatusResponse status;
+  final RequestStatus status;
+  final String notes;
+  final DateTime dateOfRequest;
   final Process process;
-  final WitnessRequestStatus request;
+  final SignedWitnessRequest request;
+  final SignedStatement statement;
 
-  RequestCollectedInfo(this.status, this.process, this.request);
+  RequestCollectedInfo({
+    @required this.status,
+    @required this.notes,
+    @required this.dateOfRequest,
+    @required this.process,
+    @required this.request,
+    @required this.statement,
+  });
 }

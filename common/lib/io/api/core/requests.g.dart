@@ -29,7 +29,9 @@ Map<String, dynamic> _$WitnessRequestToJson(WitnessRequest instance) =>
 
 SignedWitnessRequest _$SignedWitnessRequestFromJson(Map<String, dynamic> json) {
   return SignedWitnessRequest(
-    json['content'] as Map<String, dynamic>,
+    json['content'] == null
+        ? null
+        : WitnessRequest.fromJson(json['content'] as Map<String, dynamic>),
     json['signature'] == null
         ? null
         : Signature.fromJson(json['signature'] as Map<String, dynamic>),
@@ -39,7 +41,7 @@ SignedWitnessRequest _$SignedWitnessRequestFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$SignedWitnessRequestToJson(
         SignedWitnessRequest instance) =>
     <String, dynamic>{
-      'content': instance.content,
+      'content': instance.content?.toJson(),
       'signature': instance.signature?.toJson(),
     };
 

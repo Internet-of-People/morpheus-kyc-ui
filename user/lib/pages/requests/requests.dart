@@ -50,7 +50,7 @@ class RequestsPageState extends State<RequestsPage> {
 
   Future<List<RequestInfo>> _futureBuilder() async {
     _log.debug('Building requests future...');
-    final store = AppStore.instance;
+    final store = await AppStore.getInstance();
     return await Future.wait(store.state.requests.requests.map((sentRequest) => _requestFuture(sentRequest)));
   }
 

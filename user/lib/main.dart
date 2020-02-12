@@ -13,7 +13,18 @@ import 'package:morpheus_kyc_user/store/store.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:redux/redux.dart';
 
-void main() => runApp(UserApp(AppStore.instance));
+//void main() async => runApp(UserApp(await AppStore.getInstance()));
+
+void main() {
+  Log log = Log(UserApp);
+  WidgetsFlutterBinding.ensureInitialized();
+  () async {
+    log.debug(('Bootstrapping application...'));
+    final store = await AppStore.getInstance();
+    log.debug('Store created, running app...');
+    runApp(UserApp(store));
+  }();
+}
 
 class UserApp extends StatefulWidget {
   final Store<AppState> _store;
@@ -29,6 +40,7 @@ class UserApp extends StatefulWidget {
 class UserAppState extends State<UserApp> {
   Future<Directory> _applicationsDocDirFut;
   final Log _log = Log(UserApp);
+  bool _loading = true;
 
   @override
   void initState() {
@@ -42,12 +54,12 @@ class UserAppState extends State<UserApp> {
     return FutureBuilder(
       future: _applicationsDocDirFut,
       builder: (context, AsyncSnapshot<Directory> snapshot) {
-        if(snapshot.hasData && widget._store.state.loading) {
+        if(snapshot.hasData && _loading) {
           _log.debug('Using directory for storage: ${snapshot.data}');
           VaultLoader.load(
             snapshot.data,
               (did) => widget._store.dispatch(SetActiveDIDAction(did)),
-              () => widget._store.dispatch(SetAppLoadingAction(false))
+              () => _loading = false,
           );
         }
 

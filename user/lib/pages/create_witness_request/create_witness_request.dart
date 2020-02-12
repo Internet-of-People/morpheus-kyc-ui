@@ -82,6 +82,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
         widget._evidenceSchemaTree
     );
 
+    // TODO: show only keys that has rights to sign
     _availableKeys = DIDDocument.fromJson(
         json.decode(NativeSDK.instance.getDocument(NativeSDK.instance.listDids()[0]))
     ).keys.map((key) => key.auth).toList();

@@ -14,7 +14,7 @@ class RequestDetailsPage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return RequestDetailsPageState(this._info.status.status);
+    return RequestDetailsPageState(this._info.status);
   }
 }
 
@@ -26,17 +26,22 @@ class RequestDetailsPageState extends State<RequestDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> sections = [
+      _buildStatusSection(),
+      _buildProcessSection(),
+      _buildRequestMetaSection(),
+      _buildRequestSection(),
+    ];
+
+    if(widget._info.status == RequestStatus.approved) {
+      sections.add(_buildStatementSection());
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text('${widget._info.process.name}')),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(16.0),
-          child: Column(children: <Widget>[
-            _buildStatusSection(),
-            _buildProcessSection(),
-            _buildRequestSection(),
-            _buildStatementSection(),
-          ]),
+          child: Column(children: sections),
         ),
       ),
       floatingActionButton: SpeedDial(
@@ -104,25 +109,41 @@ class RequestDetailsPageState extends State<RequestDetailsPage> {
     ]);
   }
 
-  Widget _buildRequestSection() {
-    final request = widget._info.request;
-
+  Widget _buildRequestMetaSection() {
     Map<String, dynamic> infos = Map();
-    infos['DateOfRequest'] = request.dateOfRequest;
-    infos['Notes'] = request.notes;
+    infos['Claimant'] = widget._info.request.content.claimant;
+    infos['DateOfRequest'] = widget._info.dateOfRequest;
+    if(widget._info.notes!=null) {
+      infos['Notes'] = widget._info.notes;
+    }
 
     return Column(children: [
       Container(
-        margin: const EdgeInsets.all(16.0),
-        child: MapAsTable(infos,'Request')
+        margin: const EdgeInsets.only(left: 16.0, right: 16.0),
+        child: MapAsTable(infos,'Request Meta')
       )
+    ]);
+  }
+
+  Widget _buildRequestSection() {
+    final content = widget._info.request.content;
+
+    return Column(children: [
+      Container(
+          margin: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: MapAsTable(content.claim.content,'Claim')
+      ),
+      Container(
+          margin: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: MapAsTable(content.evidence,'Evidence')
+      ),
     ]);
   }
 
   Widget _buildStatementSection() {
     return Card(child: Container(
       padding: EdgeInsets.fromLTRB(16.0,0.0,16.0,0.0),
-      child: MapAsTable(widget._info.status.signedStatement.toJson(),'Statement'),
+      child: MapAsTable(widget._info.statement.toJson(),'Statement'),
     ));
   }
 }

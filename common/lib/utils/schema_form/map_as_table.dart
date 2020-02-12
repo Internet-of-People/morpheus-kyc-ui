@@ -53,7 +53,8 @@ class MapAsTable extends StatelessWidget {
       final List<DataCell> cells = [];
 
       if(entry.value is Map) {
-        rows.addAll(_mapToRow(entry.value as Map, entry.key, context));
+        String thisLevel = parent == null ? entry.key : '$parent / ${entry.key}';
+        rows.addAll(_mapToRow(entry.value as Map, thisLevel, context));
       }
       else {
         cells.add(DataCell(Text(parent == null ? entry.key : '$parent / ${entry.key}')));
