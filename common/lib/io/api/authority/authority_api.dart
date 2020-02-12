@@ -58,10 +58,11 @@ class AuthorityApi {
   }
 
   Future<void> rejectRequest(String capabilityLink, String rejectionReason) {
-    // TODO
+    return _post('/requests/$capabilityLink/reject', json.encode({'rejectionReason':rejectionReason}), 200);
   }
 
   Future<String> _post(String url, dynamic body, int expectedStatus) async {
+    print(body);
     _log.debug('POST $_apiUrl$url...');
 
     try {

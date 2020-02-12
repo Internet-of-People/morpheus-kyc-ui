@@ -2,9 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
+import 'package:morpheus_common/io/api/authority/authority_api.dart';
 import 'package:morpheus_common/io/api/core/requests.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
 import 'package:morpheus_common/widgets/request_status_icon.dart';
+import 'package:witness/pages/requests/rejection_dialog.dart';
 import 'package:witness/pages/requests/request_collected_info.dart';
 
 class RequestDetailsPage extends StatefulWidget {
@@ -14,7 +16,7 @@ class RequestDetailsPage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return RequestDetailsPageState(this._info.status);
+    return RequestDetailsPageState(this._info.status, this._info.rejectionReason);
   }
 }
 
@@ -22,7 +24,7 @@ class RequestDetailsPageState extends State<RequestDetailsPage> {
   RequestStatus _status;
   String _rejectionReason;
 
-  RequestDetailsPageState(this._status);
+  RequestDetailsPageState(this._status, this._rejectionReason);
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,11 @@ class RequestDetailsPageState extends State<RequestDetailsPage> {
       sections.add(_buildStatementSection());
     }
 
+    Widget floatingActionButton;
+    if(_status == RequestStatus.pending) {
+      floatingActionButton = _buildFloatingActionButton();
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text('${widget._info.process.name}')),
       body: SingleChildScrollView(
@@ -44,28 +51,42 @@ class RequestDetailsPageState extends State<RequestDetailsPage> {
           child: Column(children: sections),
         ),
       ),
-      floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
-        animatedIconTheme: IconThemeData(size: 22.0),
-        children: [
-          SpeedDialChild(
-              child: Icon(Icons.thumb_up),
-              backgroundColor: Theme.of(context).primaryColor,
-              label: 'Approve',
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => print('FIRST CHILD')
-          ),
-          SpeedDialChild(
-              child: Icon(Icons.thumb_down),
-              backgroundColor: Colors.red,
-              label: 'Reject',
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => print('FIRST CHILD')
-          ),
-        ],
-      )
+      floatingActionButton: floatingActionButton
     );
   }
+
+  Widget _buildFloatingActionButton() => SpeedDial(
+    animatedIcon: AnimatedIcons.menu_close,
+    animatedIconTheme: IconThemeData(size: 22.0),
+    children: [
+      SpeedDialChild(
+          child: Icon(Icons.thumb_up),
+          backgroundColor: Theme.of(context).primaryColor,
+          label: 'Approve',
+          labelStyle: TextStyle(fontSize: 18.0),
+          onTap: () => print('FIRST CHILD')
+      ),
+      SpeedDialChild(
+          child: Icon(Icons.thumb_down),
+          backgroundColor: Colors.red,
+          label: 'Reject',
+          labelStyle: TextStyle(fontSize: 18.0),
+          onTap: () async {
+            final rejectionResult = await showDialog<RejectionResult>(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => RejectionDialog(widget._info.capabilityLink)
+            );
+            if(rejectionResult.rejected) {
+              setState(() {
+                _status = RequestStatus.rejected;
+                _rejectionReason = rejectionResult.rejectionReason;
+              });
+            }
+          }
+      ),
+    ],
+  );
 
   Widget _buildStatusSection() {
     List<Widget> infos = [];
@@ -78,16 +99,16 @@ class RequestDetailsPageState extends State<RequestDetailsPage> {
       Expanded(child: Text('${toBeginningOfSentenceCase(describeEnum(_status))}',style: Theme.of(context).textTheme.subtitle1,)),
     ]));
 
-    if(_status == RequestStatus.rejected) {
+    if(_status == RequestStatus.rejected && _rejectionReason != null) {
       infos.add(Row(children: [
-        Text('Reason: $_rejectionReason')
+        Padding(child: Text('Reason: $_rejectionReason'), padding: EdgeInsets.only(top:16.0))
       ]));
     }
 
-    return Container(
+    return Card(child: Container(
       padding: EdgeInsets.all(16.0),
       child: Column(children: infos),
-    );
+    ),);
   }
 
   Widget _buildProcessSection() {

@@ -77,7 +77,7 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
       objectChildren.add(Row(
         children: <Widget>[Text(
             toBeginningOfSentenceCase(name),
-            style: Theme.of(context).textTheme.subhead
+            style: Theme.of(context).textTheme.subtitle1
         )],
       ));
     }

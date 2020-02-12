@@ -13,8 +13,6 @@ import 'package:morpheus_kyc_user/store/store.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:redux/redux.dart';
 
-//void main() async => runApp(UserApp(await AppStore.getInstance()));
-
 void main() {
   Log log = Log(UserApp);
   WidgetsFlutterBinding.ensureInitialized();

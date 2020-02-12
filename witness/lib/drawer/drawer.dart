@@ -18,11 +18,12 @@ class MainDrawer extends StatelessWidget {
               onTap: () {
                 AuthorityApi.setAsEmulator();
                 Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RequestsPage()
-                    )
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RequestsPage()
+                  ),
+                  (route) => false
                 );
               },
             )

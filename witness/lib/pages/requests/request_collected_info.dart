@@ -4,6 +4,8 @@ import 'package:morpheus_common/io/api/core/requests.dart';
 
 class RequestCollectedInfo {
   final RequestStatus status;
+  final String capabilityLink;
+  final String rejectionReason;
   final String notes;
   final DateTime dateOfRequest;
   final Process process;
@@ -12,6 +14,8 @@ class RequestCollectedInfo {
 
   RequestCollectedInfo({
     @required this.status,
+    @required this.capabilityLink,
+    @required this.rejectionReason,
     @required this.notes,
     @required this.dateOfRequest,
     @required this.process,

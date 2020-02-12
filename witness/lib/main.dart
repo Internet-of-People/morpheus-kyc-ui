@@ -18,7 +18,6 @@ void main() {
     Store<AppState>(
       appReducer,
       initialState: AppState(
-          loading: true,
           activeDid: null
       ),
     ),
@@ -39,6 +38,7 @@ class WitnessApp extends StatefulWidget {
 class WitnessAppState extends State<WitnessApp> {
   Future<Directory> _applicationsDocDirFut;
   final Log _log = Log(WitnessAppState);
+  bool _loading = true;
 
   @override
   void initState() {
@@ -52,12 +52,12 @@ class WitnessAppState extends State<WitnessApp> {
     return FutureBuilder(
         future: _applicationsDocDirFut,
         builder: (context, AsyncSnapshot<Directory> snapshot) {
-          if(snapshot.hasData && widget._store.state.loading) {
+          if(snapshot.hasData && _loading) {
             _log.debug('Using directory for storage: ${snapshot.data}');
             VaultLoader.load(
                 snapshot.data,
                     (did) => widget._store.dispatch(SetActiveDIDAction(did)),
-                    () => widget._store.dispatch(SetAppLoadingAction(false))
+                    () => _loading = false
             );
           }
 

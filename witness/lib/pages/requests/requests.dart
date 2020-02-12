@@ -6,6 +6,7 @@ import 'package:morpheus_common/io/api/authority/requests.dart';
 import 'package:morpheus_common/io/api/core/processes.dart';
 import 'package:morpheus_common/io/api/core/requests.dart';
 import 'package:morpheus_common/widgets/request_status_icon.dart';
+import 'package:witness/drawer/drawer.dart';
 import 'package:witness/pages/requests/request_collected_info.dart';
 import 'package:witness/pages/requests/request_details.dart';
 
@@ -40,6 +41,7 @@ class RequestsPageState extends State<RequestsPage> {
         ),
       ],
     ),
+    drawer: MainDrawer(),
     body: FutureBuilder<List<RequestCollectedInfo>>(
       future: _fut,
       builder: (context, AsyncSnapshot<List<RequestCollectedInfo>> snapshot) {
@@ -86,13 +88,16 @@ class RequestsPageState extends State<RequestsPage> {
       Expanded(child: ListTile(
         title: Text(info.process.name),
         subtitle: Text(info.dateOfRequest.toIso8601String()),
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => RequestDetailsPage(info)
               )
           );
+          setState(() {
+            _fut = _futureBuilder();
+          });
         },
       ))
     ]);
@@ -118,11 +123,13 @@ class RequestsPageState extends State<RequestsPage> {
       final process = _processMap[witnessRequestStatus.processId];
 
       _requests.add(RequestCollectedInfo(
+        capabilityLink: witnessRequestStatus.capabilityLink,
         process: process,
         dateOfRequest: witnessRequestStatus.dateOfRequest,
         notes: witnessRequestStatus.notes,
         request: request,
         status: witnessRequestStatus.status,
+        rejectionReason: requestStatus.rejectionReason,
         statement: requestStatus.signedStatement,
       ));
     });
