@@ -262,7 +262,6 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
     });
 
     final signedRequest = SignedWitnessRequest.fromJson(json.decode(sdkSignedRequest));
-    await Future.delayed(Duration(seconds: 2));
 
     SendWitnessRequestResponse resp = await AuthorityApi.instance.sendWitnessRequest(signedRequest);
     storeContext.dispatch(SentRequest(

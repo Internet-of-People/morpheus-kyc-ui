@@ -13,7 +13,7 @@ import 'package:morpheus_kyc_user/store/store.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:redux/redux.dart';
 
-void main() => runApp(UserApp(storeInstance()));
+void main() => runApp(UserApp(AppStore.instance));
 
 class UserApp extends StatefulWidget {
   final Store<AppState> _store;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus_common/io/api/authority/authority_api.dart';
+import 'package:morpheus_common/utils/log.dart';
 import 'package:morpheus_kyc_user/pages/requests/request_info.dart';
 import 'package:morpheus_kyc_user/pages/requests/requests_list_view.dart';
 import 'package:morpheus_kyc_user/store/state/requests_state.dart';
@@ -14,6 +15,7 @@ class RequestsPage extends StatefulWidget {
 
 class RequestsPageState extends State<RequestsPage> {
   Future<List<RequestInfo>> _fut;
+  final Log _log = Log(RequestsPageState);
 
   @override
   void initState() {
@@ -47,8 +49,8 @@ class RequestsPageState extends State<RequestsPage> {
   );
 
   Future<List<RequestInfo>> _futureBuilder() async {
-    print('refreshing');
-    final store = storeInstance();
+    _log.debug('Building requests future...');
+    final store = AppStore.instance;
     return await Future.wait(store.state.requests.requests.map((sentRequest) => _requestFuture(sentRequest)));
   }
 
