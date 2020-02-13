@@ -48,18 +48,6 @@ enum RequestStatus {
 }
 
 @JsonSerializable(explicitToJson: true)
-class SignedStatement {
-  final Signature signature;
-  final dynamic statement;
-
-  SignedStatement(this.signature, this.statement);
-
-  factory SignedStatement.fromJson(Map<String, dynamic> json) => _$SignedStatementFromJson(json);
-
-  Map<String, dynamic> toJson() => _$SignedStatementToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class Signature {
   final String publicKey;
   final String bytes;
@@ -69,4 +57,45 @@ class Signature {
   factory Signature.fromJson(Map<String, dynamic> json) => _$SignatureFromJson(json);
 
   Map<String, dynamic> toJson() => _$SignatureToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class WitnessStatement {
+  final Claim claim;
+  final String processId;
+  final WitnessStatementConstraints constraints;
+  final String nonce;
+
+  WitnessStatement(this.claim, this.processId, this.constraints, this.nonce);
+
+  factory WitnessStatement.fromJson(Map<String, dynamic> json) => _$WitnessStatementFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WitnessStatementToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class WitnessStatementConstraints {
+  final DateTime after;
+  final DateTime before;
+  final String witness; // KeyLink
+  final String authority; // DID
+  final Map<String, dynamic> content;
+
+  WitnessStatementConstraints(this.after, this.before, this.witness, this.authority, this.content);
+
+  factory WitnessStatementConstraints.fromJson(Map<String, dynamic> json) => _$WitnessStatementConstraintsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WitnessStatementConstraintsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SignedWitnessStatement  {
+  final WitnessStatement content;
+  final Signature signature;
+
+  SignedWitnessStatement(this.content, this.signature);
+
+  factory SignedWitnessStatement.fromJson(Map<String, dynamic> json) => _$SignedWitnessStatementFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SignedWitnessStatementToJson(this);
 }

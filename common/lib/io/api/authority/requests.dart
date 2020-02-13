@@ -17,7 +17,7 @@ class WitnessRequestsResponse {
 @JsonSerializable(explicitToJson: true)
 class RequestStatusResponse {
   final RequestStatus status;
-  final SignedStatement signedStatement;
+  final SignedWitnessStatement signedStatement;
   final String rejectionReason;
 
   RequestStatusResponse(this.status, this.signedStatement, this.rejectionReason);

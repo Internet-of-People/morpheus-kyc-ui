@@ -29,7 +29,7 @@ RequestStatusResponse _$RequestStatusResponseFromJson(
     _$enumDecodeNullable(_$RequestStatusEnumMap, json['status']),
     json['signedStatement'] == null
         ? null
-        : SignedStatement.fromJson(
+        : SignedWitnessStatement.fromJson(
             json['signedStatement'] as Map<String, dynamic>),
     json['rejectionReason'] as String,
   );

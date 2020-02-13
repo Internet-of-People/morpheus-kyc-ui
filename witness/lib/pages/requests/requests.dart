@@ -125,6 +125,7 @@ class RequestsPageState extends State<RequestsPage> {
       _requests.add(RequestCollectedInfo(
         capabilityLink: witnessRequestStatus.capabilityLink,
         process: process,
+        processId: witnessRequestStatus.processId,
         dateOfRequest: witnessRequestStatus.dateOfRequest,
         notes: witnessRequestStatus.notes,
         request: request,

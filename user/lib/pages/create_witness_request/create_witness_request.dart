@@ -11,6 +11,7 @@ import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
 import 'package:morpheus_common/utils/nonce.dart';
 import 'package:morpheus_common/utils/schema_form/form_builder.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
+import 'package:morpheus_common/widgets/key_selector.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
 import 'package:morpheus_kyc_user/store/actions/actions.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
@@ -49,6 +50,7 @@ class CreateWitnessRequest extends StatefulWidget{
 class CreateWitnessRequestState extends State<CreateWitnessRequest> {
   final GlobalKey<FormState> _claimFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _evidenceFormKey = GlobalKey<FormState>();
+  final KeySelectorController _keySelectorController = KeySelectorController();
 
   bool _claimFormAutoValidate = false;
   bool _evidenceFormAutoValidate = false;
@@ -63,9 +65,6 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
   ];
   SchemaDefinedFormContent _claimForm;
   SchemaDefinedFormContent _evidenceForm;
-  List<String> _availableKeys;
-  String _selectedKey;
-  int _selectedKeyIndex;
   bool _signing = false;
 
   @override
@@ -81,13 +80,6 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
         widget._evidenceSchema,
         widget._evidenceSchemaTree
     );
-
-    // TODO: show only keys that has rights to sign
-    _availableKeys = DIDDocument.fromJson(
-        json.decode(NativeSDK.instance.getDocument(NativeSDK.instance.listDids()[0]))
-    ).keys.map((key) => key.auth).toList();
-    _selectedKeyIndex = 0;
-    _selectedKey = _availableKeys[_selectedKeyIndex];
   }
 
   @override
@@ -136,37 +128,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
                 title: const Text('Select Key'),
                 isActive: _currentStep == _Step.selectKey,
                 state: _stepStates[_Step.selectKey],
-                content: Column(
-                  children: <Widget>[
-                    Row(children: [
-                      Expanded(child: Text(
-                        'Please select, which key you would like to use for signing this request:',
-                      ))
-                    ]),
-                    DropdownButton<String>(
-                      value: _selectedKey,
-                      isExpanded: true,
-                      icon: Icon(Icons.arrow_drop_down,color: Colors.black),
-                      style: TextStyle(color: Colors.black),
-                      underline: Container(
-                        height: 2,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      onChanged: (String newValue) {
-                        setState(() {
-                          _selectedKeyIndex = _availableKeys.indexOf(newValue);
-                          _selectedKey = _availableKeys[_selectedKeyIndex];
-                        });
-                      },
-                      items: _availableKeys.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value, overflow: TextOverflow.ellipsis),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                )
+                content: KeySelector(_keySelectorController)
             ),
             Step(
                 title: const Text('Confirm'),
@@ -245,9 +207,11 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
   _onSign(SignButtonStoreContext storeContext) async {
     final claim = Claim(storeContext.activeDid, _claimData);
 
+    final selectedKey = _keySelectorController.value;
+
     final request = WitnessRequest(
       claim,
-      '${storeContext.activeDid}#$_selectedKeyIndex',
+      '${storeContext.activeDid}#${selectedKey.keyIndex}',
       widget._processContentId,
       _evidenceData,
       nonce264(),
@@ -255,7 +219,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
 
     final sdkSignedRequest = NativeSDK.instance.signWitnessRequest(
         json.encode(request.toJson()),
-        _selectedKey
+        selectedKey.key
     );
 
     setState(() {

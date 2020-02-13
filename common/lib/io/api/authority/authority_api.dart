@@ -53,8 +53,8 @@ class AuthorityApi {
     );
   }
 
-  Future<void> approveRequest(String capabilityLink) {
-    // TODO
+  Future<void> approveRequest(String capabilityLink, SignedWitnessStatement statement) {
+    return _post('/requests/$capabilityLink/approve', json.encode(statement.toJson()), 200);
   }
 
   Future<void> rejectRequest(String capabilityLink, String rejectionReason) {
@@ -62,7 +62,6 @@ class AuthorityApi {
   }
 
   Future<String> _post(String url, dynamic body, int expectedStatus) async {
-    print(body);
     _log.debug('POST $_apiUrl$url...');
 
     try {

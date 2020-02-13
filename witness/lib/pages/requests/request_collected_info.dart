@@ -9,8 +9,9 @@ class RequestCollectedInfo {
   final String notes;
   final DateTime dateOfRequest;
   final Process process;
+  final String processId;
   final SignedWitnessRequest request;
-  final SignedStatement statement;
+  final SignedWitnessStatement statement;
 
   RequestCollectedInfo({
     @required this.status,
@@ -19,6 +20,7 @@ class RequestCollectedInfo {
     @required this.notes,
     @required this.dateOfRequest,
     @required this.process,
+    @required this.processId,
     @required this.request,
     @required this.statement,
   });
