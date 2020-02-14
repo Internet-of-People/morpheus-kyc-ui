@@ -42,7 +42,7 @@ class RequestsPageState extends State<RequestsPage> {
           ],
         ),
         body: snapshot.hasData
-            ? RequestsListView(snapshot.data)
+            ? RequestsListView(snapshot.data.where((element) => element != null).toList())
             : Center(child: CircularProgressIndicator()),
       );
     },
@@ -55,7 +55,12 @@ class RequestsPageState extends State<RequestsPage> {
   }
 
   Future<RequestInfo> _requestFuture(SentRequest sentRequest) async {
-    final status = await AuthorityApi.instance.checkRequestStatus(sentRequest.capabilityLink);
-    return RequestInfo(status, sentRequest);
+    try {
+      final status = await AuthorityApi.instance.checkRequestStatus(sentRequest.capabilityLink);
+      return RequestInfo(status, sentRequest);
+    }
+    catch(e) {
+      return null;
+    }
   }
 }

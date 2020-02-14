@@ -29,23 +29,9 @@ class MainDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.android),
-              title: const Text('Emulator - cloud'),
+              title: const Text('Emulator'),
               onTap: () {
                 AuthorityApi.setAsRealDevice('http://34.76.108.115:8080');
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ListAvailableProcessesPage()
-                    )
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.android),
-              title: const Text('Emulator - local'),
-              onTap: () {
-                AuthorityApi.setAsEmulator();
                 Navigator.pop(context);
                 Navigator.push(
                     context,
@@ -59,7 +45,7 @@ class MainDrawer extends StatelessWidget {
               leading: const Icon(Icons.library_books),
               title: const Text('Requests'),
               onTap: () {
-                AuthorityApi.setAsEmulator();
+                AuthorityApi.setAsRealDevice('http://34.76.108.115:8080');
                 Navigator.pop(context);
                 Navigator.push(
                     context,

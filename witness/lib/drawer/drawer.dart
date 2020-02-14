@@ -14,7 +14,7 @@ class MainDrawer extends StatelessWidget {
             Header(NativeSDK.instance.listDids()),
             ListTile(
               leading: const Icon(Icons.android),
-              title: const Text('Requests - Emulator/cloud'),
+              title: const Text('Requests'),
               onTap: () {
                 AuthorityApi.setAsRealDevice('http://34.76.108.115:8080');
                 Navigator.pop(context);
@@ -27,21 +27,6 @@ class MainDrawer extends StatelessWidget {
                 );
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.android),
-              title: const Text('Requests - Emulator/local'),
-              onTap: () {
-                AuthorityApi.setAsEmulator();
-                Navigator.pop(context);
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => RequestsPage()
-                  ),
-                  (route) => false
-                );
-              },
-            )
           ],
         )
     );
