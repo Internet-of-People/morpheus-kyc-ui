@@ -29,7 +29,21 @@ class MainDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.android),
-              title: const Text('Emulator'),
+              title: const Text('Emulator - cloud'),
+              onTap: () {
+                AuthorityApi.setAsRealDevice('http://34.76.108.115:8080');
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ListAvailableProcessesPage()
+                    )
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.android),
+              title: const Text('Emulator - local'),
               onTap: () {
                 AuthorityApi.setAsEmulator();
                 Navigator.pop(context);

@@ -12,6 +12,9 @@ const _subTypeKey = 'subtype';
 abstract class _SubTypes {
   static final String date = 'date';
   static final String photo = 'photo';
+  static final String email = 'email';
+  static final String nonce = 'nonce';
+  static final String contentId = 'contentId';
 }
 
 final _log = Log(JsonSchema);
@@ -21,10 +24,32 @@ extension JsonSchemaExt on JsonSchema {
     return this.type == SchemaType.string && !this.schemaMap.containsKey(_subTypeKey);
   }
 
+  bool isNumber() {
+    return this.type == SchemaType.number;
+  }
+
+  bool isContentId() {
+    return this.type == SchemaType.string &&
+        this.schemaMap.containsKey(_subTypeKey) &&
+        this.schemaMap[_subTypeKey] == _SubTypes.contentId;
+  }
+
   bool isDate() {
     return this.type == SchemaType.string &&
         this.schemaMap.containsKey(_subTypeKey) &&
         this.schemaMap[_subTypeKey] == _SubTypes.date;
+  }
+
+  bool isEmail() {
+    return this.type == SchemaType.string &&
+        this.schemaMap.containsKey(_subTypeKey) &&
+        this.schemaMap[_subTypeKey] == _SubTypes.email;
+  }
+
+  bool isNonce() {
+    return this.type == SchemaType.string &&
+        this.schemaMap.containsKey(_subTypeKey) &&
+        this.schemaMap[_subTypeKey] == _SubTypes.nonce;
   }
 
   bool isPhoto(){
@@ -42,7 +67,7 @@ extension JsonSchemaExt on JsonSchema {
     final List<String> debug = [];
 
     if(this.parent != null && this.parent.requiredProperties.contains(this.propertyName)){
-      if(this.isString() || this.isDate()) {
+      if(this.isString() || this.isDate() || this.isEmail() || this.isNonce()) {
         validators.add(RequiredValidator(errorText: 'Required'));
         debug.add('required');
       }
@@ -51,7 +76,7 @@ extension JsonSchemaExt on JsonSchema {
         debug.add('required');
       }
       else {
-        _log.error('Field ${this.propertyName} has a type ${this.type}, which has no required validator implemented');
+        _log.error('Field ${this.propertyName} has a type ${this.type}, which has no required validator implemented. Schema: $this');
       }
     }
 
