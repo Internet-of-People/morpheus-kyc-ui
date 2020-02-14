@@ -34,6 +34,12 @@ class MapAsTable extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Row(children: [Expanded(child: Text(toBeginningOfSentenceCase(title), style: Theme.of(context).textTheme.subtitle1,))]),
+            Row(children: [Expanded(child: 
+              Padding(
+                padding: EdgeInsets.only(top:16.0),
+                child: Text('Hint: Click on the text to get more detail', style: Theme.of(context).textTheme.caption,)
+              )
+            )]),
             Row(children: [Expanded(child: DataTable(
               columns: columns,
               rows: rows,
@@ -57,7 +63,21 @@ class MapAsTable extends StatelessWidget {
         rows.addAll(_mapToRow(entry.value as Map, thisLevel, context));
       }
       else {
-        cells.add(DataCell(Text(parent == null ? entry.key : '$parent / ${entry.key}')));
+        cells.add(DataCell(
+          Text(parent == null ? entry.key : entry.key),
+          onTap: () async {
+              await showDialog(
+                context: context,
+                builder: (_) => SimpleDialog(
+                    children: [
+                      SimpleDialogOption(
+                        child: Text(parent == null ? entry.key : '$parent / ${entry.key}'),
+                      ),
+                    ],
+                  )
+              );
+            }
+        ));
 
         // TODO currently we expect photo values' keys to be started with 'photo'
         // TODO we also expect that photos are base64 encoded
@@ -79,21 +99,20 @@ class MapAsTable extends StatelessWidget {
             text = (entry.value as DateTime).toIso8601String();
           }
 
+          final cutText = text.length > 26 ? '${text.substring(0,26)}...' : text;
+
           cells.add(DataCell(
-            Text(text, overflow: TextOverflow.ellipsis),
+            Text(cutText),
             onTap: () async {
               await showDialog(
                 context: context,
-                builder: (BuildContext context) {
-                  return SimpleDialog(
-                    children: <Widget>[
+                builder: (_) => SimpleDialog(
+                    children: [
                       SimpleDialogOption(
-                        onPressed: () {  },
                         child: Text(text),
                       ),
                     ],
-                  );
-                }
+                  )
               );
             }
           ));
