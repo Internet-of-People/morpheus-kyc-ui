@@ -76,7 +76,7 @@ class RequestDetailsPageState extends State<RequestDetailsPage> {
               )
             );
 
-            if(approvalResult!=null) {
+            if(approvalResult.statement!=null) {
               setState(() {
                 _statement = approvalResult.statement;
                 _status = RequestStatus.approved;
