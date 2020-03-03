@@ -8,14 +8,17 @@ part of 'app_state.dart';
 
 AppState _$AppStateFromJson(Map<String, dynamic> json) {
   return AppState(
-    activeDid: json['activeDid'] as String,
-    requests: json['requests'] == null
-        ? null
-        : RequestsState.fromJson(json['requests'] as Map<String, dynamic>),
+    url: json['url'] as String,
+    presentationJson: json['presentationJson'] as String,
+    signatureErrors:
+        (json['signatureErrors'] as List)?.map((e) => e as String)?.toList(),
+    discount: json['discount'] as int,
   );
 }
 
 Map<String, dynamic> _$AppStateToJson(AppState instance) => <String, dynamic>{
-      'activeDid': instance.activeDid,
-      'requests': instance.requests?.toJson(),
+      'url': instance.url,
+      'presentationJson': instance.presentationJson,
+      'signatureErrors': instance.signatureErrors,
+      'discount': instance.discount,
     };

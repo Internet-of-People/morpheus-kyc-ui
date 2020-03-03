@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:morpheus_common/utils/log.dart';
-import 'package:morpheus_inspector/store/reducers/app_state_reducer.dart';
-import 'package:morpheus_inspector/store/state/app_state.dart';
-import 'package:morpheus_inspector/store/state/requests_state.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:morpheus_inspector/store/app_state_reducer.dart';
+import 'package:morpheus_inspector/store/app_state.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_persist/redux_persist.dart';
+import 'package:redux_persist_flutter/redux_persist_flutter.dart';
 
 class AppStore {
   static Store<AppState> _instance;
@@ -17,13 +14,10 @@ class AppStore {
   static Future<Store<AppState>> getInstance() async {
     if(_instance == null) {
       _log.debug('Creating store');
-      final storageDir = await getApplicationDocumentsDirectory();
-      final path = '${storageDir.path}/.config/state.json';
-      _log.debug('Storage will be at $path');
 
       _log.debug('Creating persistor');
       final persistor = Persistor<AppState>(
-        storage: FileStorage(File(path)),
+        storage: FlutterStorage(),
         serializer: JsonSerializer<AppState>(AppState.fromJson),
       );
 

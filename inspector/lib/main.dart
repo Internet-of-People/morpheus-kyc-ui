@@ -1,16 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:morpheus_common/demo/vault.dart';
 import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
-import 'package:morpheus_common/state/actions.dart';
 import 'package:morpheus_common/theme/theme.dart';
 import 'package:morpheus_common/utils/log.dart';
-import 'package:morpheus_inspector/pages/home/home.dart';
-import 'package:morpheus_inspector/store/state/app_state.dart';
+import 'package:morpheus_inspector/pages/main.dart';
+import 'package:morpheus_inspector/store/app_state.dart';
 import 'package:morpheus_inspector/store/store.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:redux/redux.dart';
 
 void main() {
@@ -36,40 +31,23 @@ class InspectorApp extends StatefulWidget {
 }
 
 class InspectorAppState extends State<InspectorApp> {
-  Future<Directory> _applicationsDocDirFut;
   final Log _log = Log(InspectorApp);
-  bool _loading = true;
 
   @override
   void initState() {
     _log.debug('Initializing app state...');
     super.initState();
-    _applicationsDocDirFut = getApplicationDocumentsDirectory();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _applicationsDocDirFut,
-      builder: (context, AsyncSnapshot<Directory> snapshot) {
-        if(snapshot.hasData && _loading) {
-          _log.debug('Using directory for storage: ${snapshot.data}');
-          VaultLoader.load(
-            snapshot.data,
-              (did) => widget._store.dispatch(SetActiveDIDAction(did)),
-              () => _loading = false,
-          );
-        }
-
-        return StoreProvider<AppState>(
-          store: widget._store,
-          child: MaterialApp(
-            title: 'User App',
-            theme: MorpheusTheme.theme,
-            home: snapshot.hasData ? HomePage() : CircularProgressIndicator(),
-          ),
-        );
-      },
+    return StoreProvider<AppState>(
+      store: widget._store,
+      child: MaterialApp(
+        title: 'Inspector App',
+        theme: MorpheusTheme.theme,
+        home: MainPage(),
+      ),
     );
   }
 
