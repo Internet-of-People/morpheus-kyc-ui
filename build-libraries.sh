@@ -18,7 +18,7 @@ cd -
 
 # APPS USING NATIVE SDK
 
-declare -a arr=("user" "witness")
+declare -a arr=("user" "witness" "inspector")
 
 for i in "${arr[@]}"
 do
