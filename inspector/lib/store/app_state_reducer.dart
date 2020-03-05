@@ -28,7 +28,7 @@ AppState restartedReducer(AppState state, Restarted action) {
   return AppState();
 }
 
-final stateReducer = combineReducers<AppState>([
+var _reducer = combineReducers<AppState>([
   TypedReducer(scanUrlReducer),
   TypedReducer(urlDownloadedReducer),
   TypedReducer(signaturesValidatedReducer),
@@ -37,5 +37,5 @@ final stateReducer = combineReducers<AppState>([
 ]);
 
 AppState appReducer(AppState state, action) {
-  return stateReducer(state, action);
+  return _reducer(state, action);
 }

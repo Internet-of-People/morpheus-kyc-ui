@@ -22,6 +22,7 @@ dependencies:
   # For state management
   redux: ^4.0.0
   flutter_redux: ^0.6.0
+  flutter_redux_navigation: ^0.5.1
   redux_persist: ^0.8.3
   redux_persist_flutter: ^0.8.2
   json_annotation: ^3.0.1
@@ -29,6 +30,7 @@ dependencies:
   cupertino_icons: ^0.1.3
   qr_code_scanner: ^0.0.12
   flutter_svg: ^0.17.2
+  flutter_speed_dial: ^1.2.5
   morpheus_common:
     path: ../common
 

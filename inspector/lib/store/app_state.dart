@@ -11,7 +11,7 @@ class AppState {
   final List<String> signatureErrors;
   final int discount;
 
-  AppState({
+  const AppState({
     this.url,
     this.presentationJson,
     this.signatureErrors,

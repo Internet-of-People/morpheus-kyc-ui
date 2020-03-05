@@ -1,9 +1,21 @@
+import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:morpheus_common/utils/log.dart';
+import 'package:morpheus_inspector/store/actions.dart';
 import 'package:morpheus_inspector/store/app_state_reducer.dart';
 import 'package:morpheus_inspector/store/app_state.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_persist/redux_persist.dart';
 import 'package:redux_persist_flutter/redux_persist_flutter.dart';
+
+class DownloadMiddleware implements MiddlewareClass {
+  @override
+  call(Store store, action, next) {
+    if (action is ScanUrlAction) {
+      Future.delayed(Duration(seconds: 2), () => store.dispatch(UrlDownloadedAction('{"url":"${action.url}"}')));
+    }
+    next(action);
+  }
+}
 
 class AppStore {
   static Store<AppState> _instance;
@@ -30,7 +42,11 @@ class AppStore {
         initialState: persistedState != null
           ? persistedState
           : AppState.initialState(),
-        middleware: [persistor.createMiddleware()],
+        middleware: [
+          persistor.createMiddleware(),
+          NavigationMiddleware(),
+          DownloadMiddleware(),
+        ],
       );
       _log.debug('Store is ready');
     }
