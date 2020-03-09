@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:morpheus_common/demo/vault.dart';
-import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
+import 'package:morpheus_common/sdk/native_sdk.dart';
 import 'package:morpheus_common/state/actions.dart';
 import 'package:morpheus_common/theme/theme.dart';
 import 'package:morpheus_common/utils/log.dart';

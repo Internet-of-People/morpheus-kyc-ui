@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
-import 'package:morpheus_common/io/api/core/requests.dart';
+import 'package:morpheus_common/sdk/io.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
 import 'package:morpheus_common/widgets/request_status_icon.dart';
 import 'package:witness/pages/requests/approval_dialog.dart';

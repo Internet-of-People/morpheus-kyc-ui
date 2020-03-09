@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/io/api/authority/authority_api.dart';
+import 'package:morpheus_common/sdk/authority_public_api.dart';
 import 'package:morpheus_common/utils/log.dart';
 import 'package:morpheus_kyc_user/pages/requests/request_info.dart';
 import 'package:morpheus_kyc_user/pages/requests/requests_list_view.dart';
@@ -56,7 +56,7 @@ class RequestsPageState extends State<RequestsPage> {
 
   Future<RequestInfo> _requestFuture(SentRequest sentRequest) async {
     try {
-      final status = await AuthorityApi.instance.checkRequestStatus(sentRequest.capabilityLink);
+      final status = await AuthorityPublicApi.instance.getRequestStatus(sentRequest.capabilityLink);
       return RequestInfo(status, sentRequest);
     }
     catch(e) {

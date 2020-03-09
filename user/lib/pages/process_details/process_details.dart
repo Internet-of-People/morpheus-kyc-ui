@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_schema/json_schema.dart';
-import 'package:morpheus_common/io/api/content_resolver.dart';
-import 'package:morpheus_common/io/api/core/processes.dart';
+import 'package:morpheus_common/sdk/authority_public_api.dart';
+import 'package:morpheus_common/sdk/content_resolver.dart';
 import 'package:morpheus_common/widgets/nullable_text.dart';
 import 'package:morpheus_kyc_user/pages/create_witness_request/create_witness_request.dart';
 

@@ -1,11 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:morpheus_common/io/api/authority/authority_api.dart';
-import 'package:morpheus_common/io/api/core/requests.dart';
-import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
+import 'package:morpheus_common/sdk/authority_private_api.dart';
+import 'package:morpheus_common/sdk/io.dart';
+import 'package:morpheus_common/sdk/native_sdk.dart';
 import 'package:morpheus_common/utils/nonce.dart';
 import 'package:morpheus_common/widgets/key_selector.dart';
 import 'package:redux/redux.dart';
@@ -89,7 +88,7 @@ class _ApprovalDialogDialogState extends State<ApprovalDialog> {
 
               final signedStatement = SignedWitnessStatement.fromJson(json.decode(sdkSignedStatement));
 
-              await AuthorityApi.instance.approveRequest(
+              await AuthorityPrivateApi.instance.approveRequest(
                   widget.capabilityLink,
                   signedStatement
               );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/io/api/core/processes.dart';
-import 'package:morpheus_common/io/api/core/requests.dart';
+import 'package:morpheus_common/sdk/authority_public_api.dart';
+import 'package:morpheus_common/sdk/io.dart';
 
 class RequestCollectedInfo {
   final RequestStatus status;

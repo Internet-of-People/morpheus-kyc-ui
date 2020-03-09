@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/io/api/authority/authority_api.dart';
-import 'package:morpheus_common/io/api/authority/processes.dart';
-import 'package:morpheus_common/io/api/content_resolver.dart';
-import 'package:morpheus_common/io/api/core/processes.dart';
+import 'package:morpheus_common/sdk/authority_public_api.dart';
+import 'package:morpheus_common/sdk/content_resolver.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/proceess_list_view.dart';
 
 class ListAvailableProcessesPage extends StatefulWidget {
@@ -21,8 +19,8 @@ class ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> 
   @override
   void initState() {
     super.initState();
-    _processesFut = AuthorityApi.instance
-        .getProcesses()
+    _processesFut = AuthorityPublicApi.instance
+        .listProcesses()
         .then((processesResp) async {
           final contentResolvers = _createContentResolverFutures(processesResp);
           final contents = await Future.wait(contentResolvers);
@@ -55,7 +53,7 @@ class ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> 
     );
   }
 
-  List<Future<String>> _createContentResolverFutures(ProcessResponse response) {
+  List<Future<String>> _createContentResolverFutures(ListProcessesResponse response) {
     List<Future<String>> futures = [];
     response.processes.forEach((contentId) {
       futures.add(ContentResolver.resolve(contentId));

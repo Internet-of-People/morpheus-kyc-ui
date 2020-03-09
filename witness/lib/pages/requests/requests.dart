@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/io/api/authority/authority_api.dart';
-import 'package:morpheus_common/io/api/authority/requests.dart';
-import 'package:morpheus_common/io/api/core/processes.dart';
-import 'package:morpheus_common/io/api/core/requests.dart';
+import 'package:morpheus_common/sdk/authority_private_api.dart';
+import 'package:morpheus_common/sdk/authority_public_api.dart';
+import 'package:morpheus_common/sdk/io.dart';
 import 'package:morpheus_common/widgets/request_status_icon.dart';
 import 'package:witness/drawer/drawer.dart';
 import 'package:witness/pages/requests/request_collected_info.dart';
@@ -107,19 +106,19 @@ class RequestsPageState extends State<RequestsPage> {
     final List<RequestCollectedInfo> _requests = List();
     final Map<String, Process> _processMap = Map();
 
-    final response = await AuthorityApi.instance.getWitnessRequests();
+    final response = await AuthorityPrivateApi.instance.listRequests();
     final processIds = response.requests.map((r) => r.processId).toSet();
 
     await Future.forEach(processIds, (id) async {
-      final process = Process.fromJson(json.decode(await AuthorityApi.instance.getBlob(id)));
+      final process = Process.fromJson(json.decode(await AuthorityPublicApi.instance.getPublicBlob(id)));
       _processMap[id] = process;
     });
 
-    await Future.forEach(response.requests, (WitnessRequestStatus witnessRequestStatus) async {
+    await Future.forEach(response.requests, (RequestEntry witnessRequestStatus) async {
       final request = SignedWitnessRequest.fromJson(
-          json.decode(await AuthorityApi.instance.getPrivateBlob(witnessRequestStatus.requestId))
+          json.decode(await AuthorityPrivateApi.instance.getPrivateBlob(witnessRequestStatus.requestId))
       );
-      final requestStatus = await AuthorityApi.instance.checkRequestStatus(witnessRequestStatus.capabilityLink);
+      final requestStatus = await AuthorityPublicApi.instance.getRequestStatus(witnessRequestStatus.capabilityLink);
       final process = _processMap[witnessRequestStatus.processId];
 
       _requests.add(RequestCollectedInfo(

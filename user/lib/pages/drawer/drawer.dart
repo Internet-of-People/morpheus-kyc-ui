@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/io/api/authority/authority_api.dart';
-import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
+import 'package:morpheus_common/sdk/authority_private_api.dart';
+import 'package:morpheus_common/sdk/authority_public_api.dart';
+import 'package:morpheus_common/sdk/native_sdk.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/available_processes.dart';
 import 'package:morpheus_kyc_user/pages/drawer/header.dart';
 import 'package:morpheus_kyc_user/pages/requests/requests.dart';
@@ -31,7 +32,8 @@ class MainDrawer extends StatelessWidget {
               leading: const Icon(Icons.android),
               title: const Text('Emulator'),
               onTap: () {
-                AuthorityApi.setAsRealDevice('http://34.76.108.115:8080');
+                AuthorityPublicApi.setAsRealDevice('http://34.76.108.115:8080');
+                AuthorityPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
                 Navigator.pop(context);
                 Navigator.push(
                     context,
@@ -45,7 +47,8 @@ class MainDrawer extends StatelessWidget {
               leading: const Icon(Icons.library_books),
               title: const Text('Requests'),
               onTap: () {
-                AuthorityApi.setAsRealDevice('http://34.76.108.115:8080');
+                AuthorityPublicApi.setAsRealDevice('http://34.76.108.115:8080');
+                AuthorityPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
                 Navigator.pop(context);
                 Navigator.push(
                     context,

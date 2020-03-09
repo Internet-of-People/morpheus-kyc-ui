@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/io/api/authority/authority_api.dart';
+import 'package:morpheus_common/sdk/authority_private_api.dart';
 
 class RejectionResult {
   bool rejected;
@@ -56,7 +55,7 @@ class _RejectionDialogState extends State<RejectionDialog> {
               _rejecting = true;
             });
 
-            await AuthorityApi.instance.rejectRequest(
+            await AuthorityPrivateApi.instance.rejectRequest(
               widget.capabilityLink,
               rejectionReason
             );

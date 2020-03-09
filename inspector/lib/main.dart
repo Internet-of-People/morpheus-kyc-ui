@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
+import 'package:morpheus_common/sdk/native_sdk.dart';
 import 'package:redux/redux.dart';
 
-import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
 import 'package:morpheus_common/theme/theme.dart';
 import 'package:morpheus_common/utils/log.dart';
 

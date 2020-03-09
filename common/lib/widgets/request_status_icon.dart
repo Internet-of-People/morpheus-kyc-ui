@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/io/api/core/requests.dart';
+import 'package:morpheus_common/sdk/io.dart';
 
 class RequestIcon {
   static Icon byStatus(BuildContext context, RequestStatus status) {

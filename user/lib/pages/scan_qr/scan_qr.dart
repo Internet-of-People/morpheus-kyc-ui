@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/io/api/authority/authority_api.dart';
+import 'package:morpheus_common/sdk/authority_private_api.dart';
+import 'package:morpheus_common/sdk/authority_public_api.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/available_processes.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -30,7 +31,8 @@ class ScanQRPageState extends State<ScanQRPage> {
                     this.controller = controller;
                     controller.scannedDataStream.listen((scanData) {
                       controller.pauseCamera();
-                      AuthorityApi.setAsRealDevice(scanData);
+                      AuthorityPublicApi.setAsRealDevice(scanData);
+                      AuthorityPrivateApi.setAsRealDevice(scanData);
 
                       Navigator.push(
                           context,

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/io/api/ledger/did.dart';
-import 'package:morpheus_common/io/api/sdk/native_sdk.dart';
+import 'package:morpheus_common/sdk/ledger.dart';
+import 'package:morpheus_common/sdk/native_sdk.dart';
 
 class KeySelectorValue {
   final int keyIndex;
