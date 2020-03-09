@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus_common/sdk/authority_private_api.dart';
 import 'package:morpheus_common/sdk/authority_public_api.dart';
+import 'package:morpheus_common/sdk/inspector_private_api.dart';
+import 'package:morpheus_common/sdk/inspector_public_api.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/available_processes.dart';
+import 'package:morpheus_kyc_user/pages/inspector_scenarios/inspector_scenarios.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScanQRPage extends StatefulWidget {
@@ -33,13 +36,27 @@ class ScanQRPageState extends State<ScanQRPage> {
                       controller.pauseCamera();
                       AuthorityPublicApi.setAsRealDevice(scanData);
                       AuthorityPrivateApi.setAsRealDevice(scanData);
+                      InspectorPublicApi.setAsRealDevice(scanData);
+                      InspectorPrivateApi.setAsRealDevice(scanData);
 
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ListAvailableProcessesPage()
-                          )
-                      );
+                      // Here we check if the url is an Authority or Inspector API
+                      AuthorityPublicApi.instance.listProcesses()
+                          .then((value){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ListAvailableProcessesPage()
+                                )
+                            );
+                          })
+                          .catchError((){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => InspectorScenariosPage()
+                                )
+                            );
+                          });
                     });
                   },
                 )

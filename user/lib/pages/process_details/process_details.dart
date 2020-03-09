@@ -36,8 +36,8 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
   @override
   void initState() {
     super.initState();
-    _fetchClaimSchemaFut = ContentResolver.resolve(widget._process.claimSchema);
-    _fetchEvidenceSchemaFut = ContentResolver.resolve(widget._process.evidenceSchema);
+    _fetchClaimSchemaFut = ContentResolver.resolve(widget._process.claimSchema, ContentLocation.AUTHORITY_PUBLIC);
+    _fetchEvidenceSchemaFut = ContentResolver.resolve(widget._process.evidenceSchema, ContentLocation.AUTHORITY_PUBLIC);
   }
 
   @override

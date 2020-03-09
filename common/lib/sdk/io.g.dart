@@ -154,14 +154,14 @@ License _$LicenseFromJson(Map<String, dynamic> json) {
   return License(
     json['issuedTo'] as String,
     json['purpose'] as String,
-    json['expiry'] == null ? null : DateTime.parse(json['expiry'] as String),
+    json['expiry'] as String,
   );
 }
 
 Map<String, dynamic> _$LicenseToJson(License instance) => <String, dynamic>{
       'issuedTo': instance.issuedTo,
       'purpose': instance.purpose,
-      'expiry': instance.expiry?.toIso8601String(),
+      'expiry': instance.expiry,
     };
 
 Presentation _$PresentationFromJson(Map<String, dynamic> json) {

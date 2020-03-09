@@ -120,7 +120,7 @@ class ProvenClaim {
 class License {
   final String issuedTo;
   final String purpose;
-  final DateTime expiry;
+  final String expiry;
 
   License(this.issuedTo, this.purpose, this.expiry);
 

@@ -18,3 +18,44 @@ Map<String, dynamic> _$ListScenariosResponseToJson(
     <String, dynamic>{
       'scenarios': instance.scenarios,
     };
+
+Prerequisite _$PrerequisiteFromJson(Map<String, dynamic> json) {
+  return Prerequisite(
+    json['process'] as String,
+    (json['claimFields'] as List)?.map((e) => e as String)?.toList(),
+  );
+}
+
+Map<String, dynamic> _$PrerequisiteToJson(Prerequisite instance) =>
+    <String, dynamic>{
+      'process': instance.process,
+      'claimFields': instance.claimFields,
+    };
+
+Scenario _$ScenarioFromJson(Map<String, dynamic> json) {
+  return Scenario(
+    json['name'] as String,
+    json['version'] as int,
+    json['description'] as String,
+    (json['prerequisites'] as List)
+        ?.map((e) =>
+            e == null ? null : Prerequisite.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    (json['requiredLicenses'] as List)
+        ?.map((e) =>
+            e == null ? null : License.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    json['resultSchema'] as String,
+  );
+}
+
+Map<String, dynamic> _$ScenarioToJson(Scenario instance) => <String, dynamic>{
+      'name': instance.name,
+      'version': instance.version,
+      'description': instance.description,
+      'prerequisites':
+          instance.prerequisites?.map((e) => e?.toJson())?.toList(),
+      'requiredLicenses':
+          instance.requiredLicenses?.map((e) => e?.toJson())?.toList(),
+      'resultSchema': instance.resultSchema,
+    };

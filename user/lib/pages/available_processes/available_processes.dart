@@ -7,30 +7,18 @@ import 'package:morpheus_kyc_user/pages/available_processes/proceess_list_view.d
 
 class ListAvailableProcessesPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return ListAvailableProcessesPageState();
-  }
+  State<StatefulWidget> createState() => _ListAvailableProcessesPageState();
 }
 
-class ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> {
+class _ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> {
   Future<Map<String, Process>> _processesFut;
-
 
   @override
   void initState() {
     super.initState();
     _processesFut = AuthorityPublicApi.instance
         .listProcesses()
-        .then((processesResp) async {
-          final contentResolvers = _createContentResolverFutures(processesResp);
-          final contents = await Future.wait(contentResolvers);
-
-          Map<String, String> contentIdContentMap = Map();
-          for(int i=0;i<contents.length;i++) {
-            contentIdContentMap[processesResp.processes[i]] = contents[i];
-          }
-          return contentIdContentMap;
-        })
+        .then((resp) => ContentResolver.resolveByContentIds(resp.processes, ContentLocation.AUTHORITY_PUBLIC))
         .then((contents) => contents.map(
             (contentId, content) => MapEntry(contentId, Process.fromJson(json.decode(content)))
         ));
@@ -51,14 +39,5 @@ class ListAvailableProcessesPageState extends State<ListAvailableProcessesPage> 
         );
       },
     );
-  }
-
-  List<Future<String>> _createContentResolverFutures(ListProcessesResponse response) {
-    List<Future<String>> futures = [];
-    response.processes.forEach((contentId) {
-      futures.add(ContentResolver.resolve(contentId));
-    });
-
-    return futures;
   }
 }

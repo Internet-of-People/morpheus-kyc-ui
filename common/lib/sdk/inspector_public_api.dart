@@ -17,7 +17,7 @@ class InspectorPublicApi {
 
   static InspectorPublicApi get instance => _instance == null ? throw Exception('InspectorPublicApi is no yet set') : _instance;
 
-  static InspectorPublicApi setAsEmulator() => _instance = InspectorPublicApi('http://10.0.2.2:8080', 'Inspector');
+  static InspectorPublicApi setAsEmulator() => _instance = InspectorPublicApi('http://10.0.2.2:8081', 'Inspector');
 
   static InspectorPublicApi setAsRealDevice(url) => _instance = InspectorPublicApi(url, 'Inspector');
 
@@ -45,4 +45,32 @@ class ListScenariosResponse {
 
   factory ListScenariosResponse.fromJson(Map<String, dynamic> json) =>
       _$ListScenariosResponseFromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Prerequisite {
+  final String process;
+  final List<String> claimFields;
+
+  Prerequisite(this.process, this.claimFields);
+
+  factory Prerequisite.fromJson(Map<String, dynamic> json) => _$PrerequisiteFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PrerequisiteToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Scenario {
+  final String name;
+  final int version;
+  final String description;
+  final List<Prerequisite> prerequisites;
+  final List<License> requiredLicenses;
+  final String resultSchema;
+
+  Scenario(this.name, this.version, this.description, this.prerequisites, this.requiredLicenses, this.resultSchema);
+
+  factory Scenario.fromJson(Map<String, dynamic> json) => _$ScenarioFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ScenarioToJson(this);
 }
