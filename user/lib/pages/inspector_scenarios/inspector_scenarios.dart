@@ -28,7 +28,6 @@ class _InspectorScenariosPageState extends State<InspectorScenariosPage> {
   Widget build(BuildContext context) => FutureBuilder<Map<String, Scenario>>(
     future: _scenariosFut,
     builder: (BuildContext context, AsyncSnapshot<Map<String, Scenario>> snapshot) {
-      print(snapshot.error);
       return Scaffold(
           appBar: AppBar(
             title: const Text('Available Scenarios'),

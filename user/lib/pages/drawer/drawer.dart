@@ -56,6 +56,8 @@ class MainDrawer extends StatelessWidget {
                 //InspectorPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
                 InspectorPublicApi.setAsEmulator();
                 InspectorPrivateApi.setAsEmulator();
+                AuthorityPublicApi.setAsEmulator();
+                AuthorityPrivateApi.setAsEmulator();
                 Navigator.pop(context);
                 Navigator.push(
                     context,
@@ -69,8 +71,10 @@ class MainDrawer extends StatelessWidget {
               leading: const Icon(Icons.library_books),
               title: const Text('Requests'),
               onTap: () {
-                AuthorityPublicApi.setAsRealDevice('http://34.76.108.115:8080');
-                AuthorityPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
+                //AuthorityPublicApi.setAsRealDevice('http://34.76.108.115:8080');
+                //AuthorityPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
+                AuthorityPublicApi.setAsEmulator();
+                AuthorityPrivateApi.setAsEmulator();
                 Navigator.pop(context);
                 Navigator.push(
                     context,

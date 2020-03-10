@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus_common/sdk/inspector_public_api.dart';
+import 'package:morpheus_kyc_user/pages/scenario_details/scenario_details.dart';
 
 class ScenariosListView extends StatelessWidget {
   final Map<String, Scenario> _scenarios;
@@ -23,7 +24,6 @@ class ScenariosListView extends StatelessWidget {
     List<Column> columns = [];
     for(final entry in _scenarios.entries) {
       final scenario = entry.value;
-      final scenarioContentId = entry.key;
       columns.add(Column(
         children: <Widget>[
           Divider(height: 5.0),
@@ -31,15 +31,14 @@ class ScenariosListView extends StatelessWidget {
             title: Text('${scenario.name}'),
             subtitle: Text('${scenario.description}'),
             onTap: () {
-              /*Navigator.push(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProcessDetailsPage(
-                        processContentId,
+                      builder: (context) => ScenarioDetailsPage(
                         scenario,
                       )
                   )
-              );*/
+              );
             },
           ),
         ],

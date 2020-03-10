@@ -320,7 +320,7 @@ packages:
     source: hosted
     version: "3.0.1"
   json_schema:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: json_schema
       url: "https://pub.dartlang.org"

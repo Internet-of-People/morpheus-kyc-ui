@@ -17,8 +17,10 @@ class MainDrawer extends StatelessWidget {
               leading: const Icon(Icons.android),
               title: const Text('Requests'),
               onTap: () {
-                AuthorityPublicApi.setAsRealDevice('http://34.76.108.115:8080');
-                AuthorityPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
+                //AuthorityPublicApi.setAsRealDevice('http://34.76.108.115:8080');
+                //AuthorityPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
+                AuthorityPublicApi.setAsEmulator();
+                AuthorityPrivateApi.setAsEmulator();
                 Navigator.pop(context);
                 Navigator.pushAndRemoveUntil(
                     context,

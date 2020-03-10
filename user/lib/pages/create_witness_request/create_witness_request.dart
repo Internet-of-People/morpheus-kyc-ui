@@ -229,6 +229,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
     SendRequestResponse resp = await AuthorityPublicApi.instance.sendRequest(signedRequest);
     storeContext.dispatch(SentRequest(
       widget._processName,
+      widget._processContentId,
       DateTime.now(),
       AuthorityPublicApi.instance.name,
       resp.capabilityLink,
