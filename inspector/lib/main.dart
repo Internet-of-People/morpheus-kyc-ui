@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
-import 'package:morpheus_common/sdk/native_sdk.dart';
+import 'package:morpheus_inspector/pages/result.dart';
 import 'package:redux/redux.dart';
 
 import 'package:morpheus_common/theme/theme.dart';
 import 'package:morpheus_common/utils/log.dart';
-
-import 'pages/home.dart';
-import 'pages/scan_qr.dart';
-import 'store/app_state.dart';
-import 'store/store.dart';
-import 'pages/processing.dart';
-
-abstract class Routes {
-  static const String scan = '/scan';
-  static const String processing = '/processing';
-  static const String home = '/home';
-}
+import 'package:morpheus_common/sdk/native_sdk.dart';
+import 'package:morpheus_inspector/pages/home.dart';
+import 'package:morpheus_inspector/pages/scan_qr.dart';
+import 'package:morpheus_inspector/store/app_state.dart';
+import 'package:morpheus_inspector/store/routes.dart';
+import 'package:morpheus_inspector/store/store.dart';
+import 'package:morpheus_inspector/pages/processing.dart';
 
 void main() {
   Log log = Log(InspectorApp);
@@ -74,9 +69,11 @@ class _InspectorAppState extends State<InspectorApp> {
   Route _getRoute(RouteSettings settings) {
     switch (settings.name) {
       case Routes.scan:
-        return _route(settings, (context) => QrScan());
+        return _route(settings, (context) => QrScanPage());
       case Routes.processing:
-        return _route(settings, (context) => Processing());
+        return _route(settings, (context) => ProcessingPage());
+      case Routes.result:
+        return _route(settings, (context) => ResultPage());
       case Routes.home:
       default:
         return _route(settings, (context) => HomePage());

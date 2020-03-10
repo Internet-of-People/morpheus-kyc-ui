@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:morpheus_common/sdk/io.dart';
 
 part 'app_state.g.dart';
 
@@ -8,19 +9,23 @@ part 'app_state.g.dart';
 class AppState {
   final String url;
   final String presentationJson;
-  final List<String> signatureErrors;
+  final SignedPresentation presentation;
+  final List<String> errors;
+  final List<String> warnings;
   final int discount;
 
   const AppState({
     this.url,
     this.presentationJson,
-    this.signatureErrors,
+    this.presentation,
+    this.errors,
+    this.warnings,
     this.discount,
   });
 
   @override
   int get hashCode =>
-      url.hashCode ^ presentationJson.hashCode ^ signatureErrors.hashCode ^ discount.hashCode;
+      url.hashCode ^ presentationJson.hashCode ^ presentation.hashCode ^ errors.hashCode ^ warnings.hashCode ^ discount.hashCode;
 
   @override
   bool operator == (other) {
@@ -28,7 +33,9 @@ class AppState {
         other is AppState &&
             url == other.url &&
             presentationJson == other.presentationJson &&
-            signatureErrors == other.signatureErrors &&
+            presentation == other.presentation &&
+            errors == other.errors &&
+            warnings == other.warnings &&
             discount == other.discount;
   }
 

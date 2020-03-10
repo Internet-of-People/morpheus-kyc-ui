@@ -10,8 +10,12 @@ AppState _$AppStateFromJson(Map<String, dynamic> json) {
   return AppState(
     url: json['url'] as String,
     presentationJson: json['presentationJson'] as String,
-    signatureErrors:
-        (json['signatureErrors'] as List)?.map((e) => e as String)?.toList(),
+    presentation: json['presentation'] == null
+        ? null
+        : SignedPresentation.fromJson(
+            json['presentation'] as Map<String, dynamic>),
+    errors: (json['errors'] as List)?.map((e) => e as String)?.toList(),
+    warnings: (json['warnings'] as List)?.map((e) => e as String)?.toList(),
     discount: json['discount'] as int,
   );
 }
@@ -19,6 +23,8 @@ AppState _$AppStateFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$AppStateToJson(AppState instance) => <String, dynamic>{
       'url': instance.url,
       'presentationJson': instance.presentationJson,
-      'signatureErrors': instance.signatureErrors,
+      'presentation': instance.presentation?.toJson(),
+      'errors': instance.errors,
+      'warnings': instance.warnings,
       'discount': instance.discount,
     };

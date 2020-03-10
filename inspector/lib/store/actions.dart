@@ -1,3 +1,5 @@
+import 'package:morpheus_common/sdk/io.dart';
+
 class ScanUrlAction {
   final String url;
 
@@ -10,10 +12,18 @@ class UrlDownloadedAction {
   UrlDownloadedAction(this.presentationJson);
 }
 
-class SignaturesValidated {
-  final List<String> signatureErrors;
+class UrlDownloadErrorAction {
+  final String error;
 
-  SignaturesValidated(this.signatureErrors);
+  UrlDownloadErrorAction(this.error);
+}
+
+class Validated {
+  final SignedPresentation presentation;
+  final List<String> errors;
+  final List<String> warnings;
+
+  Validated(this.presentation, this.errors, this.warnings);
 }
 
 class DiscountCalculated {

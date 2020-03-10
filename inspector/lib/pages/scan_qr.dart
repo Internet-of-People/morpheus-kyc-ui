@@ -2,34 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:redux/redux.dart';
 
 import 'package:morpheus_inspector/store/actions.dart';
 import 'package:morpheus_inspector/store/app_state.dart';
-import 'package:redux/redux.dart';
+import 'package:morpheus_inspector/store/routes.dart';
 
-import '../main.dart';
-
-class QrScan extends StatefulWidget {
+class QrScanPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _QrScanState();
+    return _QrScanPageState();
   }
 }
 
 class _QrScanViewModel {
-  final Store<AppState> _store;
+  final Function _dispatch;
 
-  _QrScanViewModel(this._store);
+  _QrScanViewModel(Store<AppState> store):
+    _dispatch = store.dispatch;
 
   scanned(String url) {
-    _store.dispatch(ScanUrlAction(url));
-    _store.dispatch(NavigateToAction.replace(Routes.processing));
+    _dispatch(ScanUrlAction(url));
+    _dispatch(NavigateToAction.replace(Routes.processing));
   }
 }
 
 typedef StringCallback = void Function(String url);
 
-class _QrScanState extends State<QrScan> {
+class _QrScanPageState extends State<QrScanPage> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController controller;
 
