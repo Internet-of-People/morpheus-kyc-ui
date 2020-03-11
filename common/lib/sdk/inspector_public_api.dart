@@ -32,8 +32,9 @@ class InspectorPublicApi {
     return HttpTools.httpGet('$_apiUrl/blob/$contentId');
   }
 
-  Future<String> uploadPresentation(SignedPresentation presentation) async {
-    return HttpTools.httpPost('$_apiUrl/presentation', json.encode(presentation.toJson()), 202);
+  Future<UploadPresentationResponse> uploadPresentation(SignedPresentation presentation) async {
+    return HttpTools.httpPost('$_apiUrl/presentation', json.encode(presentation.toJson()), 202)
+      .then((resp) => UploadPresentationResponse.fromJson(json.decode(resp)));
   }
 }
 
@@ -45,6 +46,16 @@ class ListScenariosResponse {
 
   factory ListScenariosResponse.fromJson(Map<String, dynamic> json) =>
       _$ListScenariosResponseFromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UploadPresentationResponse {
+  final String contentId;
+
+  UploadPresentationResponse(this.contentId);
+
+  factory UploadPresentationResponse.fromJson(Map<String, dynamic> json) =>
+      _$UploadPresentationResponseFromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)

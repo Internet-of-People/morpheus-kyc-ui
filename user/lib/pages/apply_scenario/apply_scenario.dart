@@ -1,8 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:json_schema/json_schema.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:json_resolve/json_resolve.dart';
 import 'package:morpheus_common/sdk/inspector_public_api.dart';
 import 'package:morpheus_common/sdk/io.dart';
+import 'package:morpheus_common/sdk/native_sdk.dart';
+import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
+import 'package:morpheus_common/widgets/key_selector.dart';
+import 'package:morpheus_kyc_user/store/actions/actions.dart';
+import 'package:morpheus_kyc_user/store/state/app_state.dart';
+import 'package:morpheus_kyc_user/store/state/presentations_state.dart';
+import 'package:redux/redux.dart';
 
 class ApplyScenarioPage extends StatefulWidget {
   final Scenario _scenario;
@@ -15,21 +25,11 @@ class ApplyScenarioPage extends StatefulWidget {
 }
 
 class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
+  final KeySelectorController _keySelectorController = KeySelectorController();
+
   @override
   Widget build(BuildContext context) {
-    final subheadStyle = Theme.of(context).textTheme.subtitle1;
-
-    widget._scenario.prerequisites.forEach((p) {
-      final statement = widget._processStatementMap[p.process];
-      JsonSchema schema = JsonSchema.createSchema(statement.content.claim.content);
-      print(statement.content.claim.content);
-      p.claimFields.forEach((f) {
-        // TODO: this one does only return object schemas
-        // we have to write a custom resolver
-        print(schema.resolvePath('#/address'));
-      });
-    });
-
+    Map<String,dynamic> dataToBeShared = _getDataThatWillBeShared();
 
     return Scaffold(
       appBar: AppBar(
@@ -38,19 +38,99 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
       body: SingleChildScrollView(
         child: Column(children: [
           Container(
-            margin: const EdgeInsets.only(bottom: 8.0, top: 16.0, left: 16.0, right: 16.0),
+            margin: const EdgeInsets.all(16.0),
             child: Column(children:[
-              Row(children:[Expanded(child: Icon(Icons.description,size: 48,color: Theme.of(context).primaryColor))]),
-              Row(children:[Expanded(child:
-                Container(
-                    margin: EdgeInsets.only(top:16),
-                    child: Text('Please confirm!',textAlign: TextAlign.center, style: subheadStyle,)
-                )
-              )])
+              Container(
+                margin: const EdgeInsets.only(bottom: 16.0),
+                child:Row(children: [Expanded(child: Text('Information', style: Theme.of(context).textTheme.subtitle1,))]),
+              ),
+              Container(
+                margin: const EdgeInsets.only(bottom: 16.0),
+                child:Row(children: [Expanded(child: Text('You are about to create a Presentation here, which is a subset of your data that is enough to be shared to apply the scenario.'))]),
+              ),
+              Container(
+                margin: const EdgeInsets.only(bottom: 16.0),
+                child:Row(children: [Expanded(child: Text('NOTE: Only the data shown below will be included in the Presentation with the sharing constraints defined by licenses.',style: Theme.of(context).textTheme.bodyText1))]),
+              ),
+              Divider(),
+              MapAsTable(dataToBeShared, "Data to be Shared"),
+              Column(children: widget._scenario.requiredLicenses.map((l) => MapAsTable(l.toJson(),"License")).toList()),
+              Container(
+                margin: const EdgeInsets.only(top: 32.0, bottom: 16.0),
+                child: KeySelector(_keySelectorController),
+              ),
             ]),
+          ),
+          Container(
+            margin: const EdgeInsets.only(bottom: 32.0),
+            child: StoreConnector(
+              converter: (Store<AppState> store) => (presentation) => store.dispatch(AddPresentationAction(presentation)),
+              builder: (_,storeDispatchFn) => FlatButton(
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
+                disabledColor: Colors.grey,
+                disabledTextColor: Colors.black,
+                padding: EdgeInsets.all(8.0),
+                onPressed: () async => await _onCreatePresentationButtonPressed(storeDispatchFn, dataToBeShared),
+                child: Text(
+                  "CONFIRM & CREATE PRESENTATION",
+                  style: TextStyle(fontSize: 14.0),
+                ),
+              ),
+            ),
           )
         ]),
       ),
     );
+  }
+
+  Map<String, dynamic> _getDataThatWillBeShared() {
+    Map<String,dynamic> dataToBeShared = Map();
+
+    widget._scenario.prerequisites.forEach((prerequisite) {
+      final statement = widget._processStatementMap[prerequisite.process];
+      prerequisite.claimFields.forEach((field) {
+        final f = field.startsWith('.') ? field.substring(1) : field;
+        dataToBeShared[f]=resolve(json: statement.content.claim.content, path: f);
+      });
+    });
+
+    return dataToBeShared;
+  }
+
+  Future<void> _onCreatePresentationButtonPressed (
+    void Function(CreatedPresentation createdPresentation) storeDispatch,
+    Map<String, dynamic> dataToBeShared,
+  ) async {
+    // IMPORTANT NOTE (to code analyzers): here, the SDK gives us the opportunity to send multiple
+    // statements for one claim (meaning one claim can be signed via multiple authorities).
+    // We can also send multiple claims as well.
+    // In this PoC application though we only use one claim and one presentation.
+    final provenClaims = widget._scenario.prerequisites.map((prerequisite){
+      final signedWitnessStatement = widget._processStatementMap[prerequisite.process];
+      return ProvenClaim(
+        signedWitnessStatement.content.claim,
+        [signedWitnessStatement]
+      );
+    }).toList();
+
+    // IMPORTANT NOTE (to code analyzers): currently we only pass the license that's
+    // required by the scenario, but it's by default dynamic. Any kind of licenses can be passed here.
+    final presentation = Presentation(provenClaims, widget._scenario.requiredLicenses);
+    final sdkSignedPresentation = NativeSDK.instance.signClaimPresentation(
+        json.encode(presentation.toJson()),
+        _keySelectorController.value.key,
+    );
+    final signedPresentation = SignedPresentation.fromJson(json.decode(sdkSignedPresentation));
+
+    UploadPresentationResponse resp = await InspectorPublicApi.instance.uploadPresentation(signedPresentation);
+
+    storeDispatch(CreatedPresentation(
+      signedPresentation,
+      dataToBeShared,
+      widget._scenario.name,
+      DateTime.now(),
+      resp.contentId,
+    ));
   }
 }

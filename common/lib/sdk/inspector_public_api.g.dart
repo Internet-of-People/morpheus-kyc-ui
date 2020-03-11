@@ -19,6 +19,19 @@ Map<String, dynamic> _$ListScenariosResponseToJson(
       'scenarios': instance.scenarios,
     };
 
+UploadPresentationResponse _$UploadPresentationResponseFromJson(
+    Map<String, dynamic> json) {
+  return UploadPresentationResponse(
+    json['contentId'] as String,
+  );
+}
+
+Map<String, dynamic> _$UploadPresentationResponseToJson(
+        UploadPresentationResponse instance) =>
+    <String, dynamic>{
+      'contentId': instance.contentId,
+    };
+
 Prerequisite _$PrerequisiteFromJson(Map<String, dynamic> json) {
   return Prerequisite(
     json['process'] as String,

@@ -51,7 +51,7 @@ class _KeySelectorState extends State<KeySelector> {
       children: <Widget>[
         Row(children: [
           Expanded(child: Text(
-            'Please select, which key you would like to use for signing this request:',
+            'Please select, which key you would like to use for signing:',
           ))
         ]),
         DropdownButton<String>(

@@ -19,7 +19,7 @@ class DataAvailableAlert extends StatelessWidget {
           child: Text('You have all the data available.',textAlign: TextAlign.center)
       )
       )]),
-      Row(children: [Expanded(child: FlatButton(
+      FlatButton(
         color: Theme.of(context).primaryColor,
         textColor: Colors.white,
         disabledColor: Colors.grey,
@@ -38,9 +38,9 @@ class DataAvailableAlert extends StatelessWidget {
         },
         child: Text(
           "APPLY",
-          style: TextStyle(fontSize: 20.0),
+          style: TextStyle(fontSize: 14.0),
         ),
-      ))])
+      )
     ]);
   }
 }

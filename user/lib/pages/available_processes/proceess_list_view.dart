@@ -17,7 +17,7 @@ class ProcessListView extends StatelessWidget {
     return Container(
       child: ListView.builder(
         itemCount: _processes.length,
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(16.0),
         itemBuilder: (_, index) => items[index]
       ),
     );
