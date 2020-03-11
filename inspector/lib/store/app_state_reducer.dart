@@ -5,17 +5,25 @@ import 'package:morpheus_inspector/store/actions.dart';
 import 'package:morpheus_inspector/store/app_state.dart';
 
 AppState scanUrlReducer(AppState state, ScanUrlAction action) {
-  return AppState(url: action.url,);
+  return AppState(
+    url: action.url,
+    presentationJson: state.presentationJson,
+    presentation: state.presentation,
+    errors: state.errors,
+    warnings: state.warnings,
+    discount: state.discount,
+  );
 }
 
 AppState urlDownloadedReducer(AppState state, UrlDownloadedAction action) {
   assert(state.url != null);
   return AppState(
-      url: state.url,
-      presentationJson: action.presentationJson,
-      presentation: state.presentation,
-      errors: state.errors,
-      warnings: state.warnings,
+    url: state.url,
+    presentationJson: action.presentationJson,
+    presentation: state.presentation,
+    errors: state.errors,
+    warnings: state.warnings,
+    discount: state.discount,
   );
 }
 
@@ -27,6 +35,7 @@ AppState urlDownloadErrorReducer(AppState state, UrlDownloadErrorAction action) 
     presentation: null,
     errors: [action.error],
     warnings: [],
+    discount: state.discount,
   );
 }
 
@@ -34,11 +43,12 @@ AppState validatedReducer(AppState state, Validated action) {
   assert(state.url != null);
   //assert(state.presentationJson != null);
   return AppState(
-      url: state.url,
-      presentationJson: state.presentationJson,
-      presentation: action.presentation,
-      errors: action.errors,
-      warnings: action.warnings,
+    url: state.url,
+    presentationJson: state.presentationJson,
+    presentation: action.presentation,
+    errors: action.errors,
+    warnings: action.warnings,
+    discount: state.discount,
   );
 }
 
@@ -58,8 +68,9 @@ AppState discountCalculatedReducer(AppState state, DiscountCalculated action) {
 }
 
 AppState restartedReducer(AppState state, Restarted action) {
-  return AppState();
+  return AppState.initialState();
 }
+
 
 var _reducer = combineReducers<AppState>([
   TypedReducer(scanUrlReducer),

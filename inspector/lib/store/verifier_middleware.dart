@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';

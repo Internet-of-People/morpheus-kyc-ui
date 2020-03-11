@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 
 import 'package:morpheus_inspector/store/app_state.dart';
 
@@ -29,6 +30,10 @@ class _ResultViewModel {
     final warningItems = _state.warnings?.map((w) => _ValidationItem(false, w))?.toList() ?? [];
     return errorItems + warningItems;
   }
+
+  void toHome() {
+    _dispatch(NavigateToAction.pop());
+  }
 }
 
 class ResultPage extends StatelessWidget {
@@ -55,6 +60,10 @@ class ResultPage extends StatelessWidget {
                 ),
               ),
             ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.home),
+            onPressed: vm.toHome,
+          ),
         )
     );
   }

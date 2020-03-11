@@ -3,7 +3,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:redux/redux.dart';
 
 import 'package:morpheus_inspector/store/actions.dart';
 import 'package:morpheus_inspector/store/app_state.dart';
@@ -21,12 +20,9 @@ const url2 = 'whatever';
 const url3 = 'whatever';
 
 class _HomeViewModel {
-  final AppState _state;
   final Function _dispatch;
 
-  _HomeViewModel.create(Store<AppState> store)
-      : _state = store.state,
-        _dispatch = store.dispatch;
+  _HomeViewModel.create(this._dispatch);
 
   Future toScanQr(BuildContext context) async {
     _dispatch(NavigateToAction.push(Routes.scan));
@@ -43,7 +39,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, _HomeViewModel>(
-        converter: (store) => _HomeViewModel.create(store),
+        converter: (store) => _HomeViewModel.create(store.dispatch),
         builder: (context, vm) => Scaffold(
               appBar: AppBar(title: const Text('Morpheus Inspector')),
               floatingActionButton: _buildFab(context, vm),

@@ -15,12 +15,12 @@ class AppState {
   final int discount;
 
   const AppState({
-    this.url,
-    this.presentationJson,
-    this.presentation,
-    this.errors,
-    this.warnings,
-    this.discount,
+    @required this.url,
+    @required this.presentationJson,
+    @required this.presentation,
+    @required this.errors,
+    @required this.warnings,
+    @required this.discount,
   });
 
   @override
@@ -39,7 +39,14 @@ class AppState {
             discount == other.discount;
   }
 
-  static AppState initialState() => AppState();
+  static AppState initialState() => AppState(
+    url: null,
+    presentationJson: null,
+    presentation: null,
+    errors: null,
+    warnings: null,
+    discount: null,
+  );
 
   static AppState fromJson(dynamic json) => json == null ? initialState() : _$AppStateFromJson(json);
 
