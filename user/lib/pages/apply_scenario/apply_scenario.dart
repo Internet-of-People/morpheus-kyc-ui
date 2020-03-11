@@ -9,6 +9,7 @@ import 'package:morpheus_common/sdk/io.dart';
 import 'package:morpheus_common/sdk/native_sdk.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
 import 'package:morpheus_common/widgets/key_selector.dart';
+import 'package:morpheus_kyc_user/pages/home/home.dart';
 import 'package:morpheus_kyc_user/store/actions/actions.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
 import 'package:morpheus_kyc_user/store/state/presentations_state.dart';
@@ -120,6 +121,7 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
         provenClaims,
         widget._scenario.requiredLicenses.map((l)=>this._mapLicense(l)).toList()
     );
+    print(presentation.licenses[0].toJson());
     final sdkSignedPresentation = NativeSDK.instance.signClaimPresentation(
         json.encode(presentation.toJson()),
         _keySelectorController.value.key,
@@ -135,6 +137,37 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
       DateTime.now(),
       resp.contentId,
     ));
+
+    await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          title: Row(children: <Widget>[
+            Text('Sent')
+          ],),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Your presentation is now ready to use.')
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('BACK TO HOME'),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder:(context) => HomePage()
+                    ),
+                    (route) => false
+                );
+              },
+            ),
+          ],
+        )
+    );
   }
 
   License _mapLicense(LicenseSpecification licenseSpecification) {
@@ -143,7 +176,7 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
       licenseSpecification.issuedTo,
       licenseSpecification.purpose,
       now,
-      now, // TODO: convert the expiry field
+      now.add(Duration(days: 1)), // TODO: convert the expiry field
     );
   }
 }

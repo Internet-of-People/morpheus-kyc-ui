@@ -173,7 +173,9 @@ License _$LicenseFromJson(Map<String, dynamic> json) {
     json['validFrom'] == null
         ? null
         : DateTime.parse(json['validFrom'] as String),
-    json['validTo'] == null ? null : DateTime.parse(json['validTo'] as String),
+    json['validUntil'] == null
+        ? null
+        : DateTime.parse(json['validUntil'] as String),
   );
 }
 
@@ -181,7 +183,7 @@ Map<String, dynamic> _$LicenseToJson(License instance) => <String, dynamic>{
       'issuedTo': instance.issuedTo,
       'purpose': instance.purpose,
       'validFrom': instance.validFrom?.toIso8601String(),
-      'validTo': instance.validTo?.toIso8601String(),
+      'validUntil': instance.validUntil?.toIso8601String(),
     };
 
 Presentation _$PresentationFromJson(Map<String, dynamic> json) {

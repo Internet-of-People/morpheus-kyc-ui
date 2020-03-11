@@ -134,9 +134,9 @@ class License {
   final String issuedTo;
   final String purpose;
   final DateTime validFrom;
-  final DateTime validTo;
+  final DateTime validUntil;
 
-  License(this.issuedTo, this.purpose, this.validFrom, this.validTo);
+  License(this.issuedTo, this.purpose, this.validFrom, this.validUntil);
 
   factory License.fromJson(Map<String, dynamic> json) => _$LicenseFromJson(json);
 

@@ -41,6 +41,7 @@ class PresentationsPage extends StatelessWidget {
             title: Text('${presentation.scenarioName}'),
             subtitle: Text('Created at: ${presentation.createdAt.toIso8601String()}'),
             onTap: () {
+              print(presentation.contentId);
             },
           ),
         ],
