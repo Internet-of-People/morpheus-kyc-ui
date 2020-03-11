@@ -1,50 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:morpheus_inspector/store/actions.dart';
-import 'package:morpheus_inspector/store/app_state.dart';
-import 'package:morpheus_inspector/store/routes.dart';
+import 'package:morpheus_inspector/pages/result.dart';
+import 'package:morpheus_inspector/pages/scan_qr.dart';
+import 'package:morpheus_inspector/view_model_provider.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _HomePageState();
-  }
-}
-
-const url1 = 'whatever';
+//const host = '10.0.2.2';
+const host = '192.168.42.160';
+const url1 = 'http://$host:8081/blob/cju-WutB5_FzMH4dIkdJzhuTarsNoI3xeUNu56mG4gFWSE';
 const url2 = 'whatever';
 const url3 = 'whatever';
 
-class _HomeViewModel {
-  final Function _dispatch;
-
-  _HomeViewModel.create(this._dispatch);
-
-  Future toScanQr(BuildContext context) async {
-    _dispatch(NavigateToAction.push(Routes.scan));
-  }
-
-  Future toProcessing(BuildContext context, String url) async {
-    _dispatch(ScanUrlAction(url));
-    _dispatch(NavigateToAction.push(Routes.processing));
-  }
-}
-
-// Some icons made by [Freepik](https://www.flaticon.com/authors/freepik)
-class _HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, _HomeViewModel>(
-        converter: (store) => _HomeViewModel.create(store.dispatch),
-        builder: (context, vm) => Scaffold(
-              appBar: AppBar(title: const Text('Morpheus Inspector')),
-              floatingActionButton: _buildFab(context, vm),
-              body: Center(
-                  child: Column(
+    return Scaffold(
+          appBar: AppBar(title: const Text('Morpheus Inspector')),
+          floatingActionButton: _buildFab(context),
+          body: Center(
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
@@ -62,13 +37,14 @@ class _HomePageState extends State<HomePage> {
                         'This is a sample application for the swimming pool cashiers described in the Morpheus specification.'),
                   )
                 ],
-              )),
-            ));
+              ),
+          ),
+    );
   }
 
-  Widget _buildFab(BuildContext context, _HomeViewModel vm) {
+  Widget _buildFab(BuildContext context) {
     return SpeedDial(
-      onPress: () => vm.toScanQr(context),
+      onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => QrScanPage())),
       child: Padding(
           padding: EdgeInsets.all(8),
           child: SvgPicture.asset(
@@ -81,20 +57,25 @@ class _HomePageState extends State<HomePage> {
       children: [
         SpeedDialChild(
           label: '0% test',
-          onTap: () => vm.toProcessing(context, url1),
+          onTap: () => _toResult(context, url1),
           child: Icon(Icons.looks_one),
         ),
         SpeedDialChild(
           label: '5% test',
-          onTap: () => vm.toProcessing(context, url2),
+          onTap: () => _toResult(context, url2),
           child: Icon(Icons.looks_two),
         ),
         SpeedDialChild(
           label: '10% test',
-          onTap: () => vm.toProcessing(context, url3),
+          onTap: () => _toResult(context, url3),
           child: Icon(Icons.looks_3),
         ),
       ],
     );
+  }
+
+  void _toResult(BuildContext context, String url) {
+    ViewModel.of(context).gotUrl(url);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage()));
   }
 }
