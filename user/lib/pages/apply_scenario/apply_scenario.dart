@@ -116,7 +116,10 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
 
     // IMPORTANT NOTE (to code analyzers): currently we only pass the license that's
     // required by the scenario, but it's by default dynamic. Any kind of licenses can be passed here.
-    final presentation = Presentation(provenClaims, widget._scenario.requiredLicenses);
+    final presentation = Presentation(
+        provenClaims,
+        widget._scenario.requiredLicenses.map((l)=>this._mapLicense(l)).toList()
+    );
     final sdkSignedPresentation = NativeSDK.instance.signClaimPresentation(
         json.encode(presentation.toJson()),
         _keySelectorController.value.key,
@@ -132,5 +135,15 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
       DateTime.now(),
       resp.contentId,
     ));
+  }
+
+  License _mapLicense(LicenseSpecification licenseSpecification) {
+    final now = DateTime.now();
+    return License(
+      licenseSpecification.issuedTo,
+      licenseSpecification.purpose,
+      now,
+      now, // TODO: convert the expiry field
+    );
   }
 }

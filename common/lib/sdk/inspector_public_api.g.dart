@@ -55,8 +55,9 @@ Scenario _$ScenarioFromJson(Map<String, dynamic> json) {
             e == null ? null : Prerequisite.fromJson(e as Map<String, dynamic>))
         ?.toList(),
     (json['requiredLicenses'] as List)
-        ?.map((e) =>
-            e == null ? null : License.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => e == null
+            ? null
+            : LicenseSpecification.fromJson(e as Map<String, dynamic>))
         ?.toList(),
     json['resultSchema'] as String,
   );

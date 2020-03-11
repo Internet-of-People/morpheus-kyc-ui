@@ -150,18 +150,38 @@ Map<String, dynamic> _$ProvenClaimToJson(ProvenClaim instance) =>
       'statements': instance.statements?.map((e) => e?.toJson())?.toList(),
     };
 
-License _$LicenseFromJson(Map<String, dynamic> json) {
-  return License(
+LicenseSpecification _$LicenseSpecificationFromJson(Map<String, dynamic> json) {
+  return LicenseSpecification(
     json['issuedTo'] as String,
     json['purpose'] as String,
     json['expiry'] as String,
   );
 }
 
-Map<String, dynamic> _$LicenseToJson(License instance) => <String, dynamic>{
+Map<String, dynamic> _$LicenseSpecificationToJson(
+        LicenseSpecification instance) =>
+    <String, dynamic>{
       'issuedTo': instance.issuedTo,
       'purpose': instance.purpose,
       'expiry': instance.expiry,
+    };
+
+License _$LicenseFromJson(Map<String, dynamic> json) {
+  return License(
+    json['issuedTo'] as String,
+    json['purpose'] as String,
+    json['validFrom'] == null
+        ? null
+        : DateTime.parse(json['validFrom'] as String),
+    json['validTo'] == null ? null : DateTime.parse(json['validTo'] as String),
+  );
+}
+
+Map<String, dynamic> _$LicenseToJson(License instance) => <String, dynamic>{
+      'issuedTo': instance.issuedTo,
+      'purpose': instance.purpose,
+      'validFrom': instance.validFrom?.toIso8601String(),
+      'validTo': instance.validTo?.toIso8601String(),
     };
 
 Presentation _$PresentationFromJson(Map<String, dynamic> json) {

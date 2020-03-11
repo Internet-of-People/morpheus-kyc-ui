@@ -141,7 +141,7 @@ class _ScenarioDetailsPageState extends State<ScenarioDetailsPage> {
     );
   }
 
-  ExpansionPanel _buildRequiredLicensesPanel(List<License> licenses) {
+  ExpansionPanel _buildRequiredLicensesPanel(List<LicenseSpecification> licenses) {
     List<Widget> details = licenses.map((l) {
       return Row(
         mainAxisSize: MainAxisSize.max,

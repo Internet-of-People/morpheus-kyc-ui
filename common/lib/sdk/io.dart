@@ -117,12 +117,26 @@ class ProvenClaim {
 }
 
 @JsonSerializable(explicitToJson: true)
-class License {
+class LicenseSpecification {
   final String issuedTo;
   final String purpose;
   final String expiry;
 
-  License(this.issuedTo, this.purpose, this.expiry);
+  LicenseSpecification(this.issuedTo, this.purpose, this.expiry);
+
+  factory LicenseSpecification.fromJson(Map<String, dynamic> json) => _$LicenseSpecificationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LicenseSpecificationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class License {
+  final String issuedTo;
+  final String purpose;
+  final DateTime validFrom;
+  final DateTime validTo;
+
+  License(this.issuedTo, this.purpose, this.validFrom, this.validTo);
 
   factory License.fromJson(Map<String, dynamic> json) => _$LicenseFromJson(json);
 

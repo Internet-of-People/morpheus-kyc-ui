@@ -76,7 +76,7 @@ class Scenario {
   final int version;
   final String description;
   final List<Prerequisite> prerequisites;
-  final List<License> requiredLicenses;
+  final List<LicenseSpecification> requiredLicenses;
   final String resultSchema;
 
   Scenario(this.name, this.version, this.description, this.prerequisites, this.requiredLicenses, this.resultSchema);
