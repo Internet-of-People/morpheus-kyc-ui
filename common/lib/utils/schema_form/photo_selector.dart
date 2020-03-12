@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:morpheus_common/utils/schema_form/photo_selector_controller.dart';
 
@@ -25,7 +27,7 @@ class PhotoSelectorFormField extends FormField<File> {
     initialValue: controller != null ? controller.image : (initialValue ?? null),
     autovalidate: autovalidate,
     builder: (FormFieldState<File> state) {
-      final subheadTheme = Theme.of(state.context).textTheme.subhead;
+      final subheadTheme = Theme.of(state.context).textTheme.subtitle1;
       final titleColor = state.hasError ? Colors.red : subheadTheme.color;
       final titleStyle = subheadTheme.copyWith(color: titleColor);
 
@@ -61,9 +63,19 @@ class PhotoSelectorFormField extends FormField<File> {
 
       return InkWell(
           onTap: () async {
-            final image = await ImagePicker.pickImage(source: ImageSource.camera);
-            state.didChange(image);
-            controller.image = image;
+            final imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+            final image = await decodeImageFromList(imageFile.readAsBytesSync());
+            final scale = _calcScale(image.width, image.height, 1024, 768);
+            final compressedFile = await FlutterImageCompress.compressAndGetFile(
+              imageFile.path,
+              imageFile.path.replaceFirst('.jpg','_compressed.jpg'),
+              minWidth: image.width~/scale,
+              minHeight: image.height~/scale,
+              quality: 85,
+            );
+            state.didChange(compressedFile);
+            controller.image = compressedFile;
+            await imageFile.delete();
           },
           child: Card(child: Container(
               margin: EdgeInsets.all(16.0),
@@ -74,4 +86,16 @@ class PhotoSelectorFormField extends FormField<File> {
       );
     }
   );
+
+  static int _calcScale(
+    int srcWidth,
+    int srcHeight,
+    int minWidth,
+    int minHeight,
+  ) {
+    final scaleW = srcWidth ~/ minWidth;
+    final scaleH = srcHeight ~/ minHeight;
+
+    return math.max(1, math.min(scaleW, scaleH));
+  }
 }
