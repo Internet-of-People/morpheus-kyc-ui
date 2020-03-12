@@ -65,13 +65,13 @@ class PhotoSelectorFormField extends FormField<File> {
           onTap: () async {
             final imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
             final image = await decodeImageFromList(imageFile.readAsBytesSync());
-            final scale = _calcScale(image.width, image.height, 1024, 768);
+            final scale = _calcScale(image.width, image.height, 512, 512);
             final compressedFile = await FlutterImageCompress.compressAndGetFile(
               imageFile.path,
               imageFile.path.replaceFirst('.jpg','_compressed.jpg'),
               minWidth: image.width~/scale,
               minHeight: image.height~/scale,
-              quality: 85,
+              quality: 80,
             );
             state.didChange(compressedFile);
             controller.image = compressedFile;

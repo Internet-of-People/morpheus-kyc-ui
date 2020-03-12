@@ -17,7 +17,7 @@ class InspectorPublicApi {
 
   static InspectorPublicApi get instance => _instance == null ? throw Exception('InspectorPublicApi is no yet set') : _instance;
 
-  static InspectorPublicApi setAsEmulator() => _instance = InspectorPublicApi('http://10.0.2.2:8081', 'Inspector');
+  static InspectorPublicApi setAsEmulator() => _instance = InspectorPublicApi('http://${HttpTools.host}:8081', 'Inspector');
 
   static InspectorPublicApi setAsRealDevice(url) => _instance = InspectorPublicApi(url, 'Inspector');
 

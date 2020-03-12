@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:morpheus_common/sdk/http_tools.dart';
 import 'package:morpheus_inspector/pages/result.dart';
 import 'package:morpheus_inspector/pages/scan_qr.dart';
 import 'package:morpheus_inspector/view_model_provider.dart';
 
-//const host = '10.0.2.2';
-const host = '192.168.42.160';
-const url1 = 'http://$host:8081/blob/cju-WutB5_FzMH4dIkdJzhuTarsNoI3xeUNu56mG4gFWSE';
+const url1 = 'http://${HttpTools.host}:8081/blob/cju-WutB5_FzMH4dIkdJzhuTarsNoI3xeUNu56mG4gFWSE';
 const url2 = 'whatever';
 const url3 = 'whatever';
 

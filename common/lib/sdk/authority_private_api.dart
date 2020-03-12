@@ -15,7 +15,7 @@ class AuthorityPrivateApi {
 
   static AuthorityPrivateApi get instance => _instance == null ? throw Exception('AuthorityPrivateApi is no yet set') : _instance;
 
-  static AuthorityPrivateApi setAsEmulator() => _instance = AuthorityPrivateApi('http://10.0.2.2:8080', 'Government Office');
+  static AuthorityPrivateApi setAsEmulator() => _instance = AuthorityPrivateApi('http://${HttpTools.host}:8080', 'Government Office');
 
   static AuthorityPrivateApi setAsRealDevice(url) => _instance = AuthorityPrivateApi(url, 'Government Office');
 

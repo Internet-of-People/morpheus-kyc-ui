@@ -4,6 +4,8 @@ import 'package:morpheus_common/utils/log.dart';
 class HttpTools {
   static Log _log = Log(HttpTools);
 
+  static const host = '10.0.2.2';
+
   static Future<String> httpPost(String url, dynamic body, int expectedStatus) async {
     _log.debug('POST $url...');
 
