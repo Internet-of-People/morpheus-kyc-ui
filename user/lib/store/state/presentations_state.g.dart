@@ -33,7 +33,7 @@ CreatedPresentation _$CreatedPresentationFromJson(Map<String, dynamic> json) {
     json['createdAt'] == null
         ? null
         : DateTime.parse(json['createdAt'] as String),
-    json['contentId'] as String,
+    json['url'] as String,
   );
 }
 
@@ -44,5 +44,5 @@ Map<String, dynamic> _$CreatedPresentationToJson(
       'dataToBeShared': instance.dataToBeShared,
       'scenarioName': instance.scenarioName,
       'createdAt': instance.createdAt?.toIso8601String(),
-      'contentId': instance.contentId,
+      'url': instance.url,
     };

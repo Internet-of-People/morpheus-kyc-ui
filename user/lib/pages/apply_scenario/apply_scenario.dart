@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:json_resolve/json_resolve.dart';
@@ -135,7 +134,7 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
       dataToBeShared,
       widget._scenario.name,
       DateTime.now(),
-      resp.contentId,
+      '${InspectorPublicApi.instance.apiUrl}/blob/${resp.contentId}', // TODO will this one be a good solution?
     ));
 
     await showDialog(

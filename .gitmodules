@@ -1,4 +1,4 @@
 [submodule "morpheus-rust"]
 	path = morpheus-rust
 	url = ../morpheus-rust
-	branch = 8-wasm-did-signature-validation
+	branch = master

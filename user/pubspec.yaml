@@ -30,6 +30,7 @@ dependencies:
   path_provider: ^1.5.1
   json_schema: ^2.2.1
   json_resolve: ^1.0.0
+  qr_flutter: ^3.1.0
   morpheus_common:
     path: ../common
 

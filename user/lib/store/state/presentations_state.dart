@@ -24,9 +24,9 @@ class CreatedPresentation {
   final Map<String,dynamic> dataToBeShared;
   final String scenarioName;
   final DateTime createdAt;
-  final String contentId;
+  final String url;
 
-  CreatedPresentation(this.presentation, this.dataToBeShared, this.scenarioName, this.createdAt, this.contentId);
+  CreatedPresentation(this.presentation, this.dataToBeShared, this.scenarioName, this.createdAt, this.url);
 
   factory CreatedPresentation.fromJson(Map<String, dynamic> json) => _$CreatedPresentationFromJson(json);
 

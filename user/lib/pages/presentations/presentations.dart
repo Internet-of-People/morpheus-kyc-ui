@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:morpheus_kyc_user/pages/presentations/view_qr.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
 import 'package:morpheus_kyc_user/store/state/presentations_state.dart';
 import 'package:redux/redux.dart';
@@ -40,9 +41,12 @@ class PresentationsPage extends StatelessWidget {
           ListTile(
             title: Text('${presentation.scenarioName}'),
             subtitle: Text('Created at: ${presentation.createdAt.toIso8601String()}'),
-            onTap: () {
-              print(presentation.contentId);
-            },
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder:(context) => ViewQrPage(presentation.url)
+              ),
+            )
           ),
         ],
       ));
