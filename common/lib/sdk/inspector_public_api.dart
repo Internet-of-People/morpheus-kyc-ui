@@ -15,7 +15,7 @@ class InspectorPublicApi {
 
   InspectorPublicApi(this.apiUrl, this.name);
 
-  static InspectorPublicApi get instance => _instance == null ? throw Exception('InspectorPublicApi is no yet set') : _instance;
+  static InspectorPublicApi get instance => _instance == null ? throw Exception('InspectorPublicApi is not yet set') : _instance;
 
   static InspectorPublicApi setAsEmulator() => _instance = InspectorPublicApi('http://${HttpTools.host}:8081', 'Inspector');
 

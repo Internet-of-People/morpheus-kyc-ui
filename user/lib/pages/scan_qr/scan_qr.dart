@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus_common/sdk/authority_private_api.dart';
 import 'package:morpheus_common/sdk/authority_public_api.dart';
-import 'package:morpheus_common/sdk/inspector_private_api.dart';
+import 'package:morpheus_common/sdk/validator_api.dart';
 import 'package:morpheus_common/sdk/inspector_public_api.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/available_processes.dart';
 import 'package:morpheus_kyc_user/pages/inspector_scenarios/inspector_scenarios.dart';
@@ -37,7 +37,7 @@ class ScanQRPageState extends State<ScanQRPage> {
                       AuthorityPublicApi.setAsRealDevice(scanData);
                       AuthorityPrivateApi.setAsRealDevice(scanData);
                       InspectorPublicApi.setAsRealDevice(scanData);
-                      InspectorPrivateApi.setAsRealDevice(scanData);
+                      ValidatorApi.setAsRealDevice(scanData);
 
                       // Here we check if the url is an Authority or Inspector API
                       AuthorityPublicApi.instance.listProcesses()

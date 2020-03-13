@@ -221,3 +221,16 @@ Map<String, dynamic> _$SignedPresentationToJson(SignedPresentation instance) =>
       'signature': instance.signature?.toJson(),
       'content': instance.content?.toJson(),
     };
+
+AfterProof _$AfterProofFromJson(Map<String, dynamic> json) {
+  return AfterProof(
+    json['blockHeight'] as int,
+    json['blockHash'] as String,
+  );
+}
+
+Map<String, dynamic> _$AfterProofToJson(AfterProof instance) =>
+    <String, dynamic>{
+      'blockHeight': instance.blockHeight,
+      'blockHash': instance.blockHash,
+    };

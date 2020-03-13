@@ -14,7 +14,7 @@ class AuthorityPublicApi {
 
   AuthorityPublicApi(this._apiUrl, this.name);
 
-  static AuthorityPublicApi get instance => _instance == null ? throw Exception('AuthorityPublicApi is no yet set') : _instance;
+  static AuthorityPublicApi get instance => _instance == null ? throw Exception('AuthorityPublicApi is not yet set') : _instance;
 
   static AuthorityPublicApi setAsEmulator() => _instance = AuthorityPublicApi('http://${HttpTools.host}:8080', 'Government Office');
 

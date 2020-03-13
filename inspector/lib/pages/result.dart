@@ -16,12 +16,11 @@ class ResultPage extends StatelessWidget {
           title: Text('Result'),
         ),
         body: SafeArea(
-          child: _loadingPresentation(vm),
+          child: GestureDetector(
+            child: _loadingPresentation(vm),
+            onTap: () => Navigator.pop(context),
+          ),
         ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.home),
-        onPressed: () => Navigator.pop(context),
-      ),
     );
   }
 
@@ -35,7 +34,7 @@ class ResultPage extends StatelessWidget {
           return ListTile(
             leading: CircularProgressIndicator(),
             title: Text('Downloading presentation'),
-            subtitle: Text(vm.url),
+            subtitle: Text(vm.url ?? 'no url'),
           );
         }
       },
@@ -43,7 +42,7 @@ class ResultPage extends StatelessWidget {
   }
 
   Widget _loadingValidation(AppViewModel vm) {
-    return FutureBuilder<ValidationResult>(
+    return FutureBuilder<ValidationItems>(
       future: vm.validation,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
@@ -51,9 +50,18 @@ class ResultPage extends StatelessWidget {
             padding: EdgeInsets.all(16),
             color: _color(snapshot.data),
             child: Container(
-              color: Theme.of(context).dialogBackgroundColor,
-              child: ListView(
-                children: snapshot.data.items.map(_buildItem).toList(),
+              color: Theme
+                  .of(context)
+                  .dialogBackgroundColor,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: ListView(
+                      children: snapshot.data.items.map(_buildItem).toList(),
+                    ),
+                  ),
+                  _loadingDiscount(vm),
+                ],
               ),
             ),
           );
@@ -68,7 +76,7 @@ class ResultPage extends StatelessWidget {
     );
   }
 
-  Color _color(ValidationResult result) {
+  Color _color(ValidationItems result) {
     if (result.hasError) {
       return Colors.redAccent;
     } else if (result.hasWarning) {
@@ -84,6 +92,38 @@ class ResultPage extends StatelessWidget {
       leading: Icon(leading),
       title: Text(item.text),
       subtitle: Text(item.detail),
+    );
+  }
+
+  Widget _loadingDiscount(AppViewModel vm) {
+    return FutureBuilder<Discount>(
+      future: vm.discount,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Column(
+            children: <Widget>[
+              Text(
+                '${snapshot.data.percent}%',
+                style: Theme.of(context).textTheme.headline1,
+                textScaleFactor: 1.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  snapshot.data.address,
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+              )
+            ],
+          );
+        } else {
+          return ListTile(
+            leading: CircularProgressIndicator(),
+            title: Text('Calculating discount'),
+            subtitle: Text(vm.url),
+          );
+        }
+      },
     );
   }
 }

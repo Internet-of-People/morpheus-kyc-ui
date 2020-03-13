@@ -165,3 +165,16 @@ class SignedPresentation extends Signed {
 
   Map<String, dynamic> toJson() => _$SignedPresentationToJson(this);
 }
+
+@JsonSerializable(explicitToJson: true)
+class AfterProof {
+  final int blockHeight;
+  final String blockHash;
+
+  AfterProof(this.blockHeight, this.blockHash);
+
+  factory AfterProof.fromJson(Map<String, dynamic> json) =>
+      _$AfterProofFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AfterProofToJson(this);
+}

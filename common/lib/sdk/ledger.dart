@@ -20,7 +20,7 @@ class DIDDocument {
 @JsonSerializable(explicitToJson: true)
 class DIDKey {
   final int index;
-  final String auth;
+  final String auth; // AuthenticationData (KeyId or PublicKey serialized)
   final int validFromHeight;
   final int validUntilHeight;
   final bool valid;

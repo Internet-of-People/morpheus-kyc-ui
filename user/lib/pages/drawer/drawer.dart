@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus_common/sdk/authority_private_api.dart';
 import 'package:morpheus_common/sdk/authority_public_api.dart';
-import 'package:morpheus_common/sdk/inspector_private_api.dart';
+import 'package:morpheus_common/sdk/validator_api.dart';
 import 'package:morpheus_common/sdk/inspector_public_api.dart';
 import 'package:morpheus_common/sdk/native_sdk.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/available_processes.dart';
@@ -56,7 +56,7 @@ class MainDrawer extends StatelessWidget {
                 //InspectorPublicApi.setAsRealDevice('http://34.76.108.115:8080');
                 //InspectorPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
                 InspectorPublicApi.setAsEmulator();
-                InspectorPrivateApi.setAsEmulator();
+                ValidatorApi.setAsEmulator();
                 AuthorityPublicApi.setAsEmulator();
                 AuthorityPrivateApi.setAsEmulator();
                 Navigator.pop(context);

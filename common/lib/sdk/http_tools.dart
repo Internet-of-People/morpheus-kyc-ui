@@ -4,7 +4,8 @@ import 'package:morpheus_common/utils/log.dart';
 class HttpTools {
   static Log _log = Log(HttpTools);
 
-  static const host = '10.0.2.2';
+  // static const host = '10.0.2.2'; // Android emulator reaches host machine here
+  static const host = '34.76.108.115'; // test cloud instance
 
   static Future<String> httpPost(String url, dynamic body, int expectedStatus) async {
     _log.debug('POST $url...');
