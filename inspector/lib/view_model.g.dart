@@ -6,21 +6,15 @@ part of 'view_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DigitalIdCard _$DigitalIdCardFromJson(Map<String, dynamic> json) {
-  return DigitalIdCard(
-    address: json['address'] as String,
-    placeOfBirth: json['placeOfBirth'] == null
-        ? null
-        : PlaceOfBirth.fromJson(json['placeOfBirth'] as Map<String, dynamic>),
-    dateOfBirth: json['dateOfBirth'] as String,
+AddressProof _$DigitalIdCardFromJson(Map<String, dynamic> json) {
+  return AddressProof(
+    address: json['address'] as String
   );
 }
 
-Map<String, dynamic> _$DigitalIdCardToJson(DigitalIdCard instance) =>
+Map<String, dynamic> _$DigitalIdCardToJson(AddressProof instance) =>
     <String, dynamic>{
-      'address': instance.address,
-      'placeOfBirth': instance.placeOfBirth?.toJson(),
-      'dateOfBirth': instance.dateOfBirth,
+      'address': instance.address
     };
 
 PlaceOfBirth _$PlaceOfBirthFromJson(Map<String, dynamic> json) {

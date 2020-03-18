@@ -108,9 +108,22 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
     // In this PoC application though we only use one claim and one presentation.
     final provenClaims = widget._scenario.prerequisites.map((prerequisite){
       final signedWitnessStatement = widget._processStatementMap[prerequisite.process];
+      final maskedClaimContent = NativeSDK.instance.maskJson(
+          json.encode(signedWitnessStatement.content.claim.content),
+          prerequisite.claimFields.join(',')
+      );
+
+      final collapsedClaim = json.decode(maskedClaimContent);
+      final collapsedSignedWitnessStatement = signedWitnessStatement.toCollapsed(
+        NativeSDK.instance.maskJson(
+            json.encode(signedWitnessStatement.content.claim.toJson()),
+            '',
+        )
+      );
+
       return ProvenClaim(
-        signedWitnessStatement.content.claim,
-        [signedWitnessStatement]
+        Claim(signedWitnessStatement.content.claim.subject,collapsedClaim),
+        [collapsedSignedWitnessStatement]
       );
     }).toList();
 
@@ -120,7 +133,6 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
         provenClaims,
         widget._scenario.requiredLicenses.map((l)=>this._mapLicense(l)).toList()
     );
-    print(presentation.licenses[0].toJson());
     final sdkSignedPresentation = NativeSDK.instance.signClaimPresentation(
         json.encode(presentation.toJson()),
         _keySelectorController.value.key,

@@ -102,12 +102,47 @@ class SignedWitnessStatement extends Signed {
   factory SignedWitnessStatement.fromJson(Map<String, dynamic> json) => _$SignedWitnessStatementFromJson(json);
 
   Map<String, dynamic> toJson() => _$SignedWitnessStatementToJson(this);
+
+  CollapsedSignedWitnessStatement toCollapsed(String claimId) => CollapsedSignedWitnessStatement(
+    CollapsedWitnessStatement(
+      claimId,
+      content.processId,
+      content.constraints,
+      content.nonce,
+    ),
+    signature,
+  );
+}
+
+@JsonSerializable(explicitToJson: true)
+class CollapsedSignedWitnessStatement extends Signed {
+  final CollapsedWitnessStatement content;
+
+  CollapsedSignedWitnessStatement(this.content, Signature signature): super(signature);
+
+  factory CollapsedSignedWitnessStatement.fromJson(Map<String, dynamic> json) => _$CollapsedSignedWitnessStatementFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CollapsedSignedWitnessStatementToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CollapsedWitnessStatement {
+  final String claim;
+  final String processId;
+  final WitnessStatementConstraints constraints;
+  final String nonce;
+
+  CollapsedWitnessStatement(this.claim, this.processId, this.constraints, this.nonce);
+
+  factory CollapsedWitnessStatement.fromJson(Map<String, dynamic> json) => _$CollapsedWitnessStatementFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CollapsedWitnessStatementToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class ProvenClaim {
   final Claim claim;
-  final List<SignedWitnessStatement> statements;
+  final List<CollapsedSignedWitnessStatement> statements;
 
   ProvenClaim(this.claim, this.statements);
 

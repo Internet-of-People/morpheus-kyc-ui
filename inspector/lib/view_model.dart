@@ -107,7 +107,7 @@ class AppViewModel {
   }
 
   Future<Discount> _calculateDiscount(Claim claim) async {
-    final card = DigitalIdCard.fromJson(claim.content);
+    final card = AddressProof.fromJson(claim.content);
     final address = card.address;
     final percent = _calculatePercent(address);
     return Discount.valid(address: address, percent: percent);
@@ -125,14 +125,12 @@ class AppViewModel {
 }
 
 @JsonSerializable(explicitToJson: true)
-class DigitalIdCard {
+class AddressProof {
   final String address;
-  final PlaceOfBirth placeOfBirth;
-  final String dateOfBirth;
 
-  DigitalIdCard({ @required this.address, @required this.placeOfBirth, @required this.dateOfBirth });
+  AddressProof({ @required this.address });
 
-  factory DigitalIdCard.fromJson(Map<String, dynamic> json) => _$DigitalIdCardFromJson(json);
+  factory AddressProof.fromJson(Map<String, dynamic> json) => _$DigitalIdCardFromJson(json);
 
   Map<String, dynamic> toJson() => _$DigitalIdCardToJson(this);
 }

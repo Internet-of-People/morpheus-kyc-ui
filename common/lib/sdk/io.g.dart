@@ -131,6 +131,48 @@ Map<String, dynamic> _$SignedWitnessStatementToJson(
       'content': instance.content?.toJson(),
     };
 
+CollapsedSignedWitnessStatement _$CollapsedSignedWitnessStatementFromJson(
+    Map<String, dynamic> json) {
+  return CollapsedSignedWitnessStatement(
+    json['content'] == null
+        ? null
+        : CollapsedWitnessStatement.fromJson(
+            json['content'] as Map<String, dynamic>),
+    json['signature'] == null
+        ? null
+        : Signature.fromJson(json['signature'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$CollapsedSignedWitnessStatementToJson(
+        CollapsedSignedWitnessStatement instance) =>
+    <String, dynamic>{
+      'signature': instance.signature?.toJson(),
+      'content': instance.content?.toJson(),
+    };
+
+CollapsedWitnessStatement _$CollapsedWitnessStatementFromJson(
+    Map<String, dynamic> json) {
+  return CollapsedWitnessStatement(
+    json['claim'] as String,
+    json['processId'] as String,
+    json['constraints'] == null
+        ? null
+        : WitnessStatementConstraints.fromJson(
+            json['constraints'] as Map<String, dynamic>),
+    json['nonce'] as String,
+  );
+}
+
+Map<String, dynamic> _$CollapsedWitnessStatementToJson(
+        CollapsedWitnessStatement instance) =>
+    <String, dynamic>{
+      'claim': instance.claim,
+      'processId': instance.processId,
+      'constraints': instance.constraints?.toJson(),
+      'nonce': instance.nonce,
+    };
+
 ProvenClaim _$ProvenClaimFromJson(Map<String, dynamic> json) {
   return ProvenClaim(
     json['claim'] == null
@@ -139,7 +181,8 @@ ProvenClaim _$ProvenClaimFromJson(Map<String, dynamic> json) {
     (json['statements'] as List)
         ?.map((e) => e == null
             ? null
-            : SignedWitnessStatement.fromJson(e as Map<String, dynamic>))
+            : CollapsedSignedWitnessStatement.fromJson(
+                e as Map<String, dynamic>))
         ?.toList(),
   );
 }
