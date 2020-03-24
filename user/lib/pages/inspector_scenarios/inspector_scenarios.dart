@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/sdk/content_resolver.dart';
-import 'package:morpheus_common/sdk/inspector_public_api.dart';
 import 'package:morpheus_kyc_user/pages/inspector_scenarios/scenarios_list_view.dart';
+import 'package:morpheus_kyc_user/shared_prefs.dart';
+import 'package:morpheus_sdk/inspector.dart';
+import 'package:morpheus_sdk/utils.dart';
 
 class InspectorScenariosPage extends StatefulWidget {
   @override
@@ -16,12 +17,7 @@ class _InspectorScenariosPageState extends State<InspectorScenariosPage> {
   @override
   void initState() {
     super.initState();
-    _scenariosFut = InspectorPublicApi.instance
-        .listScenarios()
-        .then((resp) => ContentResolver.resolveByContentIds(resp.scenarios, ContentLocation.INSPECTOR_PUBLIC))
-        .then((contents) => contents.map(
-            (contentId, content) => MapEntry(contentId, Scenario.fromJson(json.decode(content)))
-        ));
+    _scenariosFut = _createScenariosFut();
   }
 
   @override
@@ -39,4 +35,11 @@ class _InspectorScenariosPageState extends State<InspectorScenariosPage> {
     },
   );
 
+  Future<Map<String,Scenario>> _createScenariosFut() async {
+    final inspectorApi = InspectorPublicApi(await AppSharedPrefs.getInspectorUrl());
+    final scenariosResp = await inspectorApi.listScenarios();
+    final resolver = ContentResolver((contentId) async => (await inspectorApi.getPublicBlob(contentId)).data);
+    final contents = await resolver.resolveByContentIds(scenariosResp.data.scenarios);
+    return contents.map((contentId, content) => MapEntry(contentId, Scenario.fromJson(json.decode(content))));
+  }
 }

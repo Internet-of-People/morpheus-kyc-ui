@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/sdk/authority_private_api.dart';
+import 'package:morpheus_sdk/authority.dart';
+import 'package:witness/shared_prefs.dart';
 
 class RejectionResult {
   bool rejected;
@@ -55,7 +56,7 @@ class _RejectionDialogState extends State<RejectionDialog> {
               _rejecting = true;
             });
 
-            await AuthorityPrivateApi.instance.rejectRequest(
+            await AuthorityPrivateApi(await AppSharedPrefs.getAuthorityUrl()).rejectRequest(
               widget.capabilityLink,
               rejectionReason
             );

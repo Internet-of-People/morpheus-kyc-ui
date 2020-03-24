@@ -3,10 +3,11 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:morpheus_common/sdk/http_tools.dart';
-import 'package:morpheus_common/sdk/io.dart';
-import 'package:morpheus_common/sdk/validator_api.dart';
-import 'package:morpheus_common/utils/log.dart';
+import 'package:morpheus_inspector/shared_prefs.dart';
+import 'package:morpheus_sdk/http.dart';
+import 'package:morpheus_sdk/io.dart';
+import 'package:morpheus_sdk/utils.dart';
+import 'package:morpheus_sdk/validator.dart';
 
 part 'view_model.g.dart';
 
@@ -63,7 +64,7 @@ class AppViewModel {
 
   Future<SignedPresentation> _download() async {
     try {
-      final jsonString = await HttpTools.httpGet(url);
+      final jsonString = (await HttpRequest().get(url)).data;
       final result = SignedPresentation.fromJson(json.decode(jsonString));
       _validation = _validate(result);
       return result;
@@ -89,7 +90,7 @@ class AppViewModel {
         null,
         null,
       );
-      final result = await ValidatorApi.instance.validate(request);
+      final result = (await ValidatorApi(await AppSharedPrefs.getValidatorUrl()).validate(request)).data;
 
       final items = result.errors.map((i) => ValidationItem(true, i, '')).toList() +
         result.warnings.map((i) => ValidationItem(false, i, '')).toList();

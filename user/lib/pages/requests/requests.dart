@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/sdk/authority_public_api.dart';
-import 'package:morpheus_common/utils/log.dart';
 import 'package:morpheus_kyc_user/pages/requests/request_info.dart';
 import 'package:morpheus_kyc_user/pages/requests/requests_list_view.dart';
+import 'package:morpheus_kyc_user/shared_prefs.dart';
 import 'package:morpheus_kyc_user/store/state/requests_state.dart';
 import 'package:morpheus_kyc_user/store/store.dart';
+import 'package:morpheus_sdk/authority.dart';
+import 'package:morpheus_sdk/utils.dart';
 
 class RequestsPage extends StatefulWidget {
   @override
@@ -56,8 +57,8 @@ class RequestsPageState extends State<RequestsPage> {
 
   Future<RequestInfo> _requestFuture(SentRequest sentRequest) async {
     try {
-      final status = await AuthorityPublicApi.instance.getRequestStatus(sentRequest.capabilityLink);
-      return RequestInfo(status, sentRequest);
+      final status = await AuthorityPublicApi(await AppSharedPrefs.getAuthorityUrl()).getRequestStatus(sentRequest.capabilityLink);
+      return RequestInfo(status.data, sentRequest);
     }
     catch(e) {
       return null;

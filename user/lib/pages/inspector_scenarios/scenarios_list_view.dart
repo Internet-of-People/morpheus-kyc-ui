@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/sdk/inspector_public_api.dart';
 import 'package:morpheus_kyc_user/pages/scenario_details/scenario_details.dart';
+import 'package:morpheus_sdk/inspector.dart';
 
 class ScenariosListView extends StatelessWidget {
   final Map<String, Scenario> _scenarios;

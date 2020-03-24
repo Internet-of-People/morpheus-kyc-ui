@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/sdk/authority_private_api.dart';
-import 'package:morpheus_common/sdk/authority_public_api.dart';
-import 'package:morpheus_common/sdk/validator_api.dart';
-import 'package:morpheus_common/sdk/inspector_public_api.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/available_processes.dart';
 import 'package:morpheus_kyc_user/pages/inspector_scenarios/inspector_scenarios.dart';
+import 'package:morpheus_kyc_user/shared_prefs.dart';
+import 'package:morpheus_sdk/authority.dart';
+import 'package:morpheus_sdk/inspector.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScanQRPage extends StatefulWidget {
@@ -30,33 +29,30 @@ class ScanQRPageState extends State<ScanQRPage> {
                 flex: 5,
                 child: QRView(
                   key: qrKey,
-                  onQRViewCreated: (QRViewController controller){
+                  onQRViewCreated: (QRViewController controller) async {
                     this.controller = controller;
-                    controller.scannedDataStream.listen((scanData) {
+                    controller.scannedDataStream.listen((scanData) async {
                       controller.pauseCamera();
-                      AuthorityPublicApi.setAsRealDevice(scanData);
-                      AuthorityPrivateApi.setAsRealDevice(scanData);
-                      InspectorPublicApi.setAsRealDevice(scanData);
-                      ValidatorApi.setAsRealDevice(scanData);
 
-                      // Here we check if the url is an Authority or Inspector API
-                      AuthorityPublicApi.instance.listProcesses()
-                          .then((value){
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ListAvailableProcessesPage()
-                                )
-                            );
-                          })
-                          .catchError((){
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => InspectorScenariosPage()
-                                )
-                            );
-                          });
+                      // TODO: endpoints must advertise what type they are
+                      if(await _isAuthorityApi(scanData)) {
+                        await AppSharedPrefs.setAuthorityUrl(scanData);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ListAvailableProcessesPage()
+                          )
+                        );
+                      }
+                      else if(await _isInspectorApi(scanData)) {
+                        await AppSharedPrefs.setInspectorUrl(scanData);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InspectorScenariosPage()
+                          )
+                        );
+                      }
                     });
                   },
                 )
@@ -73,5 +69,23 @@ class ScanQRPageState extends State<ScanQRPage> {
   void dispose() {
     controller?.dispose();
     super.dispose();
+  }
+
+  Future<bool> _isAuthorityApi(String url) async {
+    try {
+      await AuthorityPublicApi(url).listProcesses();
+      return true;
+    }
+    catch(e){}
+    return false;
+  }
+
+  Future<bool> _isInspectorApi(String url) async {
+    try {
+      await InspectorPublicApi(url).listScenarios();
+      return true;
+    }
+    catch(e){}
+    return false;
   }
 }

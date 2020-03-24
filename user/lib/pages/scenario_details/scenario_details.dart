@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:json_schema/json_schema.dart';
-import 'package:morpheus_common/sdk/authority_public_api.dart';
-import 'package:morpheus_common/sdk/content_resolver.dart';
-import 'package:morpheus_common/sdk/inspector_public_api.dart';
-import 'package:morpheus_common/sdk/io.dart';
 import 'package:morpheus_common/widgets/nullable_text.dart';
 import 'package:morpheus_kyc_user/pages/scenario_details/data_available.dart';
 import 'package:morpheus_kyc_user/pages/scenario_details/no_data_available.dart';
+import 'package:morpheus_kyc_user/shared_prefs.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
 import 'package:morpheus_kyc_user/store/state/requests_state.dart';
+import 'package:morpheus_sdk/authority.dart';
+import 'package:morpheus_sdk/inspector.dart';
+import 'package:morpheus_sdk/io.dart';
+import 'package:morpheus_sdk/utils.dart';
 import 'package:redux/redux.dart';
 
 class ScenarioDetailsPage extends StatefulWidget {
@@ -33,7 +34,9 @@ class _ScenarioDetailsPageState extends State<ScenarioDetailsPage> {
   void initState() {
     super.initState();
     _processesFut = _resolveProcesses();
-    _resultSchemaFut = ContentResolver.resolve(widget._scenario.resultSchema, ContentLocation.INSPECTOR_PUBLIC);
+
+    final resolver = ContentResolver((contentId) async => (await InspectorPublicApi(await AppSharedPrefs.getInspectorUrl()).getPublicBlob(contentId)).data);
+    _resultSchemaFut = resolver.resolve(widget._scenario.resultSchema);
   }
 
   @override
@@ -200,7 +203,8 @@ class _ScenarioDetailsPageState extends State<ScenarioDetailsPage> {
   Future<Map<String,Process>>_resolveProcesses() async {
     final ids = widget._scenario.prerequisites.map((e) => e.process).toList();
     final map = Map<String,Process>();
-    final processes = await ContentResolver.resolveByContentIds(ids, ContentLocation.AUTHORITY_PUBLIC);
+    final resolver = ContentResolver((contentId) async => (await AuthorityPublicApi(await AppSharedPrefs.getAuthorityUrl()).getPublicBlob(contentId)).data);
+    final processes = await resolver.resolveByContentIds(ids);
     processes.forEach((key, value) => map[key] = Process.fromJson(json.decode(value)));
     return map;
   }
@@ -213,9 +217,9 @@ class _ScenarioDetailsPageState extends State<ScenarioDetailsPage> {
     final Map<String,SignedWitnessStatement> completedProcesses = Map();
 
     await Future.wait(sentRequests.where((r) => expectedProcessIds.contains(r.processId)).map((r) async {
-      final res = await AuthorityPublicApi.instance.getRequestStatus(r.capabilityLink);
-      if(res.status == RequestStatus.approved) {
-        completedProcesses[r.processId] = res.signedStatement;
+      final res = await AuthorityPublicApi(await AppSharedPrefs.getAuthorityUrl()).getRequestStatus(r.capabilityLink);
+      if(res.data.status == RequestStatus.approved) {
+        completedProcesses[r.processId] = res.data.signedStatement;
       }
     }));
 

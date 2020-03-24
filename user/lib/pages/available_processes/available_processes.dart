@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/sdk/authority_public_api.dart';
-import 'package:morpheus_common/sdk/content_resolver.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/proceess_list_view.dart';
+import 'package:morpheus_kyc_user/shared_prefs.dart';
+import 'package:morpheus_sdk/authority.dart';
+import 'package:morpheus_sdk/utils.dart';
 
 class ListAvailableProcessesPage extends StatefulWidget {
   @override
@@ -16,12 +17,7 @@ class _ListAvailableProcessesPageState extends State<ListAvailableProcessesPage>
   @override
   void initState() {
     super.initState();
-    _processesFut = AuthorityPublicApi.instance
-        .listProcesses()
-        .then((resp) => ContentResolver.resolveByContentIds(resp.processes, ContentLocation.AUTHORITY_PUBLIC))
-        .then((contents) => contents.map(
-            (contentId, content) => MapEntry(contentId, Process.fromJson(json.decode(content)))
-        ));
+    _processesFut = _createProcessesFut();
   }
 
   @override
@@ -39,5 +35,12 @@ class _ListAvailableProcessesPageState extends State<ListAvailableProcessesPage>
         );
       },
     );
+  }
+
+  Future<Map<String, Process>> _createProcessesFut() async {
+    final processesResp = await AuthorityPublicApi(await AppSharedPrefs.getAuthorityUrl()).listProcesses();
+    final resolver = ContentResolver((contentId) async => (await AuthorityPublicApi(await AppSharedPrefs.getAuthorityUrl()).getPublicBlob(contentId)).data);
+    final contents = await resolver.resolveByContentIds(processesResp.data.processes);
+    return contents.map((contentId, content) => MapEntry(contentId, Process.fromJson(json.decode(content))));
   }
 }

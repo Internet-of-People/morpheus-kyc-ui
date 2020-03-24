@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:morpheus_common/sdk/io.dart';
 import 'package:morpheus_inspector/view_model.dart';
 import 'package:morpheus_inspector/view_model_provider.dart';
+import 'package:morpheus_sdk/io.dart';
 
 class ResultPage extends StatelessWidget {
   ResultPage({ Key key }): super(key: key);

@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:morpheus_common/sdk/authority_private_api.dart';
-import 'package:morpheus_common/sdk/io.dart';
-import 'package:morpheus_common/sdk/native_sdk.dart';
-import 'package:morpheus_common/utils/nonce.dart';
 import 'package:morpheus_common/widgets/key_selector.dart';
+import 'package:morpheus_sdk/authority.dart';
+import 'package:morpheus_sdk/io.dart';
+import 'package:morpheus_sdk/utils.dart';
+import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
+import 'package:witness/app_model.dart';
+import 'package:witness/shared_prefs.dart';
 import 'package:witness/store/state/app_state.dart';
 
 class ApproveResult {
@@ -81,14 +83,12 @@ class _ApprovalDialogDialogState extends State<ApprovalDialog> {
                   nonce264()
               );
 
-              final sdkSignedStatement = NativeSDK.instance.signWitnessStatement(
+              final signedStatement = Provider.of<AppModel>(context, listen: false).cryptoAPI.signWitnessStatement(
                   json.encode(statement.toJson()),
                   selectedKey.key
               );
 
-              final signedStatement = SignedWitnessStatement.fromJson(json.decode(sdkSignedStatement));
-
-              await AuthorityPrivateApi.instance.approveRequest(
+              await AuthorityPrivateApi(await AppSharedPrefs.getAuthorityUrl()).approveRequest(
                   widget.capabilityLink,
                   signedStatement
               );
@@ -108,7 +108,7 @@ class _ApprovalDialogDialogState extends State<ApprovalDialog> {
       title: const Text('Signing'),
       content: SingleChildScrollView(
         child: ListBody(children: [
-          KeySelector(_keySelectorController)
+          KeySelector(_keySelectorController, Provider.of<AppModel>(context, listen: false).cryptoAPI)
         ]),
       ),
       actions: actionButtons,

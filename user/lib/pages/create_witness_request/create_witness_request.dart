@@ -3,17 +3,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:json_schema/json_schema.dart';
-import 'package:morpheus_common/sdk/authority_public_api.dart';
-import 'package:morpheus_common/sdk/io.dart';
-import 'package:morpheus_common/sdk/native_sdk.dart';
-import 'package:morpheus_common/utils/nonce.dart';
 import 'package:morpheus_common/utils/schema_form/form_builder.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
 import 'package:morpheus_common/widgets/key_selector.dart';
+import 'package:morpheus_kyc_user/app_model.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
+import 'package:morpheus_kyc_user/shared_prefs.dart';
 import 'package:morpheus_kyc_user/store/actions/actions.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
 import 'package:morpheus_kyc_user/store/state/requests_state.dart';
+import 'package:morpheus_sdk/authority.dart';
+import 'package:morpheus_sdk/io.dart';
+import 'package:morpheus_sdk/utils.dart';
+import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 
 abstract class _Step {
@@ -126,7 +128,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
                 title: const Text('Select Key'),
                 isActive: _currentStep == _Step.selectKey,
                 state: _stepStates[_Step.selectKey],
-                content: KeySelector(_keySelectorController)
+                content: KeySelector(_keySelectorController,Provider.of<AppModel>(context, listen: false).cryptoAPI)
             ),
             Step(
                 title: const Text('Confirm'),
@@ -215,7 +217,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       nonce264(),
     );
 
-    final sdkSignedRequest = NativeSDK.instance.signWitnessRequest(
+    final signedRequest = Provider.of<AppModel>(context, listen: false).cryptoAPI.signWitnessRequest(
         json.encode(request.toJson()),
         selectedKey.key
     );
@@ -224,14 +226,12 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       _signing = true;
     });
 
-    final signedRequest = SignedWitnessRequest.fromJson(json.decode(sdkSignedRequest));
-
-    SendRequestResponse resp = await AuthorityPublicApi.instance.sendRequest(signedRequest);
+    SendRequestResponse resp = (await AuthorityPublicApi(await AppSharedPrefs.getAuthorityUrl()).sendRequest(signedRequest)).data;
     storeContext.dispatch(SentRequest(
       widget._processName,
       widget._processContentId,
       DateTime.now(),
-      AuthorityPublicApi.instance.name,
+      'Goverment Office', // TODO it must be retrieved from the endpoint
       resp.capabilityLink,
     ));
 

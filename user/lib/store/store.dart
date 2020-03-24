@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:morpheus_common/utils/log.dart';
 import 'package:morpheus_kyc_user/store/reducers/app_state_reducer.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
+import 'package:morpheus_sdk/utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_persist/redux_persist.dart';

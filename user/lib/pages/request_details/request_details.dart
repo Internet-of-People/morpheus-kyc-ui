@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:morpheus_common/sdk/io.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
 import 'package:morpheus_common/widgets/request_status_icon.dart';
 import 'package:morpheus_kyc_user/pages/requests/request_info.dart';
+import 'package:morpheus_sdk/io.dart';
 
 class RequestDetailsPage extends StatelessWidget {
   final RequestInfo _info;

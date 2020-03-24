@@ -3,15 +3,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:json_resolve/json_resolve.dart';
-import 'package:morpheus_common/sdk/inspector_public_api.dart';
-import 'package:morpheus_common/sdk/io.dart';
-import 'package:morpheus_common/sdk/native_sdk.dart';
 import 'package:morpheus_common/utils/schema_form/map_as_table.dart';
 import 'package:morpheus_common/widgets/key_selector.dart';
+import 'package:morpheus_kyc_user/app_model.dart';
 import 'package:morpheus_kyc_user/pages/home/home.dart';
+import 'package:morpheus_kyc_user/shared_prefs.dart';
 import 'package:morpheus_kyc_user/store/actions/actions.dart';
 import 'package:morpheus_kyc_user/store/state/app_state.dart';
 import 'package:morpheus_kyc_user/store/state/presentations_state.dart';
+import 'package:morpheus_sdk/inspector.dart';
+import 'package:morpheus_sdk/io.dart';
+import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 
 class ApplyScenarioPage extends StatefulWidget {
@@ -57,7 +59,7 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
               Column(children: widget._scenario.requiredLicenses.map((l) => MapAsTable(l.toJson(),"License")).toList()),
               Container(
                 margin: const EdgeInsets.only(top: 32.0, bottom: 16.0),
-                child: KeySelector(_keySelectorController),
+                child: KeySelector(_keySelectorController, Provider.of<AppModel>(context, listen: false).cryptoAPI),
               ),
             ]),
           ),
@@ -102,20 +104,22 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
     void Function(CreatedPresentation createdPresentation) storeDispatch,
     Map<String, dynamic> dataToBeShared,
   ) async {
+    final cryptoAPI = Provider.of<AppModel>(context, listen: false).cryptoAPI;
+
     // IMPORTANT NOTE (to code analyzers): here, the SDK gives us the opportunity to send multiple
     // statements for one claim (meaning one claim can be signed via multiple authorities).
     // We can also send multiple claims as well.
     // In this PoC application though we only use one claim and one presentation.
     final provenClaims = widget._scenario.prerequisites.map((prerequisite){
       final signedWitnessStatement = widget._processStatementMap[prerequisite.process];
-      final maskedClaimContent = NativeSDK.instance.maskJson(
+      final maskedClaimContent = cryptoAPI.maskJson(
           json.encode(signedWitnessStatement.content.claim.content),
           prerequisite.claimFields.join(',')
       );
 
       final collapsedClaim = json.decode(maskedClaimContent);
       final collapsedSignedWitnessStatement = signedWitnessStatement.toCollapsed(
-        NativeSDK.instance.maskJson(
+        cryptoAPI.maskJson(
             json.encode(signedWitnessStatement.content.claim.toJson()),
             '',
         )
@@ -133,20 +137,21 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
         provenClaims,
         widget._scenario.requiredLicenses.map((l)=>this._mapLicense(l)).toList()
     );
-    final sdkSignedPresentation = NativeSDK.instance.signClaimPresentation(
+    final signedPresentation = cryptoAPI.signClaimPresentation(
         json.encode(presentation.toJson()),
         _keySelectorController.value.key,
     );
-    final signedPresentation = SignedPresentation.fromJson(json.decode(sdkSignedPresentation));
 
-    UploadPresentationResponse resp = await InspectorPublicApi.instance.uploadPresentation(signedPresentation);
+    final inspectorUrl = await AppSharedPrefs.getInspectorUrl();
+    UploadPresentationResponse resp = (await InspectorPublicApi(inspectorUrl).uploadPresentation(signedPresentation)).data;
+    final scenarioUrl = '$inspectorUrl/blob/${resp.contentId}';
 
     storeDispatch(CreatedPresentation(
       signedPresentation,
       dataToBeShared,
       widget._scenario.name,
       DateTime.now(),
-      '${InspectorPublicApi.instance.apiUrl}/blob/${resp.contentId}', // TODO will this one be a good solution?
+      scenarioUrl,
     ));
 
     await showDialog(

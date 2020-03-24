@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/sdk/authority_private_api.dart';
-import 'package:morpheus_common/sdk/authority_public_api.dart';
-import 'package:morpheus_common/sdk/native_sdk.dart';
+import 'package:morpheus_sdk/authority.dart';
+import 'package:provider/provider.dart';
+import 'package:witness/app_model.dart';
 import 'package:witness/drawer/header.dart';
 import 'package:witness/pages/requests/requests.dart';
+import 'package:witness/shared_prefs.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
@@ -12,15 +13,14 @@ class MainDrawer extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            Header(NativeSDK.instance.listDids()),
+            Header(Provider.of<AppModel>(context, listen: false).cryptoAPI.listDids()),
             ListTile(
               leading: const Icon(Icons.android),
               title: const Text('Requests'),
               onTap: () {
-                //AuthorityPublicApi.setAsRealDevice('http://34.76.108.115:8080');
-                //AuthorityPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
-                AuthorityPublicApi.setAsEmulator();
-                AuthorityPrivateApi.setAsEmulator();
+                AppSharedPrefs.setAuthorityUrl(TestUrls.gcpAuthority);
+                AppSharedPrefs.setInspectorUrl(TestUrls.gcpInspector);
+                AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
                 Navigator.pop(context);
                 Navigator.pushAndRemoveUntil(
                     context,

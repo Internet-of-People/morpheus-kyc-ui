@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/sdk/ledger.dart';
-import 'package:morpheus_common/sdk/native_sdk.dart';
+import 'package:morpheus_sdk/crypto.dart';
 
 class KeySelectorValue {
   final int keyIndex;
@@ -17,8 +14,9 @@ class KeySelectorController extends ValueNotifier<KeySelectorValue> {
 
 class KeySelector extends StatefulWidget {
   final KeySelectorController _controller;
+  final CryptoAPI _cryptoAPI;
 
-  const KeySelector(this._controller, {Key key}) : super(key: key);
+  const KeySelector(this._controller, this._cryptoAPI, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _KeySelectorState();
@@ -34,9 +32,7 @@ class _KeySelectorState extends State<KeySelector> {
     super.initState();
 
     // TODO: show only keys that has rights to sign
-    _availableKeys = DIDDocument.fromJson(
-        json.decode(NativeSDK.instance.getDocument(NativeSDK.instance.listDids()[0]))
-    ).keys.map((key) => key.auth).toList();
+    _availableKeys = widget._cryptoAPI.getDocument(widget._cryptoAPI.listDids()[0]).keys.map((key) => key.auth).toList();
     _selectedKeyIndex = 0;
     _selectedKey = _availableKeys[_selectedKeyIndex];
     widget._controller.value = KeySelectorValue(

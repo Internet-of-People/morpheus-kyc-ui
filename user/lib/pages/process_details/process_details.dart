@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:json_schema/json_schema.dart';
-import 'package:morpheus_common/sdk/authority_public_api.dart';
-import 'package:morpheus_common/sdk/content_resolver.dart';
 import 'package:morpheus_common/widgets/nullable_text.dart';
 import 'package:morpheus_kyc_user/pages/create_witness_request/create_witness_request.dart';
+import 'package:morpheus_kyc_user/shared_prefs.dart';
+import 'package:morpheus_sdk/authority.dart';
+import 'package:morpheus_sdk/utils.dart';
 
 class ProcessDetailsPage extends StatefulWidget {
   final String _processContentId;
@@ -36,8 +37,10 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
   @override
   void initState() {
     super.initState();
-    _fetchClaimSchemaFut = ContentResolver.resolve(widget._process.claimSchema, ContentLocation.AUTHORITY_PUBLIC);
-    _fetchEvidenceSchemaFut = ContentResolver.resolve(widget._process.evidenceSchema, ContentLocation.AUTHORITY_PUBLIC);
+    final resolver = ContentResolver((contentId) async => (await AuthorityPublicApi(await AppSharedPrefs.getAuthorityUrl()).getPublicBlob(contentId)).data);
+
+    _fetchClaimSchemaFut = resolver.resolve(widget._process.claimSchema);
+    _fetchEvidenceSchemaFut = resolver.resolve(widget._process.evidenceSchema);
   }
 
   @override

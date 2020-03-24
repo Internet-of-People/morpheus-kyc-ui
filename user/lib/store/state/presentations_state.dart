@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:morpheus_common/sdk/io.dart';
+import 'package:morpheus_sdk/io.dart';
 
 part 'presentations_state.g.dart';
 

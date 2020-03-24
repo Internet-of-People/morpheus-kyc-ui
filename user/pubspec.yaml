@@ -31,8 +31,12 @@ dependencies:
   json_schema: ^2.2.1
   json_resolve: ^1.0.0
   qr_flutter: ^3.1.0
+  shared_preferences: ^0.5.6+3
+  provider: ^4.0.4
   morpheus_common:
     path: ../common
+  morpheus_sdk:
+    path: ../../morpheus-dart
 
 dev_dependencies:
   # For state management

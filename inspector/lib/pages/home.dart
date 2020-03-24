@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:morpheus_common/sdk/http_tools.dart';
 import 'package:morpheus_inspector/pages/result.dart';
 import 'package:morpheus_inspector/pages/scan_qr.dart';
+import 'package:morpheus_inspector/shared_prefs.dart';
 import 'package:morpheus_inspector/view_model_provider.dart';
 
-const url1 = 'http://${HttpTools.host}:8081/blob/cju-WutB5_FzMH4dIkdJzhuTarsNoI3xeUNu56mG4gFWSE';
-const url2 = 'whatever';
-const url3 = 'whatever';
+final url1 = 'http://${TestUrls.gcpValidator}/blob/cju-WutB5_FzMH4dIkdJzhuTarsNoI3xeUNu56mG4gFWSE';
+final url2 = 'whatever';
+final url3 = 'whatever';
 
 class HomePage extends StatelessWidget {
   @override

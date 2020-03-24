@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/sdk/authority_private_api.dart';
-import 'package:morpheus_common/sdk/authority_public_api.dart';
-import 'package:morpheus_common/sdk/validator_api.dart';
-import 'package:morpheus_common/sdk/inspector_public_api.dart';
-import 'package:morpheus_common/sdk/native_sdk.dart';
+import 'package:morpheus_kyc_user/app_model.dart';
 import 'package:morpheus_kyc_user/pages/available_processes/available_processes.dart';
 import 'package:morpheus_kyc_user/pages/drawer/header.dart';
 import 'package:morpheus_kyc_user/pages/inspector_scenarios/inspector_scenarios.dart';
 import 'package:morpheus_kyc_user/pages/presentations/presentations.dart';
 import 'package:morpheus_kyc_user/pages/requests/requests.dart';
 import 'package:morpheus_kyc_user/pages/scan_qr/scan_qr.dart';
+import 'package:morpheus_kyc_user/shared_prefs.dart';
+import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
@@ -18,7 +16,8 @@ class MainDrawer extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            Header(NativeSDK.instance.listDids()),
+            //Header(NativeSDK.instance.listDids()),
+            Header(Provider.of<AppModel>(context, listen: false).cryptoAPI.listDids()),
             ListTile(
               leading: const Icon(Icons.camera_alt),
               title: const Text('Scan QR'),
@@ -34,12 +33,11 @@ class MainDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.android),
-              title: const Text('Authority Test'),
+              title: const Text('IoP Authority'),
               onTap: () {
-                //AuthorityPublicApi.setAsRealDevice('http://34.76.108.115:8080');
-                //AuthorityPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
-                AuthorityPublicApi.setAsEmulator();
-                AuthorityPrivateApi.setAsEmulator();
+                AppSharedPrefs.setAuthorityUrl(TestUrls.gcpAuthority);
+                AppSharedPrefs.setInspectorUrl(TestUrls.gcpInspector);
+                AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
                 Navigator.pop(context);
                 Navigator.push(
                     context,
@@ -51,14 +49,11 @@ class MainDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.android),
-              title: const Text('Inspector Test'),
+              title: const Text('IoP Inspector'),
               onTap: () {
-                //InspectorPublicApi.setAsRealDevice('http://34.76.108.115:8080');
-                //InspectorPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
-                InspectorPublicApi.setAsEmulator();
-                ValidatorApi.setAsEmulator();
-                AuthorityPublicApi.setAsEmulator();
-                AuthorityPrivateApi.setAsEmulator();
+                AppSharedPrefs.setAuthorityUrl(TestUrls.gcpAuthority);
+                AppSharedPrefs.setInspectorUrl(TestUrls.gcpInspector);
+                AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
                 Navigator.pop(context);
                 Navigator.push(
                     context,
@@ -72,10 +67,9 @@ class MainDrawer extends StatelessWidget {
               leading: const Icon(Icons.library_books),
               title: const Text('Requests'),
               onTap: () {
-                //AuthorityPublicApi.setAsRealDevice('http://34.76.108.115:8080');
-                //AuthorityPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
-                AuthorityPublicApi.setAsEmulator();
-                AuthorityPrivateApi.setAsEmulator();
+                AppSharedPrefs.setAuthorityUrl(TestUrls.gcpAuthority);
+                AppSharedPrefs.setInspectorUrl(TestUrls.gcpInspector);
+                AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
                 Navigator.pop(context);
                 Navigator.push(
                     context,
@@ -89,10 +83,9 @@ class MainDrawer extends StatelessWidget {
               leading: const Icon(Icons.present_to_all),
               title: const Text('Presentations'),
               onTap: () {
-                //AuthorityPublicApi.setAsRealDevice('http://34.76.108.115:8080');
-                //AuthorityPrivateApi.setAsRealDevice('http://34.76.108.115:8080');
-                AuthorityPublicApi.setAsEmulator();
-                AuthorityPrivateApi.setAsEmulator();
+                AppSharedPrefs.setAuthorityUrl(TestUrls.gcpAuthority);
+                AppSharedPrefs.setInspectorUrl(TestUrls.gcpInspector);
+                AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
                 Navigator.pop(context);
                 Navigator.push(
                     context,

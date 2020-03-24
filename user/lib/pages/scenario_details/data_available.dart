@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_common/sdk/inspector_public_api.dart';
-import 'package:morpheus_common/sdk/io.dart';
 import 'package:morpheus_kyc_user/pages/apply_scenario/apply_scenario.dart';
+import 'package:morpheus_sdk/inspector.dart';
+import 'package:morpheus_sdk/io.dart';
 
 class DataAvailableAlert extends StatelessWidget {
   final Scenario _scenario;
