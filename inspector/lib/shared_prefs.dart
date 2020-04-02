@@ -42,5 +42,5 @@ class TestUrls {
   static final String emulatorValidator = 'http://10.0.2.2:8081';
   static final String gcpAuthority = 'http://34.76.108.115:8080';
   static final String gcpInspector = 'http://34.76.108.115:8081';
-  static final String gcpValidator = 'http://34.76.108.115:8081';
+  static final String gcpValidator = 'http://192.168.17.234:8081';
 }

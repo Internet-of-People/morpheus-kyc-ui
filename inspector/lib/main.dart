@@ -16,15 +16,20 @@ void main() {
   }();
 }
 
-class InspectorApp extends StatelessWidget {
+class InspectorApp extends StatefulWidget {
+  @override
+  _InspectorAppState createState() => _InspectorAppState();
+}
+
+class _InspectorAppState extends State<InspectorApp> {
   @override
   Widget build(BuildContext context) {
     return ViewModel(
-        child: MaterialApp(
-          title: 'Inspector App',
-          theme: MorpheusTheme.theme,
-          home: HomePage(),
-        ),
+      child: MaterialApp(
+        title: 'Inspector App',
+        theme: MorpheusTheme.theme,
+        home: HomePage(),
+      ),
     );
   }
 }

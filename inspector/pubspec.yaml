@@ -25,6 +25,7 @@ dependencies:
   qr_code_scanner: ^0.0.12
   flutter_svg: ^0.17.2
   flutter_speed_dial: ^1.2.5
+  #provider: ^4.0.4
   shared_preferences: ^0.5.6+3
   morpheus_common:
     path: ../common
@@ -38,6 +39,8 @@ dev_dependencies:
   # Other
   flutter_test:
     sdk: flutter
+  native_sdk:
+    path: native_sdk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

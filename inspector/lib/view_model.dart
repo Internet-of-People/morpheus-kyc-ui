@@ -4,10 +4,11 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:morpheus_inspector/shared_prefs.dart';
+import 'package:morpheus_sdk/crypto.dart';
 import 'package:morpheus_sdk/http.dart';
 import 'package:morpheus_sdk/io.dart';
 import 'package:morpheus_sdk/utils.dart';
-import 'package:morpheus_sdk/validator.dart';
+import 'package:morpheus_sdk/verifier.dart';
 
 part 'view_model.g.dart';
 
@@ -45,11 +46,15 @@ class Discount {
 }
 
 class AppViewModel {
+  final CryptoAPI _crypto;
   final Log _log = Log(AppViewModel);
+
   String _url;
   Future<SignedPresentation> _presentation;
   Future<ValidationItems> _validation;
   Future<Discount> _discount;
+
+  AppViewModel(this._crypto);
 
   String get url => _url;
   Future<SignedPresentation> get presentation => _presentation;
@@ -83,14 +88,16 @@ class AppViewModel {
     }
 
     try {
+      final contentId = _crypto.maskJson(json.encode(presentation.content.toJson()), '');
       final request = ValidationRequest(
-        provenClaim.claim.subject, // Claimant might be different from subject
-        presentation.signature.publicKey,
-        // Also, the did might only have the id of this publicKey added
-        null,
-        null,
+        presentation.signature.publicKey, // The did might only have the id of this publicKey added
+        contentId,
+        presentation.signature.bytes,
+        provenClaim.claim.subject, // Claimant might be different from subject in the future
+        null, // no AfterEnvelop support yet
       );
-      final result = (await ValidatorApi(await AppSharedPrefs.getValidatorUrl()).validate(request)).data;
+      final validatorApi = VerifierApi(await AppSharedPrefs.getValidatorUrl());
+      final result = (await validatorApi.validate(request)).data;
 
       final items = result.errors.map((i) => ValidationItem(true, i, '')).toList() +
         result.warnings.map((i) => ValidationItem(false, i, '')).toList();
