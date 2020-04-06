@@ -21,99 +21,99 @@ final _log = Log(JsonSchema);
 
 extension JsonSchemaExt on JsonSchema {
   bool isString() {
-    return this.type == SchemaType.string && !this.schemaMap.containsKey(_subTypeKey);
+    return type == SchemaType.string && !schemaMap.containsKey(_subTypeKey);
   }
 
   bool isNumber() {
-    return this.type == SchemaType.number;
+    return type == SchemaType.number;
   }
 
   bool isContentId() {
-    return this.type == SchemaType.string &&
-        this.schemaMap.containsKey(_subTypeKey) &&
-        this.schemaMap[_subTypeKey] == _SubTypes.contentId;
+    return type == SchemaType.string &&
+        schemaMap.containsKey(_subTypeKey) &&
+        schemaMap[_subTypeKey] == _SubTypes.contentId;
   }
 
   bool isDate() {
-    return this.type == SchemaType.string &&
-        this.schemaMap.containsKey(_subTypeKey) &&
-        this.schemaMap[_subTypeKey] == _SubTypes.date;
+    return type == SchemaType.string &&
+        schemaMap.containsKey(_subTypeKey) &&
+        schemaMap[_subTypeKey] == _SubTypes.date;
   }
 
   bool isEmail() {
-    return this.type == SchemaType.string &&
-        this.schemaMap.containsKey(_subTypeKey) &&
-        this.schemaMap[_subTypeKey] == _SubTypes.email;
+    return type == SchemaType.string &&
+        schemaMap.containsKey(_subTypeKey) &&
+        schemaMap[_subTypeKey] == _SubTypes.email;
   }
 
   bool isNonce() {
-    return this.type == SchemaType.string &&
-        this.schemaMap.containsKey(_subTypeKey) &&
-        this.schemaMap[_subTypeKey] == _SubTypes.nonce;
+    return type == SchemaType.string &&
+        schemaMap.containsKey(_subTypeKey) &&
+        schemaMap[_subTypeKey] == _SubTypes.nonce;
   }
 
   bool isPhoto(){
-    return this.type == SchemaType.string &&
-        this.schemaMap.containsKey(_subTypeKey) &&
-        this.schemaMap[_subTypeKey] == _SubTypes.photo;
+    return type == SchemaType.string &&
+        schemaMap.containsKey(_subTypeKey) &&
+        schemaMap[_subTypeKey] == _SubTypes.photo;
   }
 
   bool isObject() {
-    return this.type == SchemaType.object;
+    return type == SchemaType.object;
   }
 
   Optional<FormFieldValidator> getValidators() {
-    final List<FieldValidator> validators = [];
-    final List<String> debug = [];
+    final validators = <FieldValidator>[];
+    final debug = <String>[];
 
-    if(this.parent != null && this.parent.requiredProperties.contains(this.propertyName)){
-      if(this.isString() || this.isDate() || this.isEmail() || this.isNonce()) {
+    if (parent != null && parent.requiredProperties.contains(propertyName)){
+      if (isString() || isDate() || isEmail() || isNonce()) {
         validators.add(RequiredValidator(errorText: 'Required'));
         debug.add('required');
       }
-      else if(this.isPhoto()) {
+      else if (isPhoto()) {
         validators.add(NotNullOrEmptyValidator<File>(errorText: 'Required'));
         debug.add('required');
       }
       else {
-        _log.error('Field ${this.propertyName} has a type ${this.type}, which has no required validator implemented. Schema: $this');
+        _log.error('Field ${propertyName} has a type ${type}, which has no required validator implemented. Schema: $this');
       }
     }
 
-    if(this.minLength != null) {
-      validators.add(MinLengthValidator(this.minLength, errorText: 'Min length is ${this.minLength}'));
+    if (minLength != null) {
+      validators.add(MinLengthValidator(minLength, errorText: 'Min length is ${minLength}'));
       debug.add('minLength');
     }
 
-    if(this.maxLength != null) {
-      validators.add(MaxLengthValidator(this.maxLength, errorText: 'Max length is ${this.maxLength}'));
+    if (maxLength != null) {
+      validators.add(MaxLengthValidator(maxLength, errorText: 'Max length is ${maxLength}'));
       debug.add('maxLength');
     }
 
     final rangeValidator = _getNumericRangeValidator(this);
-    if(rangeValidator.isPresent){
+    if (rangeValidator.isPresent){
       validators.add(rangeValidator.value);
       debug.add('range');
     }
 
-    if(this.pattern != null){
-      validators.add(PatternValidator(this.pattern.pattern, errorText: 'Invalid pattern'));
+    if (pattern != null){
+      validators.add(PatternValidator(pattern.pattern, errorText: 'Invalid pattern'));
       debug.add('pattern');
     }
 
-    _log.debug('[Validation] ${this.propertyName} got validators attached: ${debug.join(', ')}');
+    _log.debug('[Validation] ${propertyName} got validators attached: ${debug.join(', ')}');
     return validators.isEmpty ? Optional.empty() : Optional.of(MultiValidator(validators));
   }
 }
 
 Optional<FieldValidator> _getNumericRangeValidator(JsonSchema schema){
-  if(schema.minimum == null && schema.maximum == null){
+  if (schema.minimum == null && schema.maximum == null) {
     return Optional.empty();
   }
-  else if(schema.minimum != null && schema.maximum == null){
+  else if (schema.minimum != null && schema.maximum == null) {
     return Optional.of(MinValidator(schema.minimum, errorText: 'Must be greater than or equal to ${schema.minimum}'));
   }
-  else if(schema.minimum == null && schema.maximum != null){
+  else if (schema.minimum == null && schema.maximum != null) {
     return Optional.of(MaxValidator(schema.maximum, errorText: 'Must be less than or equal to ${schema.maximum}'));
   }
   else {

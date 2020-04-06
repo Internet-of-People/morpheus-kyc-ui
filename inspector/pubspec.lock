@@ -404,7 +404,7 @@ packages:
   native_sdk:
     dependency: "direct dev"
     description:
-      path: native_sdk
+      path: "../native_sdk"
       relative: true
     source: path
     version: "1.0.0"

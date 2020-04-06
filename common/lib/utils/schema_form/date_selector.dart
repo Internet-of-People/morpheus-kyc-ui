@@ -43,7 +43,7 @@ class DateSelectorState extends State<DateSelector> {
 
     final picked = await showDatePicker(
         context: context,
-        initialDate: _dateOfBirth == null ? lastDate : _dateOfBirth,
+        initialDate: _dateOfBirth ?? lastDate,
         firstDate: DateTime(1920, 01, 01),
         lastDate: lastDate
     );

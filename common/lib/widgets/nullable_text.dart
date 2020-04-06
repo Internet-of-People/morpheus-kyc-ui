@@ -14,6 +14,6 @@ class NullableText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text == null ? ifNullText : text, style: style);
+    return Text(text ?? ifNullText, style: style);
   }
 }

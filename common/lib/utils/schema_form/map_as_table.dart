@@ -26,8 +26,8 @@ class MapAsTable extends StatelessWidget {
     }
 
     if(topLevel) {
-      final List<DataColumn> columns = const [DataColumn(label: Text('Key')), DataColumn(label: Text('Value'))];
-      final List<DataRow> rows = _mapToRow(data, null, context);
+      final columns = const <DataColumn>[DataColumn(label: Text('Key')), DataColumn(label: Text('Value'))];
+      final rows = _mapToRow(data, null, context);
 
       return Optional.of(Container(
         margin: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
@@ -53,13 +53,13 @@ class MapAsTable extends StatelessWidget {
   }
 
   List<DataRow> _mapToRow(Map<String, dynamic> map, String parent, context){
-    final List<DataRow> rows = [];
+    final rows = <DataRow>[];
 
-    for(final entry in map.entries) {
-      final List<DataCell> cells = [];
+    for (final entry in map.entries) {
+      final cells = <DataCell>[];
 
-      if(entry.value is Map) {
-        String thisLevel = parent == null ? entry.key : '$parent / ${entry.key}';
+      if (entry.value is Map) {
+        final thisLevel = parent == null ? entry.key : '$parent / ${entry.key}';
         rows.addAll(_mapToRow(entry.value as Map, thisLevel, context));
       }
       else {
@@ -85,17 +85,17 @@ class MapAsTable extends StatelessWidget {
           cells.add(DataCell(entry.value == null ? Text('null') : Image.memory(base64Decode(entry.value))));
         }
         else {
-          String text = 'Unknown entry value';
-          if(entry.value == null) {
+          var text = 'Unknown entry value';
+          if (entry.value == null) {
             text = 'null';
           }
-          else if(entry.value is String) {
+          else if (entry.value is String) {
             text = entry.value;
           }
-          else if(entry.value is int) {
+          else if (entry.value is int) {
             text = (entry.value as int).toString();
           }
-          else if(entry.value is DateTime) {
+          else if (entry.value is DateTime) {
             text = (entry.value as DateTime).toIso8601String();
           }
 

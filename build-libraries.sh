@@ -16,16 +16,9 @@ AR=$TOOLCHAINPATH/aarch64-linux-android-ar CC=$TOOLCHAINPATH/aarch64-linux-andro
 
 cd -
 
-# APPS USING NATIVE SDK
-
-declare -a arr=("user" "witness" "inspector")
-
-for i in "${arr[@]}"
-do
-    JNI_LIBS=$i/native_sdk/android/src/main/jniLibs
-    rm -rf $JNI_LIBS
-    mkdir -p $JNI_LIBS/x86_64
-    mkdir -p $JNI_LIBS/arm64-v8a
-    cp $SDK_PATH/target/x86_64-linux-android/release/libmorpheus_sdk.so $JNI_LIBS/x86_64
-    cp $SDK_PATH/target/aarch64-linux-android/release/libmorpheus_sdk.so $JNI_LIBS/arm64-v8a
-done
+JNI_LIBS=native_sdk/android/src/main/jniLibs
+rm -rf $JNI_LIBS
+mkdir -p $JNI_LIBS/x86_64
+mkdir -p $JNI_LIBS/arm64-v8a
+cp $SDK_PATH/target/x86_64-linux-android/release/libmorpheus_sdk.so $JNI_LIBS/x86_64
+cp $SDK_PATH/target/aarch64-linux-android/release/libmorpheus_sdk.so $JNI_LIBS/arm64-v8a

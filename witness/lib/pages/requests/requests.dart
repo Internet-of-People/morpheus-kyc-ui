@@ -52,7 +52,7 @@ class RequestsPageState extends State<RequestsPage> {
   );
 
   Widget _buildList(List<RequestCollectedInfo> requests, bool loading) {
-    final List<Widget> children = [];
+    final children = <Widget>[];
 
     if(loading) {
       children.add(LinearProgressIndicator());
@@ -65,7 +65,7 @@ class RequestsPageState extends State<RequestsPage> {
         shrinkWrap: true,
         itemCount: requests.length,
         itemBuilder:(context, int index) {
-          RequestCollectedInfo request = requests[index];
+          final request = requests[index];
           return Column(
             children: <Widget>[
               Divider(height: 5.0),
@@ -103,8 +103,8 @@ class RequestsPageState extends State<RequestsPage> {
   }
 
   Future<List<RequestCollectedInfo>> _futureBuilder() async {
-    final List<RequestCollectedInfo> _requests = List();
-    final Map<String, Process> _processMap = Map();
+    final _requests = <RequestCollectedInfo>[];
+    final _processMap = <String, Process>{};
     final authorityPrivateApi = AuthorityPrivateApi(await AppSharedPrefs.getAuthorityUrl());
     final authorityPublicApi = AuthorityPublicApi(await AppSharedPrefs.getAuthorityUrl());
 

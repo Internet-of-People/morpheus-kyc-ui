@@ -36,11 +36,11 @@ class ApprovalDialog extends StatefulWidget {
 
 class _ApprovalDialogDialogState extends State<ApprovalDialog> {
   bool _approving = false;
-  KeySelectorController _keySelectorController = KeySelectorController();
+  final _keySelectorController = KeySelectorController();
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> actionButtons = [];
+    final actionButtons = <Widget>[];
     if(_approving){
       actionButtons.add(SizedBox(
         child: Padding(child: CircularProgressIndicator(), padding: EdgeInsets.all(16.0)),

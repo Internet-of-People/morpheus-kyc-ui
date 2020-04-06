@@ -31,28 +31,27 @@ class PhotoSelectorFormField extends FormField<File> {
       final titleColor = state.hasError ? Colors.red : subheadTheme.color;
       final titleStyle = subheadTheme.copyWith(color: titleColor);
 
-      List<Widget> content = [
+      final content = <Widget>[
         Row(children: <Widget>[
-          Expanded(child: Text(title, style: titleStyle))
-        ])
+          Expanded(child: Text(title, style: titleStyle)),
+        ]),
       ];
 
-      if(controller.isImageSelected()){
+      if (controller.isImageSelected()) {
         content.add(Container(
           margin: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
           child: Image.file(controller.image),
         ));
-      }
-      else {
+      } else {
         content.add(Container(
           margin: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
           child: Row(children: <Widget>[
-            Expanded(child: Text('Click Here to Select a Photo'))
+            Expanded(child: Text('Click Here to Select a Photo')),
           ]),
         ));
       }
 
-      if(state.hasError) {
+      if (state.hasError) {
         content.add(Container(
           margin: EdgeInsets.fromLTRB(0, 16.0, 0.0, 0.0),
           child: Row(children: <Widget>[

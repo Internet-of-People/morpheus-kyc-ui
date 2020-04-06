@@ -23,20 +23,23 @@ class DidsDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = [];
+    var children = <Widget>[];
 
     if(_dids != null) {
-      children = [Container(
+      children = <Widget>[Container(
         padding: EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
         margin: EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(4.0)
+            borderRadius: BorderRadius.circular(4.0),
         ),
         child: DropdownButton<String>(
           value: _activeDid,
           isExpanded: true,
-          icon: Icon(Icons.arrow_drop_down,color: Colors.black),
+          icon: Icon(
+              Icons.arrow_drop_down,
+              color: Colors.black,
+          ),
           style: TextStyle(color: Colors.black),
           underline: Container(height: 0),
           onChanged: _onChanged,

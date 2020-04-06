@@ -25,7 +25,7 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
     return _buildObject(widget._schema.description, widget._schema, true, widget._schemaTree);
   }
 
-  _buildWidgetFormSchema(String name, JsonSchema schema, bool topLevel, JsonSchemaFormTree schemaTree){
+  Widget _buildWidgetFormSchema(String name, JsonSchema schema, bool topLevel, JsonSchemaFormTree schemaTree) {
     final alreadyThere = schemaTree.contains(name);
 
     if(
@@ -54,7 +54,7 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
             return _buildContainer(field.widget, topLevel);
           }
           else if(schema.isObject()) {
-            JsonSchemaFormTree subTree = alreadyThere ? schemaTree.get<JsonSchemaFormTree>(name) : JsonSchemaFormTree();
+            final subTree = alreadyThere ? schemaTree.get<JsonSchemaFormTree>(name) : JsonSchemaFormTree();
             schemaTree.putSubtreeIfAbsent(name, subTree);
             return _buildContainer(_buildObject(name, schema, false, subTree), topLevel);
           }
@@ -64,7 +64,7 @@ class SchemaDefinedFormContentState extends State<SchemaDefinedFormContent> {
         }
       
         Widget _buildObject(String name, JsonSchema schema, bool topLevel, JsonSchemaFormTree schemaTree){
-          List<Widget> objectChildren = [];
+          final objectChildren = <Widget>[];
       
           if(name != null) {
             if(topLevel){
@@ -173,7 +173,7 @@ class JsonSchemaFormTreeValue {
 }
 
 class JsonSchemaFormTree {
-  final Map<String, dynamic> _root = Map();
+  final _root = <String, dynamic>{};
 
   void putIfAbsent(String key, JsonSchemaFormTreeValue value) {
     if(_root[key] == null) {
@@ -196,7 +196,7 @@ class JsonSchemaFormTree {
   }
 
   Map<String, dynamic> _parseTree(JsonSchemaFormTree tree) {
-    Map<String, dynamic> parsed = Map();
+    final parsed = <String, dynamic>{};
 
     for(final entry in tree._root.entries) {
       if(entry.value is JsonSchemaFormTree) {

@@ -16,7 +16,7 @@ class RequestDetailsPage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return RequestDetailsPageState(this._info.status, this._info.rejectionReason, this._info.statement);
+    return RequestDetailsPageState(_info.status, _info.rejectionReason, _info.statement);
   }
 }
 
@@ -29,7 +29,7 @@ class RequestDetailsPageState extends State<RequestDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> sections = [
+    final sections = <Widget>[
       _buildStatusSection(),
       _buildProcessSection(),
       _buildRequestMetaSection(),
@@ -107,7 +107,7 @@ class RequestDetailsPageState extends State<RequestDetailsPage> {
   );
 
   Widget _buildStatusSection() {
-    List<Widget> infos = [];
+    final infos = <Widget>[];
 
     infos.add(Row(children: [
       Padding(
@@ -149,7 +149,7 @@ class RequestDetailsPageState extends State<RequestDetailsPage> {
   }
 
   Widget _buildRequestMetaSection() {
-    Map<String, dynamic> infos = Map();
+    final infos = <String, dynamic>{};
     infos['Claimant'] = widget._info.request.content.claimant;
     infos['DateOfRequest'] = widget._info.dateOfRequest;
     if(widget._info.notes!=null) {

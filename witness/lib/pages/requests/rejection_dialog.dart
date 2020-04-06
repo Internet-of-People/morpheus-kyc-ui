@@ -20,11 +20,11 @@ class RejectionDialog extends StatefulWidget {
 
 class _RejectionDialogState extends State<RejectionDialog> {
   bool _rejecting = false;
-  TextEditingController _rejectionReasonController = TextEditingController();
+  final _rejectionReasonController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> rejectActionButtons = [];
+    final rejectActionButtons = <Widget>[];
     if(_rejecting){
       rejectActionButtons.add(SizedBox(
         child: Padding(child: CircularProgressIndicator(), padding: EdgeInsets.all(16.0)),

@@ -69,8 +69,11 @@ class AppViewModel {
 
   Future<SignedPresentation> _download() async {
     try {
-      final jsonString = (await HttpRequest().get(url)).data;
-      final result = SignedPresentation.fromJson(json.decode(jsonString));
+      final response = await HttpRequest<SignedPresentation>().get(
+        url,
+        callback: (resp) => SignedPresentation.fromJson(json.decode(resp.body)),
+      );
+      final result = response.data;
       _validation = _validate(result);
       return result;
     } catch (e) {
