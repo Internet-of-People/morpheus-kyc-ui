@@ -9,7 +9,7 @@ import 'package:redux_persist/redux_persist.dart';
 
 class AppStore {
   static Store<AppState> _instance;
-  static Log _log = Log(AppStore);
+  static final _log = Log(AppStore);
 
   AppStore._();
 
@@ -32,9 +32,7 @@ class AppStore {
 
       _instance = Store<AppState>(
         appReducer,
-        initialState: persistedState != null
-          ? persistedState
-          : AppState.initialState(),
+        initialState: persistedState ?? AppState.initialState(),
         middleware: [persistor.createMiddleware()],
       );
       _log.debug('Store is ready');

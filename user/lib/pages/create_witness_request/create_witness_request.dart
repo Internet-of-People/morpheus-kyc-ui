@@ -51,18 +51,18 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
   final GlobalKey<FormState> _claimFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _evidenceFormKey = GlobalKey<FormState>();
   final KeySelectorController _keySelectorController = KeySelectorController();
+  final List<StepState> _stepStates = [
+    StepState.indexed,
+    StepState.indexed,
+    StepState.indexed,
+    StepState.indexed,
+  ];
 
   bool _claimFormAutoValidate = false;
   bool _evidenceFormAutoValidate = false;
   Map<String, dynamic> _claimData;
   Map<String, dynamic> _evidenceData;
   int _currentStep = _Step.claimSchema;
-  List<StepState> _stepStates = [
-    StepState.indexed,
-    StepState.indexed,
-    StepState.indexed,
-    StepState.indexed,
-  ];
   SchemaDefinedFormContent _claimForm;
   SchemaDefinedFormContent _evidenceForm;
   bool _signing = false;
@@ -159,7 +159,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
     );
   }
 
-  _onStepContinue() {
+  void _onStepContinue() {
     if(_currentStep == _Step.claimSchema) {
       if (!_claimFormKey.currentState.validate()) {
         setState(() {
@@ -198,13 +198,13 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
     }
   }
 
-  _onStepCancel() {
+  void _onStepCancel() {
     if (_currentStep > _Step.claimSchema) {
       setState(() => _currentStep = _currentStep - 1);
     }
   }
 
-  _onSign(SignButtonStoreContext storeContext) async {
+  void _onSign(SignButtonStoreContext storeContext) async {
     final claim = Claim(storeContext.activeDid, _claimData);
 
     final selectedKey = _keySelectorController.value;
@@ -226,7 +226,10 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       _signing = true;
     });
 
-    SendRequestResponse resp = (await AuthorityPublicApi(await AppSharedPrefs.getAuthorityUrl()).sendRequest(signedRequest)).data;
+    final authorityUrl = await AppSharedPrefs.getAuthorityUrl();
+    final authorityApi = AuthorityPublicApi(authorityUrl);
+    final response = await authorityApi.sendRequest(signedRequest);
+    final resp = response.data;
     storeContext.dispatch(SentRequest(
       widget._processName,
       widget._processContentId,
@@ -272,7 +275,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
   }
 
   Widget _buildStepperNavigation(BuildContext context, { onStepCancel, onStepContinue }) {
-    final ThemeData themeData = Theme.of(context);
+    final themeData = Theme.of(context);
     final cancelButton = Container(
       margin: const EdgeInsetsDirectional.only(start: 8.0),
       child: FlatButton(
@@ -303,7 +306,7 @@ class CreateWitnessRequestState extends State<CreateWitnessRequest> {
       ),
     );
 
-    List<Widget> buttons = [];
+    final buttons = <Widget>[];
 
     switch(_currentStep) {
       case _Step.claimSchema:

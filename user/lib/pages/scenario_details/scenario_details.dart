@@ -91,7 +91,7 @@ class _ScenarioDetailsPageState extends State<ScenarioDetailsPage> {
                   ),
                   builder: (_,AsyncSnapshot<Map<String, SignedWitnessStatement>> snapshot) {
                     if(snapshot.hasData){
-                      bool prerequisitesMeet = _checkPrerequisites(snapshot.data);
+                      final prerequisitesMeet = _checkPrerequisites(snapshot.data);
                       return prerequisitesMeet
                           ? DataAvailableAlert(widget._scenario, snapshot.data)
                           : NoDataAvailableAlert();
@@ -118,7 +118,7 @@ class _ScenarioDetailsPageState extends State<ScenarioDetailsPage> {
         body: FutureBuilder(
           future: _processesFut,
           builder: (_, AsyncSnapshot<Map<String,Process>> snapshot) {
-            List<Widget> details = [];
+            final details = <Widget>[];
             if(snapshot.hasData) {
               prerequisites.forEach((p) {
                 details.add(ListTile(
@@ -177,10 +177,10 @@ class _ScenarioDetailsPageState extends State<ScenarioDetailsPage> {
         body: FutureBuilder(
           future: _resultSchemaFut,
           builder: (context, snapshot) {
-            List<Widget> details = [];
+            final details = <Widget>[];
 
             if(snapshot.hasData) {
-              JsonSchema schema = JsonSchema.createSchema(snapshot.data);
+              final schema = JsonSchema.createSchema(snapshot.data);
               schema.properties.forEach((key, value) {
                 details.add(ListTile(
                   title: Text(key),
@@ -202,8 +202,15 @@ class _ScenarioDetailsPageState extends State<ScenarioDetailsPage> {
 
   Future<Map<String,Process>>_resolveProcesses() async {
     final ids = widget._scenario.prerequisites.map((e) => e.process).toList();
-    final map = Map<String,Process>();
-    final resolver = ContentResolver((contentId) async => (await AuthorityPublicApi(await AppSharedPrefs.getAuthorityUrl()).getPublicBlob(contentId)).data);
+    final map = <String,Process>{};
+    final authorityUrl = await AppSharedPrefs.getAuthorityUrl();
+    final authorityApi = AuthorityPublicApi(authorityUrl);
+    final resolver = ContentResolver(
+      (contentId) async {
+        final response = await authorityApi.getPublicBlob(contentId);
+        return response.data;
+      }
+    );
     final processes = await resolver.resolveByContentIds(ids);
     processes.forEach((key, value) => map[key] = Process.fromJson(json.decode(value)));
     return map;
@@ -213,8 +220,8 @@ class _ScenarioDetailsPageState extends State<ScenarioDetailsPage> {
       List<SentRequest> sentRequests,
       List<Prerequisite> prerequisites
   ) async {
-    final List<String> expectedProcessIds = prerequisites.map((e) => e.process).toList();
-    final Map<String,SignedWitnessStatement> completedProcesses = Map();
+    final expectedProcessIds = prerequisites.map((e) => e.process).toList();
+    final completedProcesses = <String,SignedWitnessStatement>{};
 
     await Future.wait(sentRequests.where((r) => expectedProcessIds.contains(r.processId)).map((r) async {
       final res = await AuthorityPublicApi(await AppSharedPrefs.getAuthorityUrl()).getRequestStatus(r.capabilityLink);

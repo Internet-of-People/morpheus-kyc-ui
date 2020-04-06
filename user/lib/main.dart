@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 
 void main() {
-  Log log = Log(UserApp);
+  final log = Log(UserApp);
   WidgetsFlutterBinding.ensureInitialized();
   () async {
     log.debug(('Bootstrapping application...'));

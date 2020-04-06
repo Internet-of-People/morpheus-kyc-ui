@@ -25,7 +25,7 @@ class ProcessDetailsPage extends StatefulWidget {
 class ProcessDetailsPageState extends State<ProcessDetailsPage> {
   Future<String> _fetchClaimSchemaFut;
   Future<String> _fetchEvidenceSchemaFut;
-  Map<int, bool> _detailsInfoState = {
+  final _detailsInfoState = <int, bool>{
     0: false,
     1: false,
   };
@@ -108,7 +108,7 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
 
   FloatingActionButton _buildButton(AsyncSnapshot<ResolvedSchemas> snapshot) {
     Function onButtonPressed;
-    String buttonLabel = 'Loading...';
+    var buttonLabel = 'Loading...';
     Widget buttonIcon = SizedBox(
       width: 20,
       height: 20,
@@ -144,8 +144,8 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
   }
 
   ExpansionPanel _buildClaimPanel(AsyncSnapshot<ResolvedSchemas> snapshot) {
-    List<Widget> claimDetails = <Widget>[];
-    String title = 'Loading...';
+    var claimDetails = <Widget>[];
+    var title = 'Loading...';
 
     if(snapshot.hasData){
       final claimSchema = JsonSchema.createSchema(snapshot.data.claimSchema);
@@ -179,8 +179,8 @@ class ProcessDetailsPageState extends State<ProcessDetailsPage> {
   }
 
   ExpansionPanel _buildEvidencePanel(AsyncSnapshot<ResolvedSchemas> snapshot){
-    List<Widget> evidenceDetails = <Widget>[];
-    String title = 'Loading...';
+    var evidenceDetails = <Widget>[];
+    var title = 'Loading...';
 
     if(snapshot.hasData) {
       final evidenceSchema = JsonSchema.createSchema(snapshot.data.evidenceSchema);

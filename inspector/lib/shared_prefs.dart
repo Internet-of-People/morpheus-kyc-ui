@@ -6,32 +6,32 @@ class AppSharedPrefs {
   static final String _validatorKey = 'morpheus_validator_url';
 
   static Future<void> setAuthorityUrl(String url) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(_authorityKey, url);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_authorityKey, url);
   }
 
   static Future<void> setInspectorUrl(String url) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(_inspectorKey, url);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_inspectorKey, url);
   }
 
   static Future<void> setValidatorUrl(String url) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(_validatorKey, url);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_validatorKey, url);
   }
 
   static Future<String> getAuthorityUrl() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_authorityKey);
   }
 
   static Future<String> getInspectorUrl() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_inspectorKey);
   }
 
   static Future<String> getValidatorUrl() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_validatorKey);
   }
 }

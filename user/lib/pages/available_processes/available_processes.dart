@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:morpheus_kyc_user/pages/available_processes/proceess_list_view.dart';
+import 'package:morpheus_kyc_user/pages/available_processes/process_list_view.dart';
 import 'package:morpheus_kyc_user/shared_prefs.dart';
 import 'package:morpheus_sdk/authority.dart';
 import 'package:morpheus_sdk/utils.dart';

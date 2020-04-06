@@ -31,7 +31,7 @@ class DateSelectorState extends State<DateSelector> {
         ),
         validator: widget._validator,
         onTap: (){
-          FocusScope.of(context).requestFocus(new FocusNode()); // don't show the keyboard
+          FocusScope.of(context).requestFocus(FocusNode()); // don't show the keyboard
           _onDateTapped();
         },
       ),

@@ -35,7 +35,7 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.14.11"
+    version: "1.14.12"
   colorize:
     dependency: transitive
     description:
@@ -231,12 +231,12 @@ packages:
     source: hosted
     version: "1.6.4"
   pedantic:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0+1"
+    version: "1.9.0"
   quiver:
     dependency: transitive
     description:

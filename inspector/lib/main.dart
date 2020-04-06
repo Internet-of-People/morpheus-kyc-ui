@@ -7,7 +7,7 @@ import 'package:morpheus_inspector/view_model_provider.dart';
 import 'package:morpheus_sdk/utils.dart';
 
 void main() {
-  Log log = Log(InspectorApp);
+  final log = Log(InspectorApp);
   WidgetsFlutterBinding.ensureInitialized();
   AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
   () async {

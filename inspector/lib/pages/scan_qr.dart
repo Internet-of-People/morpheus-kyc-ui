@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import 'package:morpheus_inspector/pages/result.dart';
@@ -34,11 +35,11 @@ class QrScanPageState extends State<QrScanPage> {
                 key: qrKey,
                 onQRViewCreated: (QRViewController controller) {
                   this.controller = controller;
-                  this.subscription = controller.scannedDataStream.listen((scanData) async {
+                  subscription = controller.scannedDataStream.listen((scanData) async {
                     controller.pauseCamera();
                     ViewModel.of(context).gotUrl(scanData);
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage()));
+                    unawaited(Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage())));
                   });
                 },
               )

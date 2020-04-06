@@ -33,7 +33,7 @@ class PresentationsPage extends StatelessWidget {
   }
 
   List<Column> _buildItems(BuildContext context, List<CreatedPresentation> presentations) {
-    List<Column> columns = [];
+    final columns = <Column>[];
     for(final presentation in presentations) {
       columns.add(Column(
         children: <Widget>[

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:morpheus_sdk/authority.dart';
 import 'package:provider/provider.dart';
 import 'package:witness/app_model.dart';
 import 'package:witness/drawer/header.dart';

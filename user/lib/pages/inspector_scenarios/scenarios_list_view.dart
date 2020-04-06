@@ -21,7 +21,7 @@ class ScenariosListView extends StatelessWidget {
   }
 
   List<Column> _buildItems(context) {
-    List<Column> columns = [];
+    final columns = <Column>[];
     for(final entry in _scenarios.entries) {
       final scenario = entry.value;
       columns.add(Column(

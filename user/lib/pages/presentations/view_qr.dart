@@ -27,7 +27,7 @@ class ViewQrPage extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               onPressed: () => Navigator.pop(context),
               child: Text(
-                "CLOSE",
+                'CLOSE',
                 style: TextStyle(fontSize: 14.0),
               ),
             )

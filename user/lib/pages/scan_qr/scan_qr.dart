@@ -4,6 +4,7 @@ import 'package:morpheus_kyc_user/pages/inspector_scenarios/inspector_scenarios.
 import 'package:morpheus_kyc_user/shared_prefs.dart';
 import 'package:morpheus_sdk/authority.dart';
 import 'package:morpheus_sdk/inspector.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScanQRPage extends StatefulWidget {
@@ -37,21 +38,21 @@ class ScanQRPageState extends State<ScanQRPage> {
                       // TODO: endpoints must advertise what type they are
                       if(await _isAuthorityApi(scanData)) {
                         await AppSharedPrefs.setAuthorityUrl(scanData);
-                        Navigator.push(
+                        unawaited(Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ListAvailableProcessesPage()
                           )
-                        );
+                        ));
                       }
                       else if(await _isInspectorApi(scanData)) {
                         await AppSharedPrefs.setInspectorUrl(scanData);
-                        Navigator.push(
+                        unawaited(Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => InspectorScenariosPage()
                           )
-                        );
+                        ));
                       }
                     });
                   },
@@ -76,7 +77,9 @@ class ScanQRPageState extends State<ScanQRPage> {
       await AuthorityPublicApi(url).listProcesses();
       return true;
     }
-    catch(e){}
+    catch(e) {
+      // Nothing to do here
+    }
     return false;
   }
 
@@ -85,7 +88,9 @@ class ScanQRPageState extends State<ScanQRPage> {
       await InspectorPublicApi(url).listScenarios();
       return true;
     }
-    catch(e){}
+    catch(e) {
+      // Nothing to do here
+    }
     return false;
   }
 }

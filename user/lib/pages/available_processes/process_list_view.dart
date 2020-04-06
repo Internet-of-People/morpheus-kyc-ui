@@ -24,7 +24,7 @@ class ProcessListView extends StatelessWidget {
   }
 
   List<Column> _buildItems(context) {
-    List<Column> columns = [];
+    final columns = <Column>[];
     for(final entry in _processes.entries) {
       final process = entry.value;
       final processContentId = entry.key;

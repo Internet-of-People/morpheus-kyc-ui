@@ -13,7 +13,7 @@ class RequestDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> sections = [
+    final sections = <Widget>[
       _buildStatusSection(context, _info.status.status),
       _buildMetaSection(),
     ];
@@ -40,7 +40,7 @@ class RequestDetailsPage extends StatelessWidget {
   }
 
   Widget _buildStatusSection(context, RequestStatus _status) {
-    List<Widget> infos = [];
+    final infos = <Widget>[];
 
     infos.add(Row(children: [
       Padding(

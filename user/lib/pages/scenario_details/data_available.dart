@@ -37,7 +37,7 @@ class DataAvailableAlert extends StatelessWidget {
           );
         },
         child: Text(
-          "APPLY",
+          'APPLY',
           style: TextStyle(fontSize: 14.0),
         ),
       )

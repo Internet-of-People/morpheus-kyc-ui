@@ -9,7 +9,7 @@ class RequestsListView extends StatelessWidget {
   const RequestsListView(this._requests, {Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    if(_requests.length == 0) {
+    if(_requests.isEmpty) {
       return Center(child: Text('No Requests Yet'),);
     }
 

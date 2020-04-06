@@ -19,7 +19,7 @@ class Header extends StatefulWidget{
 class HeaderState extends State<Header> {
   @override
   Widget build(BuildContext context) {
-    List<Widget> header = [
+    final header = <Widget>[
       Expanded(child: const Text('Your Profile',style: TextStyle(color: Colors.white,fontSize: 24)))
     ];
 

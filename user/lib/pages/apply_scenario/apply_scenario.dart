@@ -31,7 +31,7 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String,dynamic> dataToBeShared = _getDataThatWillBeShared();
+    final dataToBeShared = _getDataThatWillBeShared();
 
     return Scaffold(
       appBar: AppBar(
@@ -55,8 +55,8 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
                 child:Row(children: [Expanded(child: Text('NOTE: Only the data shown below will be included in the Presentation with the sharing constraints defined by licenses.',style: Theme.of(context).textTheme.bodyText1))]),
               ),
               Divider(),
-              MapAsTable(dataToBeShared, "Data to be Shared"),
-              Column(children: widget._scenario.requiredLicenses.map((l) => MapAsTable(l.toJson(),"License")).toList()),
+              MapAsTable(dataToBeShared, 'Data to be Shared'),
+              Column(children: widget._scenario.requiredLicenses.map((l) => MapAsTable(l.toJson(), 'License')).toList()),
               Container(
                 margin: const EdgeInsets.only(top: 32.0, bottom: 16.0),
                 child: KeySelector(_keySelectorController, Provider.of<AppModel>(context, listen: false).cryptoAPI),
@@ -75,7 +75,7 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
                 padding: EdgeInsets.all(8.0),
                 onPressed: () async => await _onCreatePresentationButtonPressed(storeDispatchFn, dataToBeShared),
                 child: Text(
-                  "CONFIRM & CREATE PRESENTATION",
+                  'CONFIRM & CREATE PRESENTATION',
                   style: TextStyle(fontSize: 14.0),
                 ),
               ),
@@ -87,7 +87,7 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
   }
 
   Map<String, dynamic> _getDataThatWillBeShared() {
-    Map<String,dynamic> dataToBeShared = Map();
+    final dataToBeShared = <String,dynamic>{};
 
     widget._scenario.prerequisites.forEach((prerequisite) {
       final statement = widget._processStatementMap[prerequisite.process];
@@ -135,7 +135,7 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
     // required by the scenario, but it's by default dynamic. Any kind of licenses can be passed here.
     final presentation = Presentation(
         provenClaims,
-        widget._scenario.requiredLicenses.map((l)=>this._mapLicense(l)).toList()
+        widget._scenario.requiredLicenses.map((l) => _mapLicense(l)).toList()
     );
     final signedPresentation = cryptoAPI.signClaimPresentation(
         json.encode(presentation.toJson()),
@@ -143,7 +143,8 @@ class _ApplyScenarioPageState extends State<ApplyScenarioPage> {
     );
 
     final inspectorUrl = await AppSharedPrefs.getInspectorUrl();
-    UploadPresentationResponse resp = (await InspectorPublicApi(inspectorUrl).uploadPresentation(signedPresentation)).data;
+    final inspectorResponse = await InspectorPublicApi(inspectorUrl).uploadPresentation(signedPresentation);
+    final resp = inspectorResponse.data;
     final scenarioUrl = '$inspectorUrl/blob/${resp.contentId}';
 
     storeDispatch(CreatedPresentation(

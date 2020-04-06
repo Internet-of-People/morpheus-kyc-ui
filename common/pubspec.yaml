@@ -15,6 +15,7 @@ dependencies:
   # Other
   intl: ^0.15.8
   json_schema: ^2.2.1
+  pedantic: ^1.9.0
   form_field_validator: ^1.0.1
   optional: ^4.0.1
   image_picker: ^0.6.3+1

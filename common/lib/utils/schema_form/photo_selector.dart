@@ -24,7 +24,7 @@ class PhotoSelectorFormField extends FormField<File> {
   }) : super(
     onSaved: onSaved,
     validator: validator,
-    initialValue: controller != null ? controller.image : (initialValue ?? null),
+    initialValue: controller?.image ?? initialValue,
     autovalidate: autovalidate,
     builder: (FormFieldState<File> state) {
       final subheadTheme = Theme.of(state.context).textTheme.subtitle1;
