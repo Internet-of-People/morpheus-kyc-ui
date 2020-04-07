@@ -15,7 +15,7 @@ class AppSharedPrefs {
     await prefs.setString(_inspectorKey, url);
   }
 
-  static Future<void> setValidatorUrl(String url) async {
+  static Future<void> setVerifierUrl(String url) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_validatorKey, url);
   }
@@ -30,7 +30,7 @@ class AppSharedPrefs {
     return prefs.getString(_inspectorKey);
   }
 
-  static Future<String> getValidatorUrl() async {
+  static Future<String> getVerifierUrl() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_validatorKey);
   }
@@ -39,8 +39,8 @@ class AppSharedPrefs {
 class TestUrls {
   static final String emulatorAuthority = 'http://10.0.2.2:8080';
   static final String emulatorInspector = 'http://10.0.2.2:8081';
-  static final String emulatorValidator = 'http://10.0.2.2:8081';
+  static final String emulatorVerifier = 'http://10.0.2.2:8081';
   static final String gcpAuthority = 'http://34.76.108.115:8080';
   static final String gcpInspector = 'http://34.76.108.115:8081';
-  static final String gcpValidator = 'http://34.76.108.115:8081';
+  static final String gcpVerifier = 'http://34.76.108.115:8081';
 }

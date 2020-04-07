@@ -37,7 +37,7 @@ class MainDrawer extends StatelessWidget {
               onTap: () {
                 AppSharedPrefs.setAuthorityUrl(TestUrls.gcpAuthority);
                 AppSharedPrefs.setInspectorUrl(TestUrls.gcpInspector);
-                AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
+                AppSharedPrefs.setVerifierUrl(TestUrls.gcpVerifier);
                 Navigator.pop(context);
                 Navigator.push(
                     context,
@@ -53,7 +53,7 @@ class MainDrawer extends StatelessWidget {
               onTap: () {
                 AppSharedPrefs.setAuthorityUrl(TestUrls.gcpAuthority);
                 AppSharedPrefs.setInspectorUrl(TestUrls.gcpInspector);
-                AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
+                AppSharedPrefs.setVerifierUrl(TestUrls.gcpVerifier);
                 Navigator.pop(context);
                 Navigator.push(
                     context,
@@ -69,7 +69,7 @@ class MainDrawer extends StatelessWidget {
               onTap: () {
                 AppSharedPrefs.setAuthorityUrl(TestUrls.gcpAuthority);
                 AppSharedPrefs.setInspectorUrl(TestUrls.gcpInspector);
-                AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
+                AppSharedPrefs.setVerifierUrl(TestUrls.gcpVerifier);
                 Navigator.pop(context);
                 Navigator.push(
                     context,
@@ -85,7 +85,7 @@ class MainDrawer extends StatelessWidget {
               onTap: () {
                 AppSharedPrefs.setAuthorityUrl(TestUrls.gcpAuthority);
                 AppSharedPrefs.setInspectorUrl(TestUrls.gcpInspector);
-                AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
+                AppSharedPrefs.setVerifierUrl(TestUrls.gcpVerifier);
                 Navigator.pop(context);
                 Navigator.push(
                     context,

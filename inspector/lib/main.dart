@@ -9,7 +9,7 @@ import 'package:morpheus_sdk/utils.dart';
 void main() {
   final log = Log(InspectorApp);
   WidgetsFlutterBinding.ensureInitialized();
-  AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
+  AppSharedPrefs.setVerifierUrl(TestUrls.gcpVerifier);
   () async {
     log.debug(('Bootstrapping application...'));
     runApp(InspectorApp());

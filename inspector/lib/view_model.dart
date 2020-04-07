@@ -99,7 +99,7 @@ class AppViewModel {
         provenClaim.claim.subject, // Claimant might be different from subject in the future
         null, // no AfterEnvelop support yet
       );
-      final validatorApi = VerifierApi(await AppSharedPrefs.getValidatorUrl());
+      final validatorApi = VerifierApi(await AppSharedPrefs.getVerifierUr());
       final result = (await validatorApi.validate(request)).data;
 
       final items = result.errors.map((i) => ValidationItem(true, i, '')).toList() +

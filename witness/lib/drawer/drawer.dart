@@ -19,7 +19,7 @@ class MainDrawer extends StatelessWidget {
               onTap: () {
                 AppSharedPrefs.setAuthorityUrl(TestUrls.gcpAuthority);
                 AppSharedPrefs.setInspectorUrl(TestUrls.gcpInspector);
-                AppSharedPrefs.setValidatorUrl(TestUrls.gcpValidator);
+                AppSharedPrefs.setVerifierUrl(TestUrls.gcpVerifier);
                 Navigator.pop(context);
                 Navigator.pushAndRemoveUntil(
                     context,

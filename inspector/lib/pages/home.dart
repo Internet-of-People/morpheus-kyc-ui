@@ -7,7 +7,7 @@ import 'package:morpheus_inspector/pages/scan_qr.dart';
 import 'package:morpheus_inspector/shared_prefs.dart';
 import 'package:morpheus_inspector/view_model_provider.dart';
 
-final url1 = 'http://${TestUrls.gcpValidator}/blob/cju-WutB5_FzMH4dIkdJzhuTarsNoI3xeUNu56mG4gFWSE';
+final url1 = 'http://${TestUrls.gcpVerifier}/blob/cju-WutB5_FzMH4dIkdJzhuTarsNoI3xeUNu56mG4gFWSE';
 final url2 = 'whatever';
 final url3 = 'whatever';
 
